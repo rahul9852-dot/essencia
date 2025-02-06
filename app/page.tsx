@@ -1,7 +1,9 @@
+'use client';
 import React from 'react';
+import HomeScreen from './home/page';
 
 function Home() {
-  return <div className=" text-red-500">Welcome to Essencia Fashion!!!</div>;
+  return <HomeScreen />;
 }
 
 export default Home;

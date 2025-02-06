@@ -1,16 +1,20 @@
 import type { Config } from 'tailwindcss';
 
-export default {
+const config: Config = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
-    './lib/**/*.{js,ts,jsx,tsx,mdx,css,scss}',
-    './shared/**/*.{js,ts,jsx,tsx,mdx,css,scss}',
-    './styles/**/*.{js,ts,jsx,tsx,mdx,css,scss}',
-    './app/**/*.{js,ts,jsx,tsx,mdx,css,scss}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './lib/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--font-inter)'],
+      },
+      transitionTimingFunction: {
+        slide: 'cubic-bezier(0.4, 0, 0.2, 1)',
+      },
       colors: {
         white: '#FFFFFF',
         black: '#000000',
@@ -94,8 +98,63 @@ export default {
           600: '#D97706',
           700: '#B45309',
         },
+        accent: {
+          500: '#292221',
+        },
+        neutral: {
+          500: '#6B7280',
+        },
+        heroSection: {
+          900: '#292221',
+        },
+        progressBar: {
+          500: '#292221',
+        },
+        movingMarquee: {
+          500: '#9c6d4e',
+        },
+        modalBg: {
+          500: '#BCB3AE',
+        },
+        modalHoverText: {
+          500: '#ff5019',
+        },
+        modalImgBg: {
+          500: '#9c6d4e',
+        },
+        modalImgBlur1: {
+          500: '#292221',
+        },
+        modalImgBlur2: {
+          500: '#9c6d4e',
+        },
+        modalImgBlur3: {
+          500: '##232323',
+        },
+        modalImgBlur4: {
+          500: '#9c6d4e',
+        },
+        modalImgBlur5: {
+          500: '#292221',
+        },
+      },
+      animation: {
+        marquee: 'marquee 25s linear infinite',
+        marquee2: 'marquee2 25s linear infinite',
+      },
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-100%)' },
+        },
+        marquee2: {
+          '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(0%)' },
+        },
       },
     },
   },
   plugins: [],
-} satisfies Config;
+};
+
+export default config;
