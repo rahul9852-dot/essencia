@@ -7,7 +7,7 @@ const Navbar: React.FC = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-12">
           <Link href="/" className="text-white text-2xl font-light">
-            FAME
+            Essancia Fashion
           </Link>
           <div className="hidden md:flex space-x-8">
             <Link href="/" className="text-white hover:text-white/80">
