@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Essencia Fashion',
-  description: 'Essencia Fashion',
+  title: 'Essancia Fashion',
+  description: 'Essancia Fashion',
 };
 
 export default function RootLayout({

@@ -7,7 +7,6 @@ import MarQuee from '../../lib/components/MarQueee/MarQuee';
 // import RoundedCards from '../../lib/components/RoundedCards/roundedCards';
 import WinterFashionSection from '../../lib/components/WinterFashion/WinterFashionSection';
 import SportswearSection from '../../lib/components/Sportswear/SportswearSection';
-import SummerCollection from '../../lib/components/SummerCollection/SummerCollection';
 
 const HomeScreen = () => {
   return (
@@ -20,7 +19,6 @@ const HomeScreen = () => {
       {/* <RoundedCards /> */}
       <WinterFashionSection />
       <SportswearSection />
-      <SummerCollection />
     </main>
   );
 };
