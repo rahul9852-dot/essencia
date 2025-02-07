@@ -142,6 +142,7 @@ const config: Config = {
         marquee: 'marquee 25s linear infinite',
         marquee2: 'marquee2 25s linear infinite',
         fadeIn: 'fadeIn 0.5s ease-out forwards',
+        blink: 'blink 2s ease-in-out infinite',
       },
       keyframes: {
         marquee: {
@@ -155,6 +156,10 @@ const config: Config = {
         fadeIn: {
           '0%': { opacity: '0', transform: 'translateY(10px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        blink: {
+          '0%, 100%': { transform: 'scaleY(1)' },
+          '50%': { transform: 'scaleY(0.1)' },
         },
       },
     },
