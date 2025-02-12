@@ -17,28 +17,28 @@ const fashionItems: FashionItem[] = [
     id: 1,
     image: '/images/a1.webp',
     title: 'Brown sweatshirt with muffler',
-    price: 130.0,
+    price: 1299.0,
     colors: ['#8B7355', '#2F2F2F', '#4A3728', '#6B4423'], // Brown, Black, Dark Brown, Copper
   },
   {
     id: 2,
     image: '/images/b1.webp',
     title: 'Black Blouson Crop Top',
-    price: 180.0,
+    price: 1199.0,
     colors: ['#000000', '#4A4A4A', '#2C2C2C'], // Black, Dark Gray, Charcoal
   },
   {
     id: 3,
     image: '/images/c1.webp',
     title: 'Women black high-neck dress',
-    price: 45.0,
+    price: 1455.0,
     colors: ['#000000', '#1A1A1A', '#333333'], // Black, Rich Black, Dark Gray
   },
   {
     id: 4,
     image: '/images/f1.webp',
     title: 'Women black Long coat',
-    price: 4580.0,
+    price: 1980.0,
     originalPrice: 5500.0,
     discount: '15% OFF',
     colors: ['#000000', '#36454F', '#1B1B1B'], // Black, Charcoal, Deep Black
@@ -47,28 +47,28 @@ const fashionItems: FashionItem[] = [
     id: 5,
     image: '/images/m4.webp',
     title: 'Women Cream sweater',
-    price: 288.0,
+    price: 1888.0,
     colors: ['#FFFDD0', '#F5F5DC', '#E8E5D7'], // Cream, Beige, Light Beige
   },
   {
     id: 6,
     image: '/images/d1.webp',
     title: 'Women coat with brown shirt',
-    price: 260.0,
+    price: 2360.0,
     colors: ['#8B7355', '#6B4423', '#483C32'], // Brown, Saddle Brown, Dark Brown
   },
   {
     id: 7,
     image: '/images/i1.webp',
     title: 'Summer maxi dress',
-    price: 399.0,
+    price: 1399.0,
     colors: ['#FFFFFF', '#F5F5F5', '#ECECEC'], // White, Off White, Light Gray
   },
   {
     id: 8,
     image: '/images/i1.webp',
     title: 'Black dress',
-    price: 148.0,
+    price: 1248.0,
     originalPrice: 168.0,
     discount: '11% OFF',
     colors: ['#000000', '#2C2C2C', '#1A1A1A'], // Black, Dark Gray, Rich Black
@@ -126,7 +126,7 @@ const WinterFashionSection = () => {
     <section className="px-4 py-16 max-w-[1400px] mx-auto">
       <div className="flex justify-between items-center mb-8">
         <h2 className="text-4xl font-normal">
-          Colorful Winter Fashion
+          Essancia Winter Fashion
           <span className="text-sm text-gray-500 ml-4">
             {currentPage * itemsPerPage + 1}-
             {Math.min((currentPage + 1) * itemsPerPage, fashionItems.length)} of{' '}
@@ -237,7 +237,7 @@ const WinterFashionSection = () => {
                 </h3>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-medium">
-                    ${item.price.toFixed(2)}
+                    ₹{item.price.toFixed(2)}
                   </span>
                   {item.originalPrice && (
                     <span className="text-gray-400 line-through text-sm">

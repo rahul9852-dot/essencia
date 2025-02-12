@@ -57,12 +57,13 @@ const CollectionsDropdown = ({ isOpen }: { isOpen: boolean }) => {
   return (
     <div
       className={`
-        absolute top-full left-0 w-full bg-white z-50 border-t border-gray-100
-        transition-all duration-500 ease-in-out overflow-hidden
+        absolute top-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2 
+        max-w-[1400px] w-[calc(100%-2rem)] bg-white rounded-3xl z-50
+        transition-all duration-500 ease-in-out overflow-hidden shadow-lg
         ${isOpen ? 'max-h-[264px] opacity-100' : 'max-h-0 opacity-0'}
       `}
     >
-      <div className="max-w-[1400px] mx-auto py-12">
+      <div className="w-full py-12 px-8">
         <div className="grid grid-cols-6 gap-12">
           {categories.map((category, index) => (
             <div
