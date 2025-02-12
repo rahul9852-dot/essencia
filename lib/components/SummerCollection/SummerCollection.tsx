@@ -1,119 +1,166 @@
-import React, { useEffect, useState, useRef } from 'react';
+'use client';
+
+import React, { useEffect, useRef } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const cards = [
   {
     id: 1,
     image: '/images/f1.webp',
+    title: 'Men leather jacket',
+    price: 210.0,
     alt: 'Summer fashion model 1',
   },
   {
     id: 2,
-    image: '/images/i4.webp',
+    image: '/images/i1.webp',
+    title: 'Women casual wear',
+    price: 180.0,
+    discount: '15% OFF',
     alt: 'Summer fashion model 2',
   },
   {
     id: 3,
     image: '/images/m4.webp',
+    title: 'Summer collection',
+    price: 150.0,
     alt: 'Summer fashion model 3',
   },
   {
     id: 4,
+    image: '/images/d1.webp',
+    title: 'Men leather jacket',
+    price: 210.0,
+    alt: 'Summer fashion model 1',
+  },
+  {
+    id: 5,
+    image: '/images/c1.webp',
+    title: 'Women casual wear',
+    price: 180.0,
+    discount: '15% OFF',
+    alt: 'Summer fashion model 2',
+  },
+  {
+    id: 6,
     image: '/images/b1.webp',
-    alt: 'Summer fashion model 4',
+    title: 'Summer collection',
+    price: 150.0,
+    alt: 'Summer fashion model 3',
   },
 ];
 
 const SummerCollection = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (!sectionRef.current) return;
+    if (!sectionRef.current || cardsRef.current.length === 0) return;
 
-      const rect = sectionRef.current.getBoundingClientRect();
-      const sectionTop = rect.top;
-      const sectionHeight = rect.height;
-      const windowHeight = window.innerHeight;
+    const cardHeight = cardsRef.current[0]?.offsetHeight || 0;
+    const totalScroll = cardHeight * (cards.length - 1);
 
-      // Calculate progress when section is in view
-      if (sectionTop <= windowHeight && sectionTop >= -sectionHeight) {
-        const progress = Math.abs(sectionTop) / (sectionHeight - windowHeight);
-        setScrollProgress(Math.min(Math.max(progress, 0), 1));
+    // Set initial positions
+    gsap.set(cardsRef.current, {
+      y: i => i * cardHeight,
+    });
+
+    // Create a timeline for smoother animation
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top top',
+        end: `+=${totalScroll}`,
+        scrub: 1,
+        pin: true,
+        anticipatePin: 1,
+      },
+    });
+
+    // Animate each card
+    cardsRef.current.forEach((card, index) => {
+      if (card) {
+        tl.to(
+          card,
+          {
+            y: -totalScroll,
+            ease: 'none',
+          },
+          0
+        ); // The '0' ensures all animations start at the same time
       }
-    };
+    });
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Initial check
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative min-h-[200vh] bg-[#1C1C1C]">
-      {/* Fixed content container */}
+    <section ref={sectionRef} className="relative h-screen">
       <div className="sticky top-0 h-screen overflow-hidden">
-        {/* Background image */}
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[#F8F8F8]">
           <Image
-            src="/images/a1.webp"
+            src="/images/slider_3.webp"
             alt="Summer collection background"
             fill
-            className="object-cover brightness-75"
+            className="object-cover object-right"
             priority
           />
         </div>
 
-        {/* Content */}
-        <div className="relative h-full">
-          {/* Text content */}
-          <div className="absolute inset-0 flex flex-col justify-center px-4 md:px-16 max-w-[1400px] mx-auto text-white">
-            <h2 className="text-5xl md:text-7xl font-normal mb-6 leading-tight max-w-[600px]">
+        <div className="relative h-full max-w-[1400px] mx-auto px-4">
+          <div className="absolute left-0 top-[25%] max-w-[600px] text-white z-20">
+            <h2 className="text-[64px] font-light leading-[1.1] mb-6">
               Perfect Picks for Hot Summer Days
             </h2>
-            <p className="text-lg mb-8 max-w-[500px]">
+            <p className="text-lg opacity-90 mb-8">
               Stay cool & stylish all summer long with our perfect picks for hot
               summer days.
             </p>
-            <Link
-              href="/collections/summer"
-              className="inline-flex bg-white text-black px-8 py-3 rounded-none hover:bg-gray-100 transition-colors duration-300 w-fit uppercase text-sm tracking-wider"
-            >
+            <button className="bg-white text-black px-8 py-3 hover:bg-gray-100 transition-colors">
               SHOP NOW
-            </Link>
+            </button>
           </div>
-
-          {/* Scrolling cards */}
-          <div className="absolute right-[10%] h-full flex items-center">
-            <div className="relative h-[140%] flex flex-col gap-6">
-              {cards.map((card, index) => {
-                // Calculate individual card movement
-                const cardProgress = Math.max(
-                  0,
-                  Math.min(1, (scrollProgress - index * 0.2) * 2)
-                );
-
-                return (
-                  <div
-                    key={card.id}
-                    className="w-[400px] aspect-[3/4] transition-all duration-300"
-                    style={{
-                      transform: `translateY(${-cardProgress * 100}%)`,
-                      opacity: 1 - cardProgress,
-                    }}
-                  >
-                    <div className="relative w-full h-full rounded-lg overflow-hidden">
+          <div className="absolute right-[4%] top-1/2 -translate-y-1/2">
+            <div className="relative flex flex-col">
+              {cards.map((card, index) => (
+                <div
+                  key={card.id}
+                  ref={el => {
+                    cardsRef.current[index] = el;
+                  }}
+                  className="relative w-[450px]"
+                >
+                  <div className="bg-[#F8F8F8] rounded-2xl overflow-hidden shadow-md">
+                    <div className="relative aspect-[3/4] rounded-2xl overflow-hidden">
+                      {card.discount && (
+                        <span className="absolute top-4 right-4 bg-red-500 text-white text-xs px-2 py-1 rounded-sm z-10">
+                          {card.discount}
+                        </span>
+                      )}
                       <Image
-                        src={card.image}
+                        src={card.image || '/placeholder.svg'}
                         alt={card.alt}
                         fill
                         className="object-cover"
                       />
                     </div>
+                    <div className="p-4">
+                      <h3 className="text-[15px] text-gray-900">
+                        {card.title}
+                      </h3>
+                      <p className="text-[15px] text-gray-900">
+                        ${card.price.toFixed(2)}
+                      </p>
+                    </div>
                   </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
           </div>
         </div>

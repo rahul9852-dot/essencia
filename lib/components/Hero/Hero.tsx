@@ -1,34 +1,30 @@
 import React from 'react';
 import ProgressBar from '../ProgressBar/ProgressBar';
-
 interface SlideContent {
   title: string;
   subtitle: string;
   media: string;
   type: 'image' | 'video';
 }
-
 const slideContents: SlideContent[] = [
   {
-    title: 'Must-Have Winter Outfits',
-    subtitle:
-      'Presents a carefully curated collection of essential clothing pieces to elevate your winter wardrobe.',
-    media: '/images/winter-fashion.jpg',
-    type: 'image',
-  },
-  {
-    title: 'Summer Fashion Picks',
+    title: 'Essancia Fashion Picks',
     subtitle:
       'Discover our latest summer collection for your perfect seasonal wardrobe.',
     media: '/videos/summer-fashion.mp4',
+
     type: 'video',
   },
+  {
+    title: 'Must-Have Winter Outfits',
+    subtitle: 'Curated essentials to elevate your winter wardrobe beautifully.',
+    media: '/images/bannerImage.webp',
+    type: 'image',
+  },
 ];
-
 const Hero: React.FC = () => {
   const [currentSlide, setCurrentSlide] = React.useState(0);
-  const [isTransitioning, setIsTransitioning] = React.useState(false);
-
+  const [, setIsTransitioning] = React.useState(false);
   React.useEffect(() => {
     const interval = setInterval(() => {
       setIsTransitioning(true);
@@ -37,13 +33,10 @@ const Hero: React.FC = () => {
         setIsTransitioning(false);
       }, 500);
     }, 5000);
-
     return () => clearInterval(interval);
   }, []);
-
   return (
     <div className="relative h-screen w-full overflow-hidden">
-      {/* Background Media */}
       {slideContents.map((slide, index) => (
         <div
           key={index}
@@ -67,23 +60,20 @@ const Hero: React.FC = () => {
               className="absolute inset-0 w-full h-full object-cover"
             />
           )}
-          {/* Overlay */}
           <div className="absolute inset-0 bg-black/30" />
         </div>
       ))}
-
-      {/* Content */}
-      <div className="relative z-10 h-full flex flex-col justify-center px-4 md:px-20">
-        <h1 className="text-6xl md:text-8xl text-white font-light mb-6">
-          {slideContents[currentSlide].title}
-        </h1>
-        <p className="text-lg md:text-xl text-white/90 max-w-2xl mb-16">
-          {slideContents[currentSlide].subtitle}
-        </p>
-
-        {/* Bottom Navigation */}
+      <div className="relative z-10 h-full flex flex-col justify-center px-16 md:px-20">
+        <div className="pt-48 md:pt-48">
+          <h1 className="md:text-8xl text-wrap max-w-2xl text-white font-light mb-8">
+            {slideContents[currentSlide].title}
+          </h1>
+          <p className="text-lg md:text-xl text-white/90 max-w-2xl mb-8 ">
+            {slideContents[currentSlide].subtitle}
+          </p>
+        </div>
         <div className="absolute bottom-32 left-0 right-0 px-4 md:px-20">
-          <div className="flex flex-col gap-8">
+          <div className="flex gap-8">
             {slideContents.map((slide, index) => (
               <div key={index} className="flex flex-col gap-4">
                 <h3
@@ -108,5 +98,4 @@ const Hero: React.FC = () => {
     </div>
   );
 };
-
 export default Hero;
