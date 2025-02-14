@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import CollectionsDropdown from './CollectionsDropdown';
@@ -19,7 +20,7 @@ const Navbar: React.FC = () => {
       <nav
         className={`
           max-w-[1400px] mx-auto rounded-full transition-all duration-300 text-black
-          ${isScrolled ? 'bg-white/80 backdrop-blur-sm shadow-sm' : 'bg-white/60 backdrop-blur-sm'}
+          ${isScrolled ? 'bg-white/10 backdrop-blur-sm shadow-sm' : 'bg-white/60 backdrop-blur-sm'}
         `}
       >
         <div className="flex items-center justify-between h-16 px-8">
