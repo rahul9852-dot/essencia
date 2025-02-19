@@ -172,7 +172,7 @@ const WinterFashionSection = () => {
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                className="w-6 h-6"
+                className="w-6 h-6 text-black"
               >
                 <path
                   strokeLinecap="round"
@@ -200,7 +200,7 @@ const WinterFashionSection = () => {
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                className="w-6 h-6"
+                className="w-6 h-6 text-black"
               >
                 <path
                   strokeLinecap="round"
