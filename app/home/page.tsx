@@ -35,9 +35,9 @@ const HomeScreen = () => {
       <SpringCollections />
       <ProductDetails />
       <FitnessFashion />
-      <Stores />
       <FashionShowcase />
       <DesignerSection />
+      <Stores />
     </main>
   );
 };
