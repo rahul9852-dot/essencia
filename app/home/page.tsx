@@ -22,13 +22,13 @@ import FashionShowcase from '@/lib/components/FashionShowcase/FashionShowcase';
 const HomeScreen = () => {
   return (
     <main className="relative">
-      <Hero />
+      {/* <Hero />
       <SubHero />
       <HeroCardSection />
       <MarQuee />
       <RoundedCards categories={categories} />
       <CategoryShowcase />
-      <WinterFashionSection />
+      <WinterFashionSection /> */}
       <SportswearSection />
       <SummerCollection />
       <WinterCollection />

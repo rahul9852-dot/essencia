@@ -14,7 +14,7 @@ const cards = [
     title: 'Men leather jacket',
     price: 210.0,
     alt: 'Summer fashion model 1',
-    category: "Men's Fashion",
+    category: "1-Men's Fashion",
   },
   {
     id: 2,
@@ -74,7 +74,7 @@ const SummerCollection = () => {
     const middleOffset = (window.innerHeight - cardHeight) / 2;
     const startOffset = cardHeight * Math.floor(cards.length / 2);
 
-    // Enhanced initial animation with middle positioning
+    // Initial setup
     gsap.set(cardsRef.current, {
       y: i => middleOffset + i * cardHeight - startOffset,
       opacity: 0,
@@ -82,7 +82,7 @@ const SummerCollection = () => {
       rotateY: -15,
     });
 
-    // Fade in animation with 3D effect
+    // Fade in animation
     gsap.to(cardsRef.current, {
       opacity: 1,
       scale: 1,
@@ -101,7 +101,7 @@ const SummerCollection = () => {
       ease: 'power3.out',
     });
 
-    // Enhanced scroll animation with middle card focus
+    // Scroll animation
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: sectionRef.current,
@@ -110,11 +110,15 @@ const SummerCollection = () => {
         scrub: 1.5,
         pin: true,
         anticipatePin: 1,
+        onComplete: () => {
+          // Signal completion to parent
+          ScrollTrigger.refresh();
+        },
       },
     });
 
     // Animate cards from middle position
-    cardsRef.current.forEach((card, index) => {
+    cardsRef.current.forEach(card => {
       if (card) {
         tl.to(
           card,
