@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -56,41 +56,57 @@ const cards = [
 const WinterCollection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   useEffect(() => {
     if (!sectionRef.current || cardsRef.current.length === 0) return;
 
     const cardHeight = cardsRef.current[0]?.offsetHeight || 0;
     const totalScroll = cardHeight * (cards.length - 1);
+    const middleOffset = (window.innerHeight - cardHeight) / 2;
+    const startOffset = cardHeight * Math.floor(cards.length / 2);
 
-    // Set initial positions
+    // Set initial position with middle card centered
     gsap.set(cardsRef.current, {
-      y: i => i * cardHeight,
+      y: i => middleOffset + i * cardHeight - startOffset,
+      opacity: 0,
+      scale: 0.9,
+      rotateY: -15,
     });
 
-    // Create a timeline for smoother animation
+    // Fade in animation with 3D effect
+    gsap.to(cardsRef.current, {
+      opacity: 1,
+      scale: 1,
+      rotateY: 0,
+      duration: 0.8,
+      stagger: 0.1,
+      ease: 'power3.out',
+    });
+
+    // Enhanced scroll animation with middle card focus
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: sectionRef.current,
         start: 'top top',
         end: `+=${totalScroll}`,
-        scrub: 1,
+        scrub: 1.5,
         pin: true,
         anticipatePin: 1,
       },
     });
 
-    // Animate each card
-    cardsRef.current.forEach((card, index) => {
+    // Animate cards from middle position
+    cardsRef.current.forEach(card => {
       if (card) {
         tl.to(
           card,
           {
-            y: -totalScroll,
+            y: middleOffset - (totalScroll + startOffset),
             ease: 'none',
           },
           0
-        ); // The '0' ensures all animations start at the same time
+        );
       }
     });
 
@@ -110,22 +126,24 @@ const WinterCollection = () => {
             className="object-cover object-right"
             priority
           />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />
         </div>
 
         <div className="relative h-full max-w-[1400px] mx-auto px-4">
           <div className="absolute left-0 top-[25%] max-w-[600px] text-white z-20">
             <h2 className="text-[64px] font-light leading-[1.1] mb-6">
-              Perfect Picks for Hot Summer Days
+              Perfect Picks for winter Days
             </h2>
             <p className="text-lg opacity-90 mb-8">
-              Stay cool & stylish all summer long with our perfect picks for hot
-              summer days.
+              Stay cool & stylish all winter long with our perfect picks for
+              winter days.
             </p>
             <button className="bg-white text-black px-8 py-3 hover:bg-gray-100 transition-colors">
               SHOP NOW
             </button>
           </div>
-          <div className="absolute right-[8%] top-1/2 -translate-y-1/2">
+
+          <div className="absolute right-[8%] h-screen flex items-center">
             <div className="relative flex flex-col">
               {cards.map((card, index) => (
                 <div
@@ -133,27 +151,41 @@ const WinterCollection = () => {
                   ref={el => {
                     cardsRef.current[index] = el;
                   }}
-                  className="relative w-[450px]"
+                  className="relative w-[350px] transform-gpu mb-4"
+                  onMouseEnter={() => setHoveredCard(card.id)}
+                  onMouseLeave={() => setHoveredCard(null)}
                 >
-                  <div className="bg-[#F8F8F8] rounded-2xl overflow-hidden shadow-md">
-                    <div className="relative aspect-[3/4] rounded-2xl overflow-hidden">
+                  <div
+                    className={`bg-white rounded-xl overflow-hidden shadow-lg
+                    transform transition-all duration-500
+                    ${hoveredCard === card.id ? 'scale-105 shadow-2xl' : ''}`}
+                  >
+                    <div className="relative aspect-[3/4] rounded-xl overflow-hidden">
                       {card.discount && (
-                        <span className="absolute top-4 right-4 bg-red-500 text-white text-xs px-2 py-1 rounded-sm z-10">
+                        <span
+                          className="absolute top-3 right-3 bg-red-500 text-white
+                          px-3 py-0.5 rounded-full z-10 shadow-lg text-sm"
+                        >
                           {card.discount}
                         </span>
                       )}
                       <Image
-                        src={card.image || '/placeholder.svg'}
+                        src={card.image}
                         alt={card.alt}
                         fill
-                        className="object-cover"
+                        className={`object-cover transition-transform duration-700
+                          ${hoveredCard === card.id ? 'scale-110' : 'scale-100'}`}
+                      />
+                      <div
+                        className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent 
+                        opacity-0 transition-opacity duration-300 hover:opacity-100"
                       />
                     </div>
-                    <div className="p-4">
-                      <h3 className="text-[15px] text-gray-900">
+                    <div className="p-4 space-y-1">
+                      <h3 className="text-base font-medium text-gray-900">
                         {card.title}
                       </h3>
-                      <p className="text-[15px] text-gray-900">
+                      <p className="text-lg font-semibold text-gray-900">
                         ${card.price.toFixed(2)}
                       </p>
                     </div>

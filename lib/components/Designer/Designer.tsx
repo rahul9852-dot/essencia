@@ -2,7 +2,7 @@ import React from 'react';
 
 const DesignerSection = () => {
   return (
-    <div className="flex flex-col justify-center items-center gap-4 px-12 py-12">
+    <div className="flex flex-col justify-center items-center gap-4 px-12 py-12 bg-white">
       <div className="flex flex-col  justify-center items-center">
         <p className="text-black text-center text-4xl font-extralight mb-12 max-w-[800px]">
           Spotlight on emerging designers and their fresh takes on winter

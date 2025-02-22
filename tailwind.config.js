@@ -1,6 +1,5 @@
-import type { Config } from 'tailwindcss';
-
-const config: Config = {
+/** @type {import('tailwindcss').Config} */
+const config = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -104,14 +103,14 @@ const config: Config = {
         neutral: {
           500: '#6B7280',
         },
-        heroSection: {
-          900: '#292221',
+        subhero: {
+          900: '#FCF8F5',
         },
         progressBar: {
           500: '#292221',
         },
-        movingMarquee: {
-          500: '#9c6d4e',
+        marquee: {
+          100: '#FCF8F5',
         },
         modalBg: {
           500: '#BCB3AE',
@@ -138,11 +137,13 @@ const config: Config = {
           500: '#292221',
         },
       },
+
       animation: {
-        marquee: 'marquee 25s linear infinite',
-        marquee2: 'marquee2 25s linear infinite',
+        marquee: 'marquee 30s linear infinite',
+        marquee2: 'marquee2 30s linear infinite',
         fadeIn: 'fadeIn 0.5s ease-out forwards',
         blink: 'blink 2s ease-in-out infinite',
+        shimmer: 'shimmer 2s infinite linear',
       },
       keyframes: {
         marquee: {
@@ -160,6 +161,9 @@ const config: Config = {
         blink: {
           '0%, 100%': { transform: 'scaleY(1)' },
           '50%': { transform: 'scaleY(0.1)' },
+        },
+        shimmer: {
+          '100%': { transform: 'translateX(200%)' },
         },
       },
     },

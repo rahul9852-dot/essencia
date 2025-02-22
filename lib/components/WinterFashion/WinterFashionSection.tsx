@@ -22,7 +22,7 @@ const fashionItems: FashionItem[] = [
   },
   {
     id: 2,
-    image: '/images/b1.webp',
+    image: '/images/showcaseCategory/sc5.webp',
     title: 'Black Blouson Crop Top',
     price: 1199.0,
     colors: ['#000000', '#4A4A4A', '#2C2C2C'], // Black, Dark Gray, Charcoal
@@ -66,7 +66,7 @@ const fashionItems: FashionItem[] = [
   },
   {
     id: 8,
-    image: '/images/i1.webp',
+    image: '/images/c1.webp',
     title: 'Black dress',
     price: 1248.0,
     originalPrice: 168.0,
@@ -106,6 +106,7 @@ const ColorDots = ({
 const WinterFashionSection = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [isHovered, setIsHovered] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const itemsPerPage = 4;
   const totalPages = Math.ceil(fashionItems.length / itemsPerPage);
 
@@ -115,30 +116,38 @@ const WinterFashionSection = () => {
   );
 
   const handlePrevious = () => {
+    setIsLoading(true);
     setCurrentPage(prev => prev - 1);
+    setTimeout(() => setIsLoading(false), 300);
   };
 
   const handleNext = () => {
+    setIsLoading(true);
     setCurrentPage(prev => prev + 1);
+    setTimeout(() => setIsLoading(false), 300);
   };
 
   return (
     <section className="px-4 py-16 max-w-[1400px] mx-auto">
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-4xl font-normal">
-          Essancia Winter Fashion
-          <span className="text-sm text-gray-500 ml-4">
+      {/* Enhanced Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-12 gap-4">
+        <div>
+          <h2 className="text-4xl sm:text-5xl font-normal mb-2">
+            Essancia Winter Fashion
+          </h2>
+          <p className="text-sm text-gray-500">
             {currentPage * itemsPerPage + 1}-
             {Math.min((currentPage + 1) * itemsPerPage, fashionItems.length)} of{' '}
-            {fashionItems.length}
-          </span>
-        </h2>
+            {fashionItems.length} items
+          </p>
+        </div>
         <Link
           href="/collections/winter-fashion"
-          className="text-base flex items-center hover:opacity-80 transition-opacity group"
+          className="group flex items-center space-x-2 px-6 py-2 bg-black text-white rounded-full 
+            hover:bg-gray-900 transition-all duration-300 ease-out"
         >
-          View all
-          <span className="ml-2 group-hover:translate-x-1 transition-transform duration-300">
+          <span>View Collection</span>
+          <span className="transform translate-x-0 group-hover:translate-x-1 transition-transform duration-300">
             →
           </span>
         </Link>
@@ -146,20 +155,24 @@ const WinterFashionSection = () => {
 
       <div className="relative">
         <div className="overflow-visible relative">
-          {/* Previous Button */}
+          {/* Enhanced Navigation Buttons */}
           {currentPage > 0 && (
             <button
               onClick={handlePrevious}
-              className="absolute left-[-20px] top-[35%] -translate-y-1/2 z-10 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-all duration-300 hover:scale-110"
+              className="absolute -left-6 top-[35%] -translate-y-1/2 z-10 
+                w-12 h-12 bg-white/80 backdrop-blur rounded-full shadow-lg 
+                flex items-center justify-center
+                hover:bg-white hover:scale-110
+                transition-all duration-300 ease-out"
               aria-label="Previous items"
             >
               <svg
-                width="20"
-                height="20"
+                width="24"
+                height="24"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                className="w-5 h-5"
+                className="w-6 h-6 text-black"
               >
                 <path
                   strokeLinecap="round"
@@ -171,20 +184,23 @@ const WinterFashionSection = () => {
             </button>
           )}
 
-          {/* Next Button */}
           {currentPage < totalPages - 1 && (
             <button
               onClick={handleNext}
-              className="absolute right-[-20px] top-[35%] -translate-y-1/2 z-10 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-all duration-300 hover:scale-110"
+              className="absolute -right-6 top-[35%] -translate-y-1/2 z-10 
+                w-12 h-12 bg-white/80 backdrop-blur rounded-full shadow-lg 
+                flex items-center justify-center
+                hover:bg-white hover:scale-110
+                transition-all duration-300 ease-out"
               aria-label="Next items"
             >
               <svg
-                width="20"
-                height="20"
+                width="24"
+                height="24"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                className="w-5 h-5"
+                className="w-6 h-6 text-black"
               >
                 <path
                   strokeLinecap="round"
@@ -196,7 +212,11 @@ const WinterFashionSection = () => {
             </button>
           )}
 
-          <div className="grid grid-cols-4 gap-6 -mx-16 px-16">
+          {/* Enhanced Product Grid */}
+          <div
+            className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 -mx-16 px-16
+            transition-opacity duration-300 ${isLoading ? 'opacity-50' : 'opacity-100'}`}
+          >
             {currentItems.map(item => (
               <div
                 key={item.id}
@@ -205,15 +225,23 @@ const WinterFashionSection = () => {
                 onMouseLeave={() => setIsHovered(null)}
               >
                 {item.discount && (
-                  <span className="absolute top-4 right-4 bg-red-500 text-white text-sm px-3 py-1 rounded-full z-10">
+                  <span
+                    className="absolute top-4 right-4 z-10
+                    bg-red-500 text-white text-sm px-4 py-1 rounded-full
+                    shadow-lg"
+                  >
                     {item.discount}
                   </span>
                 )}
-                <div className="aspect-[3/4] relative overflow-hidden rounded-lg mb-4 bg-[#F5F5F5]">
+                <div
+                  className="aspect-[3/4] relative overflow-hidden rounded-xl mb-4 
+                  bg-gradient-to-b from-gray-50 to-gray-100 
+                  group-hover:shadow-xl
+                  transition-all duration-500 ease-out"
+                >
                   <div
-                    className={`w-full h-full transform transition-all duration-500 ${
-                      isHovered === item.id ? 'scale-105' : 'scale-100'
-                    }`}
+                    className={`w-full h-full transform transition-all duration-700
+                    ${isHovered === item.id ? 'scale-110' : 'scale-100'}`}
                   >
                     <Image
                       src={item.image}
@@ -225,41 +253,53 @@ const WinterFashionSection = () => {
                     />
                   </div>
 
-                  {/* Color dots overlay */}
-                  {isHovered === item.id && (
-                    <div className="absolute inset-0 bg-black/20 transition-opacity duration-300">
-                      <ColorDots colors={item.colors} showMore={true} />
-                    </div>
-                  )}
+                  {/* Improved Color dots overlay - No blur effect */}
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent
+                    transition-opacity duration-300 ease-out
+                    ${isHovered === item.id ? 'opacity-100' : 'opacity-0'}`}
+                  >
+                    <ColorDots colors={item.colors} showMore={true} />
+                  </div>
                 </div>
-                <h3 className="text-base font-normal mb-2 transition-colors duration-300 hover:text-gray-600">
-                  {item.title}
-                </h3>
-                <div className="flex items-center gap-2">
-                  <span className="text-lg font-medium">
-                    ₹{item.price.toFixed(2)}
-                  </span>
-                  {item.originalPrice && (
-                    <span className="text-gray-400 line-through text-sm">
-                      ${item.originalPrice.toFixed(2)}
+
+                <div
+                  className="space-y-2 transition-transform duration-300 ease-out
+                  group-hover:translate-y-[-4px]"
+                >
+                  <h3
+                    className="text-base font-medium transition-colors duration-300 
+                    group-hover:text-gray-600"
+                  >
+                    {item.title}
+                  </h3>
+                  <div className="flex items-center gap-3">
+                    <span className="text-lg font-semibold">
+                      ₹{item.price.toFixed(2)}
                     </span>
-                  )}
+                    {item.originalPrice && (
+                      <span className="text-gray-400 line-through text-sm">
+                        ₹{item.originalPrice.toFixed(2)}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Page Indicators */}
-          <div className="flex justify-center mt-8 gap-2">
+          {/* Enhanced Page Indicators */}
+          <div className="flex justify-center mt-12 gap-3">
             {Array.from({ length: totalPages }).map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentPage(index)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  currentPage === index
-                    ? 'w-8 bg-black'
-                    : 'bg-gray-300 hover:bg-gray-400'
-                }`}
+                className={`h-2 rounded-full transition-all duration-500 ease-out
+                  ${
+                    currentPage === index
+                      ? 'w-8 bg-black'
+                      : 'w-2 bg-gray-300 hover:bg-gray-400 hover:scale-110'
+                  }`}
                 aria-label={`Go to page ${index + 1}`}
               />
             ))}
