@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Image from 'next/image';
+import Loading from '@/lib/components/Loading/Loading';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -55,6 +56,8 @@ const ContactPage = () => {
     message: '',
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
 
   // Cursor effect
   useEffect(() => {
@@ -97,51 +100,63 @@ const ContactPage = () => {
 
   // Initial animations
   useEffect(() => {
-    const tl = gsap.timeline();
+    setIsMounted(true);
 
-    tl.from('.contact-title', {
-      y: 100,
-      opacity: 0,
-      duration: 1,
-      ease: 'power3.out',
-    })
-      .from(
-        '.form-element',
-        {
-          y: 50,
-          opacity: 0,
-          stagger: 0.2,
-          duration: 0.8,
-          ease: 'power3.out',
-        },
-        '-=0.5'
-      )
-      .from(
-        '.contact-info',
-        {
-          x: 100,
-          opacity: 0,
-          duration: 0.8,
-          ease: 'power3.out',
-        },
-        '-=0.8'
-      );
+    // Initialize animations after mounting
+    const initializeAnimations = () => {
+      const tl = gsap.timeline();
 
-    // Scroll animations
-    gsap.utils.toArray('section').forEach((section: any) => {
-      gsap.from(section, {
+      tl.from('.contact-title', {
+        y: 100,
         opacity: 0,
-        y: 50,
         duration: 1,
         ease: 'power3.out',
-        scrollTrigger: {
-          trigger: section,
-          start: 'top 80%',
-          end: 'top 20%',
-          toggleActions: 'play none none reverse',
-        },
+      })
+        .from(
+          '.form-element',
+          {
+            y: 50,
+            opacity: 0,
+            stagger: 0.2,
+            duration: 0.8,
+            ease: 'power3.out',
+          },
+          '-=0.5'
+        )
+        .from(
+          '.contact-info',
+          {
+            x: 100,
+            opacity: 0,
+            duration: 0.8,
+            ease: 'power3.out',
+          },
+          '-=0.8'
+        );
+
+      // Scroll animations
+      gsap.utils.toArray('section').forEach((section: any) => {
+        gsap.from(section, {
+          opacity: 0,
+          y: 50,
+          duration: 1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 80%',
+            end: 'top 20%',
+            toggleActions: 'play none none reverse',
+          },
+        });
       });
-    });
+
+      setIsLoading(false);
+    };
+
+    // Small delay to ensure smooth transition
+    const timer = setTimeout(initializeAnimations, 100);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const validateForm = (): boolean => {
@@ -175,11 +190,14 @@ const ContactPage = () => {
     }, 3000);
   };
 
+  if (!isMounted) return <Loading />;
+
   return (
     <div
       ref={containerRef}
       className="min-h-screen bg-gradient-to-b from-white to-gray-50"
     >
+      {isLoading && <Loading />}
       {/* Hero Section */}
       <section className="h-[90vh] relative overflow-hidden">
         <Image

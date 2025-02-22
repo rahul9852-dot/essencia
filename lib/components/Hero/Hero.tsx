@@ -13,7 +13,7 @@ const slideContents: SlideContent[] = [
   {
     title: 'Essancia Fashion Picks',
     subtitle:
-      'Discover our latest summer collection for your perfect seasonal wardrobe.',
+      'Discover our latest summer collection for your perfect seasonal.',
     media: '/videos/summer-fashion.mp4',
     type: 'video',
   },
@@ -119,14 +119,14 @@ const Hero: React.FC = () => {
 
       {/* Content and Navigation */}
       <div className="relative z-10 h-full flex flex-col justify-center px-16 md:px-20">
-        <div className="pt-48 md:pt-48">
+        {/* <div className="pt-48 md:pt-48">
           <h1 className="md:text-8xl text-wrap max-w-2xl text-white font-light mb-8">
             {slideContents[currentSlide].title}
           </h1>
           <p className="text-lg md:text-xl text-white/90 max-w-2xl mb-8">
             {slideContents[currentSlide].subtitle}
           </p>
-        </div>
+        </div> */}
 
         <div className="absolute bottom-32 left-0 right-0 px-4 md:px-20">
           <div className="flex gap-8">

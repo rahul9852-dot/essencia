@@ -7,6 +7,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { IoSearchOutline } from 'react-icons/io5';
 import { IoCloseOutline } from 'react-icons/io5';
+import Loading from '@/lib/components/Loading/Loading';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -33,7 +34,7 @@ const blogPosts: BlogPost[] = [
     category: 'Fashion Trends',
     date: 'March 15, 2024',
     readTime: '5 min read',
-    image: '/images/blog/aboutUs-innerImg2.webp',
+    image: '/images/blog/bannerImage.webp',
     author: {
       name: 'Sarah Johnson',
       avatar: '/images/avatars/sarah.webp',
@@ -47,7 +48,7 @@ const blogPosts: BlogPost[] = [
     category: 'Sustainability',
     date: 'March 12, 2024',
     readTime: '7 min read',
-    image: '/images/blog/sustainable.webp',
+    image: '/images/blog/bannerImage.webp',
     author: {
       name: 'Michael Chen',
       avatar: '/images/avatars/michael.webp',
@@ -61,7 +62,7 @@ const blogPosts: BlogPost[] = [
     category: 'Style Guide',
     date: 'March 10, 2024',
     readTime: '6 min read',
-    image: '/images/blog/winter-fashion.webp',
+    image: '/images/blog/bannerImage.webp',
     author: {
       name: 'Emma Davis',
       avatar: '/images/avatars/emma.webp',
@@ -75,7 +76,7 @@ const blogPosts: BlogPost[] = [
     category: 'Style Guide',
     date: 'March 8, 2024',
     readTime: '4 min read',
-    image: '/images/blog/accessories.webp',
+    image: '/images/blog/bannerImage.webp',
     author: {
       name: 'James Wilson',
       avatar: '/images/avatars/james.webp',
@@ -88,7 +89,7 @@ const blogPosts: BlogPost[] = [
     category: 'Style Guide',
     date: 'March 5, 2024',
     readTime: '8 min read',
-    image: '/images/blog/styling-tips.webp',
+    image: '/images/blog/bannerImage.webp',
     author: {
       name: 'Sarah Johnson',
       avatar: '/images/avatars/sarah.webp',
@@ -112,6 +113,8 @@ const BlogPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const searchRef = useRef<HTMLDivElement>(null);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
 
   // Filter posts based on category and search
   const filteredPosts = blogPosts.filter(post => {
@@ -124,54 +127,67 @@ const BlogPage = () => {
   });
 
   useEffect(() => {
-    // Enhanced header and hero content animations
-    const tl = gsap.timeline();
+    setIsMounted(true);
 
-    tl.from(headerRef.current, {
-      y: -100,
-      opacity: 0,
-      duration: 1.2,
-      ease: 'power3.out',
-    }).from(
-      heroContentRef.current,
-      {
-        y: 30,
-        opacity: 0,
-        duration: 1,
-        ease: 'power3.out',
-      },
-      '-=0.8'
-    );
+    // Initialize animations after mounting
+    const initializeAnimations = () => {
+      const tl = gsap.timeline();
 
-    // Enhanced posts animation
-    const posts = postsRef.current?.children;
-    if (posts) {
-      gsap.from(posts, {
-        y: 60,
+      tl.from(headerRef.current, {
+        y: -100,
         opacity: 0,
-        duration: 0.8,
-        stagger: 0.15,
+        duration: 1.2,
         ease: 'power3.out',
-        scrollTrigger: {
-          trigger: postsRef.current,
-          start: 'top 80%',
-          end: 'bottom 20%',
-          toggleActions: 'play none none reverse',
+      }).from(
+        heroContentRef.current,
+        {
+          y: 30,
+          opacity: 0,
+          duration: 1,
+          ease: 'power3.out',
         },
-      });
-    }
+        '-=0.8'
+      );
 
-    // Add search animation
-    if (searchRef.current) {
-      gsap.from(searchRef.current, {
-        y: 20,
-        opacity: 0,
-        duration: 0.8,
-        ease: 'power3.out',
-        delay: 0.5,
-      });
-    }
+      // Enhanced posts animation
+      const posts = postsRef.current?.children;
+      if (posts) {
+        gsap.from(posts, {
+          y: 60,
+          opacity: 0,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: postsRef.current,
+            start: 'top 80%',
+            end: 'bottom 20%',
+            toggleActions: 'play none none reverse',
+          },
+        });
+      }
+
+      // Add search animation
+      if (searchRef.current) {
+        gsap.from(searchRef.current, {
+          y: 20,
+          opacity: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          delay: 0.5,
+        });
+      }
+
+      setIsLoading(false);
+    };
+
+    // Small delay to ensure smooth transition
+    const timer = setTimeout(initializeAnimations, 100);
+
+    return () => clearTimeout(timer);
   }, []);
+
+  if (!isMounted) return <Loading />;
 
   // Add search handler
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -203,32 +219,33 @@ const BlogPage = () => {
   };
 
   return (
-    <main className="min-h-screen bg-white">
-      {/* Enhanced Hero Section */}
+    <main className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+      {isLoading && <Loading />}
+      {/* Hero Section */}
       <div
         ref={headerRef}
-        className="relative h-[70vh] flex items-center justify-center"
+        className="relative h-[80vh] flex items-center justify-center"
       >
         <Image
           src="/images/blog/bannerImage.webp"
           alt="Blog hero"
           fill
-          className="object-cover"
+          className="object-cover scale-105"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
         <div
           ref={heroContentRef}
           className="relative z-10 text-center text-white px-4 max-w-4xl"
         >
-          <h1 className="text-5xl md:text-7xl font-light mb-6 leading-tight">
+          <h1 className="text-6xl md:text-7xl xl:text-8xl font-light mb-8 leading-tight">
             Essancia Fashion Blog
           </h1>
-          <p className="text-xl md:text-2xl text-white/90 max-w-2xl mx-auto mb-8">
+          <p className="text-xl md:text-2xl text-white/90 max-w-2xl mx-auto mb-12">
             Discover the latest trends, styling tips, and fashion insights
           </p>
 
-          {/* Enhanced Search Bar */}
+          {/* Search Bar */}
           <div ref={searchRef} className="relative max-w-xl mx-auto">
             <div
               className={`relative transition-all duration-300 ${
@@ -242,14 +259,15 @@ const BlogPage = () => {
                 onChange={handleSearch}
                 onFocus={() => setIsSearchFocused(true)}
                 onBlur={() => setIsSearchFocused(false)}
-                className="w-full px-6 py-3 pl-12 rounded-full bg-white/10 
-                  backdrop-blur-sm border border-white/20 text-white 
+                className="w-full px-8 py-4 pl-14 rounded-full bg-white/10 
+                  backdrop-blur-md border border-white/20 text-white text-lg
                   placeholder-white/60 focus:outline-none focus:ring-2 
-                  focus:ring-white/50 transition-all duration-300"
+                  focus:ring-white/50 transition-all duration-300
+                  shadow-[0_0_20px_rgba(255,255,255,0.1)]"
               />
               <IoSearchOutline
-                className="absolute left-4 top-1/2 -translate-y-1/2 
-                text-white/60 text-xl"
+                className="absolute left-5 top-1/2 -translate-y-1/2 
+                text-white/60 text-2xl"
               />
 
               {searchQuery && (
@@ -275,21 +293,21 @@ const BlogPage = () => {
         </div>
       </div>
 
-      {/* Enhanced Categories Section */}
-      <div className="py-16 px-4 max-w-7xl mx-auto">
+      {/* Categories Section */}
+      <div className="py-20 px-4 max-w-7xl mx-auto">
         <div className="flex flex-wrap justify-center gap-4">
           {categories.map(category => (
             <button
               key={category.name}
               onClick={() => setSelectedCategory(category.name)}
-              className={`group relative px-6 py-3 rounded-full transition-all duration-300
+              className={`group relative px-8 py-3 rounded-full transition-all duration-300
                 ${
                   selectedCategory === category.name
-                    ? 'bg-black text-white'
-                    : 'bg-gray-100 text-black hover:bg-gray-200'
+                    ? 'bg-black text-white shadow-xl scale-105'
+                    : 'bg-white text-black hover:bg-gray-50 shadow-md hover:shadow-xl'
                 }`}
             >
-              <span className="relative z-10 flex items-center gap-2">
+              <span className="relative z-10 flex items-center gap-3">
                 {category.name}
                 <span className="text-sm opacity-60">({category.count})</span>
               </span>
@@ -298,15 +316,16 @@ const BlogPage = () => {
         </div>
       </div>
 
-      {/* Enhanced Blog Posts Grid */}
-      <div ref={postsRef} className="py-16 px-4 max-w-7xl mx-auto">
+      {/* Blog Posts Grid */}
+      <div ref={postsRef} className="py-20 px-4 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredPosts.map(post => (
             <Link
               href={`/blog/${post.id}`}
               key={post.id}
-              className="group relative bg-white rounded-xl overflow-hidden
-                hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
+              className="group relative bg-white rounded-2xl overflow-hidden
+                shadow-[0_0_20px_rgba(0,0,0,0.05)] hover:shadow-[0_0_30px_rgba(0,0,0,0.15)] 
+                transition-all duration-500 hover:-translate-y-2"
             >
               <div className="relative aspect-[16/9]">
                 <Image
@@ -321,28 +340,36 @@ const BlogPage = () => {
                   opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 />
                 <span
-                  className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm
-                  px-4 py-1 rounded-full text-sm font-medium"
+                  className="absolute top-4 left-4 bg-white shadow-lg
+                  px-4 py-2 rounded-full text-sm font-medium text-black"
                 >
                   {post.category}
                 </span>
                 <span
                   className="absolute top-4 right-4 bg-black/80 backdrop-blur-sm
-                  px-3 py-1 rounded-full text-xs text-white"
+                  px-4 py-2 rounded-full text-xs text-white shadow-lg"
                 >
                   {post.readTime}
                 </span>
               </div>
 
-              <div className="p-6 space-y-4">
-                <h2 className="text-xl font-semibold group-hover:text-gray-600 transition-colors">
+              <div className="p-8 space-y-4">
+                <h2
+                  className="text-xl font-semibold text-gray-900 group-hover:text-gray-600 
+                  transition-colors line-clamp-2"
+                >
                   {post.title}
                 </h2>
-                <p className="text-gray-600 line-clamp-2">{post.excerpt}</p>
+                <p className="text-gray-600 line-clamp-2 leading-relaxed">
+                  {post.excerpt}
+                </p>
 
-                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                  <div className="flex items-center space-x-3">
-                    <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-white shadow-md">
+                <div className="flex items-center justify-between pt-6 border-t border-gray-100">
+                  <div className="flex items-center space-x-4">
+                    <div
+                      className="relative w-12 h-12 rounded-full overflow-hidden 
+                      border-2 border-white shadow-md"
+                    >
                       <Image
                         src={post.author.avatar}
                         alt={post.author.name}
@@ -351,16 +378,22 @@ const BlogPage = () => {
                       />
                     </div>
                     <div>
-                      <span className="block text-sm font-medium">
+                      <span className="block text-sm font-medium text-gray-900">
                         {post.author.name}
                       </span>
-                      <span className="block text-xs text-gray-500">
+                      <span className="block text-xs text-gray-500 mt-0.5">
                         {post.date}
                       </span>
                     </div>
                   </div>
-                  <span className="text-sm text-black/60 group-hover:text-black transition-colors">
-                    Read More →
+                  <span
+                    className="text-sm font-medium text-gray-600 group-hover:text-black 
+                    transition-colors flex items-center gap-1"
+                  >
+                    Read More
+                    <span className="transform transition-transform group-hover:translate-x-1">
+                      →
+                    </span>
                   </span>
                 </div>
               </div>

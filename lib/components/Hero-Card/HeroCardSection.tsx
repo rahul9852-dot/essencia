@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const HeroCardSection = () => {
   const shinyRef = useRef<HTMLDivElement>(null);
@@ -82,14 +83,16 @@ const HeroCardSection = () => {
               with our expert tips and outfit inspirations tailored for the
               modern globetrotter.
             </p>
-            <button
-              className="inline-flex items-center justify-center px-6 py-3 
+            <Link href="/collections" className="hover:text-gray-800">
+              <button
+                className="inline-flex items-center justify-center px-6 py-3 
                 bg-black text-white rounded-md hover:bg-gray-800 
                 transition-colors duration-300 mt-4 max-w-xs"
-              aria-label="Explore summer collection"
-            >
-              Explore Collection
-            </button>
+                aria-label="Explore summer collection"
+              >
+                Explore Collection
+              </button>
+            </Link>
           </div>
         </div>
       </div>
