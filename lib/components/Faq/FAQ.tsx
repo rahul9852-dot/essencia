@@ -34,7 +34,7 @@ const faqData: FAQItem[] = [
       'We accept all major credit cards (Visa, MasterCard, American Express), PayPal, and Apple Pay. All transactions are secure and encrypted.',
   },
   {
-    question: 'How do I know if an item will fit?',
+    question: 'How do I know if an item  fit?',
     answer:
       "We provide detailed size guides for all our products. You can find the size guide link on each product page. If you're still unsure, our customer service team is happy to help with specific measurements.",
   },
