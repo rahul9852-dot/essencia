@@ -1,14 +1,25 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import CollectionsDropdown from './CollectionsDropdown';
 import PagesDropDown from '../PagesDropDown/PagesDropDown';
 
-const Navbar = () => {
-  const [isCollectionsOpen, setIsCollectionsOpen] = useState(false);
-  const [isPageOpen, setIsPageOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+const Navbar: React.FC = () => {
+  const [isCollectionsOpen, setIsCollectionsOpen] = useState<boolean>(false);
+  const [isPageOpen, setIsPageOpen] = useState<boolean>(false);
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  const collectionsRef = useRef<HTMLDivElement>(null);
+  const pagesRef = useRef<HTMLDivElement>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const pathname = usePathname();
+
+  useEffect(() => {
+    // Close dropdowns when route changes
+    setIsCollectionsOpen(false);
+    setIsPageOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,6 +33,40 @@ const Navbar = () => {
     setIsCollectionsOpen(false);
     setIsPageOpen(false);
     setIsMobileMenuOpen(false);
+  };
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // Don't close if clicking inside a link or button
+      if ((event.target as HTMLElement).closest('a, button')) return;
+
+      if (
+        collectionsRef.current &&
+        !collectionsRef.current.contains(event.target as Node)
+      ) {
+        setIsCollectionsOpen(false);
+      }
+      if (
+        pagesRef.current &&
+        !pagesRef.current.contains(event.target as Node)
+      ) {
+        setIsPageOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const toggleCollections = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsCollectionsOpen(!isCollectionsOpen);
+    setIsPageOpen(false);
+  };
+
+  const togglePages = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsPageOpen(!isPageOpen);
+    setIsCollectionsOpen(false);
   };
 
   return (
@@ -46,10 +91,10 @@ const Navbar = () => {
             <Link href="/" className="hover:text-gray-800">
               Home
             </Link>
-            <div className="relative">
+            <div ref={collectionsRef} className="relative">
               <button
                 className="flex items-center hover:text-gray-800"
-                onClick={() => setIsCollectionsOpen(!isCollectionsOpen)}
+                onClick={toggleCollections}
               >
                 Collections
                 <svg
@@ -67,10 +112,10 @@ const Navbar = () => {
                 </svg>
               </button>
             </div>
-            <div className="relative">
+            <div ref={pagesRef} className="relative">
               <button
                 className="flex items-center hover:text-gray-800"
-                onClick={() => setIsPageOpen(!isPageOpen)}
+                onClick={togglePages}
               >
                 Pages
                 <svg
@@ -219,8 +264,8 @@ const Navbar = () => {
           </div>
         )}
       </nav>
-      <CollectionsDropdown isOpen={isCollectionsOpen} />
-      <PagesDropDown isOpen={isPageOpen} />
+      {isCollectionsOpen && <CollectionsDropdown isOpen={isCollectionsOpen} />}
+      {isPageOpen && <PagesDropDown isOpen={isPageOpen} />}
     </div>
   );
 };
