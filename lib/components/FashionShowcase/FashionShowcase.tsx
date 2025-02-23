@@ -158,9 +158,9 @@ const FashionShowcase = () => {
   return (
     <section ref={sectionRef} className="relative h-screen">
       <div className="sticky top-0 h-screen overflow-hidden">
-        <div className="grid grid-cols-2 h-full">
+        <div className="grid md:grid-cols-2 grid-cols-1 h-full">
           {/* Left: Static Image */}
-          <div className="relative h-full bg-[#F5F5F5]">
+          <div className="relative h-[50vh] md:h-full bg-[#F5F5F5]">
             <Image
               src="/images/e2.webp"
               alt="Fashion model"
@@ -169,18 +169,23 @@ const FashionShowcase = () => {
               priority
             />
             <div className="absolute inset-0 bg-black/10" />
-            <div className="absolute bottom-10 left-10 text-white">
-              <h2 className="text-5xl font-light mb-4">New Collection</h2>
-              <p className="text-lg opacity-90">
+            <div className="absolute bottom-6 md:bottom-10 left-4 md:left-10 text-white">
+              <h2 className="text-3xl md:text-5xl font-light mb-2 md:mb-4">
+                New Collection
+              </h2>
+              <p className="text-base md:text-lg opacity-90">
                 Discover our latest fashion arrivals
               </p>
             </div>
           </div>
 
           {/* Right: Scrolling Cards */}
-          <div className="relative h-full bg-[#F5F5F5] overflow-hidden">
-            <div ref={containerRef} className="absolute inset-x-0 px-16 pt-16">
-              <div className="grid grid-cols-2 gap-8">
+          <div className="relative h-[50vh] md:h-full bg-[#F5F5F5] overflow-hidden">
+            <div
+              ref={containerRef}
+              className="absolute inset-x-0 px-4 md:px-16 pt-8 md:pt-16"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-8">
                 {products.map(card => (
                   <div
                     key={card.id}
@@ -193,9 +198,9 @@ const FashionShowcase = () => {
                         {card.discount}
                       </span>
                     )}
-                    <div className="aspect-[3/4] relative overflow-hidden rounded-lg mb-4 bg-[#F5F5F5]">
+                    <div className="aspect-[3/4] relative overflow-hidden rounded-lg mb-2 md:mb-4 bg-[#F5F5F5] touch-manipulation">
                       <div
-                        className={`w-full h-full transform transition-all duration-500 ${
+                        className={`w-full h-full transform transition-all duration-300 ${
                           isHovered === card.id ? 'scale-105' : 'scale-100'
                         }`}
                       >
