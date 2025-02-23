@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 
@@ -91,10 +91,22 @@ const CategoryShowcase = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<Map<string, HTMLDivElement[]>>(new Map());
   const animationRef = useRef<gsap.Context | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useLayoutEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
     animationRef.current = gsap.context(() => {}, containerRef);
-    return () => animationRef.current?.revert();
+
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+      animationRef.current?.revert();
+    };
   }, []);
 
   const handleCategoryHover = (categoryId: string) => {
@@ -260,6 +272,12 @@ const CategoryShowcase = () => {
     }
   };
 
+  const handleCategoryClick = (categoryId: string) => {
+    if (isMobile) {
+      setActiveCategory(activeCategory === categoryId ? null : categoryId);
+    }
+  };
+
   return (
     <div
       id="category-showcase"
@@ -275,63 +293,95 @@ const CategoryShowcase = () => {
         />
         <div className="overlay absolute inset-0 bg-gradient-to-br from-[#0F172A]/95 to-[#1E293B]/95 transition-all duration-700" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/50" />
-        <div className="absolute inset-0 bg-[#000]/20 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-[#292221]/20 backdrop-blur-[2px]" />
       </div>
 
-      {/* Enhanced Category Titles */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen gap-16 px-4">
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen gap-4 md:gap-16 px-4">
         {categories.map(category => (
-          <h2
-            key={category.id}
-            id={`category-${category.id}`}
-            className="text-6xl font-light cursor-pointer transform-gpu
-              transition-all duration-200 ease-out
-              text-white/80 hover:text-white select-none
-              relative group"
-            onMouseEnter={() => handleCategoryHover(category.id)}
-            onMouseLeave={() => handleCategoryExit(category.id)}
-          >
-            <span className="relative inline-block">
-              {category.title}
-              <span
-                className="absolute left-0 right-0 bottom-0 h-[1px] 
-                bg-gradient-to-r from-transparent via-white/50 to-transparent 
-                transform scale-x-0 group-hover:scale-x-100 
-                transition-transform duration-300 ease-out"
-              />
-            </span>
-          </h2>
+          <div key={category.id} className="w-full md:w-auto">
+            <h2
+              id={`category-${category.id}`}
+              className={`text-3xl md:text-6xl font-light cursor-pointer transform-gpu
+                transition-all duration-300 ease-out select-none relative group
+                ${isMobile ? 'flex items-center justify-between border-b border-white/20 pb-4' : ''}
+                ${activeCategory === category.id ? 'text-white' : 'text-white/60'}
+                ${!isMobile ? 'hover:text-orange-400' : ''}`}
+              onClick={() => handleCategoryClick(category.id)}
+              onMouseEnter={() => !isMobile && handleCategoryHover(category.id)}
+              onMouseLeave={() => !isMobile && handleCategoryExit(category.id)}
+            >
+              <span className="relative inline-block">
+                {category.title}
+                {!isMobile && (
+                  <span
+                    className="absolute left-0 right-0 bottom-0 h-[1px] 
+                    bg-gradient-to-r from-transparent via-white/50 to-transparent 
+                    transform scale-x-0 group-hover:scale-x-100 
+                    transition-transform duration-300 ease-out"
+                  />
+                )}
+              </span>
+              {isMobile && (
+                <span
+                  className={`transform transition-transform duration-300 text-2xl
+                    ${activeCategory === category.id ? 'rotate-180' : ''}`}
+                >
+                  ↓
+                </span>
+              )}
+            </h2>
+
+            {/* Mobile Image Grid */}
+            {isMobile && activeCategory === category.id && (
+              <div className="grid grid-cols-2 gap-4 mt-4 pb-8">
+                {category.images.map((image, index) => (
+                  <div
+                    key={index}
+                    className="relative aspect-[3/4] rounded-lg overflow-hidden"
+                  >
+                    <img
+                      src={image.src}
+                      alt={`${category.title} ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         ))}
       </div>
 
-      {/* Enhanced category images */}
-      {categories.map(category => (
-        <div key={category.id}>
-          {category.images.map((image, imageIndex) => (
-            <div
-              key={`${category.id}-${imageIndex}`}
-              ref={el => {
-                if (el) {
-                  const images = imagesRef.current.get(category.id) || [];
-                  images[imageIndex] = el;
-                  imagesRef.current.set(category.id, images);
-                }
-              }}
-              className="absolute w-[400px] h-[600px] rounded-2xl overflow-hidden opacity-0 shadow-2xl transform-gpu cursor-pointer"
-              style={image.position as pos}
-            >
-              <div className="w-full h-full transform-gpu">
-                <img
-                  src={image.src}
-                  alt={`${category.title} ${imageIndex + 1}`}
-                  className="w-full h-full object-cover scale-105"
-                />
-                <div className="image-overlay absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+      {/* Desktop category images */}
+      {!isMobile &&
+        categories.map(category => (
+          <div key={category.id}>
+            {category.images.map((image, imageIndex) => (
+              <div
+                key={`${category.id}-${imageIndex}`}
+                ref={el => {
+                  if (el) {
+                    const images = imagesRef.current.get(category.id) || [];
+                    images[imageIndex] = el;
+                    imagesRef.current.set(category.id, images);
+                  }
+                }}
+                className="absolute w-[400px] h-[600px] rounded-2xl overflow-hidden opacity-0 shadow-2xl transform-gpu cursor-pointer"
+                style={image.position as pos}
+              >
+                <div className="w-full h-full transform-gpu">
+                  <img
+                    src={image.src}
+                    alt={`${category.title} ${imageIndex + 1}`}
+                    className="w-full h-full object-cover scale-105"
+                  />
+                  <div className="image-overlay absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      ))}
+            ))}
+          </div>
+        ))}
     </div>
   );
 };

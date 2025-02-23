@@ -158,9 +158,9 @@ const ParallaxSection: React.FC<ParallaxSectionProps> = ({
 
         <div
           ref={cardsContainerRef}
-          className="w-full md:w-1/2 h-[70vh] md:h-screen overflow-hidden"
+          className="w-full md:w-1/2 h-[70vh] md:h-auto overflow-hidden"
         >
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4 md:p-6">
             {cards.map(card => (
               <div
                 key={card.id}
@@ -183,11 +183,11 @@ const ParallaxSection: React.FC<ParallaxSectionProps> = ({
                     </span>
                   )}
                 </div>
-                <div className="mt-2">
-                  <h3 className="text-sm font-medium text-white/90 truncate">
+                <div className="mt-3 mb-4">
+                  <h3 className="text-sm md:text-base font-medium text-white/90 truncate">
                     {card.title}
                   </h3>
-                  <p className="text-sm font-semibold text-white/80">
+                  <p className="text-sm md:text-base font-semibold text-white/80">
                     ${card.price.toFixed(2)}
                   </p>
                 </div>
