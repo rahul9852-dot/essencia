@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect, useState, useRef } from 'react';
 import ProgressBar from '../ProgressBar/ProgressBar';
 
@@ -30,7 +31,7 @@ const Hero: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [progress, setProgress] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const progressInterval = useRef<NodeJS.Timeout>();
+  const progressInterval = useRef<NodeJS.Timeout>(0);
   const startTimeRef = useRef<number>(Date.now());
 
   const updateProgress = (duration: number) => {

@@ -3,7 +3,11 @@ import React from 'react';
 import HomeScreen from './home/page';
 
 function Home() {
-  return <HomeScreen />;
+  return (
+    <div className="w-full min-h-screen overflow-x-hidden">
+      <HomeScreen />
+    </div>
+  );
 }
 
 export default Home;
