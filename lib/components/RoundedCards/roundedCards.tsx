@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import Image from 'next/image'; // Using Next.js Image for better performance
+import { useRouter } from 'next/navigation';
 
 type Image = {
   src: string;
@@ -21,21 +22,23 @@ interface RoundedCardsProps {
 gsap.registerPlugin(ScrollTrigger);
 
 const RoundedCards: React.FC<RoundedCardsProps> = ({ categories }) => {
+  const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
-  // Scroll event handler
+  // Handle responsive state
   useEffect(() => {
-    const handleScroll = (): void => {
-      setIsScrolled(window.scrollY > 0);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
     };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Animation setup
   useEffect(() => {
     const container = containerRef.current;
     const sections = sectionRefs.current.filter((ref): ref is HTMLElement =>
@@ -44,131 +47,96 @@ const RoundedCards: React.FC<RoundedCardsProps> = ({ categories }) => {
 
     if (!container || sections.length === 0) return;
 
-    // Smooth horizontal scroll with improved settings
-    const horizontalScroll = gsap.to(sections, {
-      xPercent: -100 * (sections.length - 1),
-      ease: 'none',
-      scrollTrigger: {
-        trigger: container,
-        start: 'top top',
-        end: `+=${sections.length * 100}%`,
-        pin: true,
-        anticipatePin: 1, // Prevents jerk when pinning
-        scrub: 1.5, // Increased for smoother scrolling
-        snap: {
-          snapTo: 1 / (sections.length - 1),
-          duration: { min: 0.3, max: 0.6 }, // Dynamic duration based on scroll speed
-          ease: 'power2.inOut',
-          inertia: true, // Adds momentum-based snapping
-        },
-        invalidateOnRefresh: true, // Recalculates on resize
-      },
-    });
-
-    // Section animations with improved timing
-    const cleanupFns = sections.map(section => {
-      const card = section.querySelector('.card-wrapper');
-      const title = section.querySelector('.card-title');
-
-      if (!card || !title) return () => {};
-
-      gsap.set(title, {
-        y: 100,
-        opacity: 0,
+    const ctx = gsap.context(() => {
+      gsap.set(sections, {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
       });
 
-      const titleTrigger = ScrollTrigger.create({
-        trigger: section,
-        containerAnimation: horizontalScroll,
-        start: 'left center',
-        end: 'right center',
-        toggleActions: 'play reverse play reverse', // Smoother reversing
-        onEnter: () => {
-          gsap.to(title, {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            ease: 'power3.out',
-            overwrite: 'auto', // Prevents animation conflicts
-          });
-        },
-        onLeave: () => {
-          gsap.to(title, {
-            y: 100,
-            opacity: 0,
-            duration: 0.5,
-            ease: 'power2.in',
-            overwrite: 'auto',
-          });
-        },
-        onEnterBack: () => {
-          gsap.to(title, {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            ease: 'power3.out',
-            overwrite: 'auto',
-          });
-        },
-        onLeaveBack: () => {
-          gsap.to(title, {
-            y: 100,
-            opacity: 0,
-            duration: 0.5,
-            ease: 'power2.in',
-            overwrite: 'auto',
-          });
+      const timeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: container,
+          pin: true,
+          scrub: isMobile ? 0.8 : 1.2,
+          start: 'top top',
+          end: `+=${sections.length * 100}%`,
+          onUpdate: self => {
+            const newIndex = Math.round(self.progress * (sections.length - 1));
+            setActiveIndex(newIndex);
+          },
         },
       });
 
-      // Smoother hover animations
-      const handleMouseEnter = () => {
-        gsap.to(card, {
-          scale: 1.02,
-          duration: 0.5,
-          ease: 'power2.out',
-          overwrite: 'auto',
-        });
-        gsap.to(title, {
-          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(8px)',
-          duration: 0.4,
-          ease: 'power2.out',
-        });
-      };
+      sections.forEach((section, i) => {
+        const card = section.querySelector('.card-wrapper');
+        const content = section.querySelector('.content-wrapper');
+        const image = section.querySelector('.image-wrapper');
+        const title = section.querySelector('.title-line');
+        const description = section.querySelector('.description');
 
-      const handleMouseLeave = () => {
-        gsap.to(card, {
-          scale: 1,
-          duration: 0.5,
-          ease: 'power2.inOut',
-          overwrite: 'auto',
-        });
-        gsap.to(title, {
-          backgroundColor: 'rgba(255, 255, 255, 0.06)',
-          backdropFilter: 'blur(8px)',
-          duration: 0.4,
-          ease: 'power2.inOut',
-        });
-      };
+        if (i === 0) {
+          gsap.set(section, { opacity: 1, scale: 1 });
+        } else {
+          gsap.set(section, { opacity: 0, scale: 0.8 });
+        }
 
-      section.addEventListener('mouseenter', handleMouseEnter);
-      section.addEventListener('mouseleave', handleMouseLeave);
+        // Exit animation
+        timeline.to(
+          sections[i - 1],
+          {
+            opacity: 0,
+            scale: 0.8,
+            duration: 1,
+            ease: 'power2.inOut',
+          },
+          i
+        );
 
-      return () => {
-        titleTrigger.kill();
-        section.removeEventListener('mouseenter', handleMouseEnter);
-        section.removeEventListener('mouseleave', handleMouseLeave);
-      };
+        // Enter animation
+        timeline.fromTo(
+          section,
+          { opacity: 0, scale: 0.8 },
+          { opacity: 1, scale: 1, duration: 1, ease: 'power2.inOut' },
+          i
+        );
+
+        if (card && content && image && title && description) {
+          // Card animation
+          timeline.fromTo(
+            card,
+            { y: 100, rotation: isMobile ? -3 : -5 },
+            { y: 0, rotation: 0, duration: 1 },
+            i
+          );
+
+          // Content animation
+          timeline.fromTo(
+            [title, description],
+            { opacity: 0, x: isMobile ? -20 : -30 },
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.6,
+              stagger: 0.1,
+              ease: 'power2.out',
+            },
+            i + 0.3
+          );
+
+          // Image animation
+          timeline.fromTo(
+            image,
+            { scale: 1.2, filter: 'brightness(0.5)' },
+            { scale: 1, filter: 'brightness(1)', duration: 1.5 },
+            i
+          );
+        }
+      });
     });
 
-    // Cleanup
-    return () => {
-      horizontalScroll.kill();
-      ScrollTrigger.getAll().forEach(t => t.kill());
-      cleanupFns.forEach(fn => fn());
-    };
-  }, []);
+    return () => ctx.revert();
+  }, [categories.length, isMobile]);
 
   const handleSkip = (): void => {
     const categoryShowcase = document.querySelector('#category-showcase');
@@ -182,30 +150,153 @@ const RoundedCards: React.FC<RoundedCardsProps> = ({ categories }) => {
     }
   };
 
+  const handleExploreClick = (category: Category) => {
+    router.push(
+      `/collections/${category.title.toLowerCase().replace(/\s+/g, '-')}`
+    );
+  };
+
   return (
     <div
       ref={containerRef}
-      className="h-screen overflow-hidden bg-black relative will-change-transform"
+      className="h-screen overflow-hidden bg-gradient-to-br from-white via-gray-50 to-gray-100 relative"
     >
+      {/* Progress indicator */}
+      <div className="fixed top-1/2 right-4 md:right-8 transform -translate-y-1/2 z-50">
+        <div className="flex flex-col gap-2 md:gap-3">
+          {categories.map((_, i) => (
+            <div
+              key={i}
+              className={`w-1 rounded-full transition-all duration-300 
+                ${
+                  i === activeIndex
+                    ? 'h-8 md:h-12 bg-black'
+                    : 'h-3 md:h-4 bg-black/30'
+                }`}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div className="relative h-full">
+        {categories.map((category, index) => (
+          <section
+            key={category.id}
+            ref={el => {
+              sectionRefs.current[index] = el;
+            }}
+            className="absolute inset-0 w-full h-full flex items-center justify-center px-4 md:px-0"
+          >
+            {/* Background Image with updated overlay */}
+            <div className="absolute inset-0 image-wrapper">
+              <Image
+                src={category.images[0].src}
+                alt=""
+                fill
+                className="object-cover opacity-60 transition-transform duration-1000"
+                priority={index === 0}
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-white/80 to-transparent" />
+            </div>
+
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-20">
+              {/* Text Content */}
+              <div className="text-black space-y-4 md:space-y-6 w-full md:w-[400px] text-center md:text-left">
+                <h2 className="title-line text-4xl md:text-6xl font-light leading-tight">
+                  {category.title}
+                </h2>
+                <div className="h-0.5 w-16 md:w-24 bg-black/30 mx-auto md:mx-0" />
+                <p className="description text-gray-600 text-base md:text-lg max-w-md mx-auto md:mx-0">
+                  Discover our latest collection of{' '}
+                  {category.title.toLowerCase()}, featuring unique designs and
+                  premium quality.
+                </p>
+                <button
+                  ref={buttonRef}
+                  onClick={() => handleExploreClick(category)}
+                  className="relative mt-4 md:mt-8 px-6 md:px-8 py-2.5 md:py-3 
+                    rounded-full transition-all duration-300 group
+                    text-sm md:text-base overflow-hidden"
+                >
+                  {/* Updated glassmorphism background */}
+                  <div
+                    className="absolute inset-0 bg-black/5 backdrop-blur-md 
+                    rounded-full border border-black/10 transition-all duration-300
+                    group-hover:bg-black/10"
+                  />
+
+                  {/* Button content */}
+                  <span
+                    className="relative z-10 flex items-center gap-2 text-gray-800
+                    group-hover:text-black transition-colors duration-300"
+                  >
+                    Explore Collection
+                    <svg
+                      className="w-4 h-4 transition-transform duration-300
+                        group-hover:translate-x-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+
+              {/* Card with updated styling */}
+              <div className="card-wrapper perspective-1000">
+                <div
+                  className="relative w-[280px] h-[350px] md:w-[400px] md:h-[500px] 
+                  rounded-xl md:rounded-2xl overflow-hidden 
+                  shadow-[0_8px_32px_rgba(0,0,0,0.1)] 
+                  transform-gpu hover:scale-[1.02] transition-all duration-500 group
+                  bg-white/80 backdrop-blur-sm"
+                >
+                  <Image
+                    src={category.images[0].src}
+                    alt={category.title}
+                    fill
+                    className="object-cover transition-all duration-700 
+                      group-hover:scale-110 group-hover:rotate-1"
+                    priority={index === 0}
+                  />
+                  <div
+                    className="absolute inset-0 bg-gradient-to-t 
+                    from-white/60 via-transparent to-white/20
+                    group-hover:opacity-80 transition-opacity duration-500"
+                  />
+                </div>
+              </div>
+            </div>
+          </section>
+        ))}
+      </div>
+
+      {/* Updated Skip button */}
       <button
         onClick={handleSkip}
         className={`
-          fixed bottom-8 right-8 z-50 
-          px-6 py-3 rounded-full flex items-center gap-2
-          transition-all duration-300
-          text-white/50 hover:text-white
-          ${isScrolled ? 'bg-white/10' : 'bg-white/20'} 
-          backdrop-blur-sm hover:bg-white/30
+          fixed bottom-4 md:bottom-8 right-4 md:right-8 z-50 
+          px-4 md:px-6 py-2 md:py-3 rounded-full flex items-center gap-2
+          transition-all duration-300 text-sm md:text-base
+          text-gray-600 hover:text-gray-900
+          ${activeIndex > 0 ? 'bg-black/5' : 'bg-black/10'} 
+          backdrop-blur-sm hover:bg-black/15
         `}
         aria-label="Skip to next section"
       >
-        <span>Skip</span>
+        <span className="hidden md:inline">Skip</span>
         <svg
-          className="w-5 h-5 animate-bounce"
+          className="w-4 h-4 md:w-5 md:h-5 animate-bounce"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
-          aria-hidden="true"
         >
           <path
             strokeLinecap="round"
@@ -215,55 +306,6 @@ const RoundedCards: React.FC<RoundedCardsProps> = ({ categories }) => {
           />
         </svg>
       </button>
-
-      <div className="flex h-full">
-        {categories.map((category, index) => (
-          <section
-            key={category.id}
-            ref={el => {
-              sectionRefs.current[index] = el;
-            }}
-            className="w-screen h-full flex-shrink-0 relative flex items-center justify-center will-change-transform"
-          >
-            <div className="absolute inset-0">
-              <Image
-                src={category.images[0].src}
-                alt=""
-                fill
-                className="object-cover opacity-40"
-                priority={index === 0}
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-10" />
-            </div>
-
-            <div className="card-wrapper relative z-10 w-[500px] h-[500px]">
-              <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl">
-                <Image
-                  src={category.images[0].src}
-                  alt={category.title}
-                  fill
-                  className="object-cover"
-                  priority={index === 0}
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60" />
-
-                <div
-                  className="card-title absolute bottom-0 left-0 right-0 p-8 transition-all duration-500 bg-white/10 backdrop-blur-sm"
-                  style={{
-                    willChange: 'transform, opacity',
-                    transform: 'translateY(100px)',
-                    opacity: 0,
-                  }}
-                >
-                  <h2 className="text-4xl font-bold text-white text-center">
-                    {category.title}
-                  </h2>
-                </div>
-              </div>
-            </div>
-          </section>
-        ))}
-      </div>
     </div>
   );
 };
