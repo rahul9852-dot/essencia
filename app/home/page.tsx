@@ -21,23 +21,27 @@ import FashionShowcase from '@/lib/components/FashionShowcase/FashionShowcase';
 //https://colorhunt.co/palette/fff2d7ffe0b5f8c794d8ae7e
 const HomeScreen = () => {
   return (
-    <main className="relative">
-      <Hero />
-      <SubHero />
-      <HeroCardSection />
-      <MarQuee />
-      <RoundedCards categories={categories} />
-      <CategoryShowcase />
-      <WinterFashionSection />
-      <SportswearSection />
-      <SummerCollection />
-      <WinterCollection />
-      <SpringCollections />
-      <ProductDetails />
-      <FitnessFashion />
-      <FashionShowcase />
-      <DesignerSection />
-      <Stores />
+    <main className="w-full">
+      <div className="w-full">
+        <Hero />
+        <div className="max-w-[1400px] mx-auto">
+          <SubHero />
+          <HeroCardSection />
+          <MarQuee />
+          <RoundedCards categories={categories} />
+          <CategoryShowcase />
+          <WinterFashionSection />
+          <SportswearSection />
+          <SummerCollection />
+          <WinterCollection />
+          <SpringCollections />
+          <ProductDetails />
+          <FitnessFashion />
+          <FashionShowcase />
+          <DesignerSection />
+          <Stores />
+        </div>
+      </div>
     </main>
   );
 };
