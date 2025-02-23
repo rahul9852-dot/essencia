@@ -1,5 +1,9 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
+import gsap from 'gsap';
+
 const categories = [
   {
     title: 'About Us',
@@ -22,41 +26,98 @@ const categories = [
     link: '/shipping-policy',
   },
 ];
-const PagesDropDown = ({ isOpen }: { isOpen: boolean }) => {
+
+interface Props {
+  isOpen: boolean;
+}
+
+const PagesDropDown: React.FC<Props> = ({ isOpen }) => {
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!dropdownRef.current || !contentRef.current) return;
+
+    const dropdown = dropdownRef.current;
+    const content = contentRef.current;
+    const ctx = gsap.context(() => {
+      if (isOpen) {
+        gsap.set(dropdown, {
+          display: 'block',
+          opacity: 0,
+          y: -20,
+        });
+
+        gsap.to(dropdown, {
+          opacity: 1,
+          y: 0,
+          duration: 0.4,
+          ease: 'power2.out',
+        });
+
+        gsap.fromTo(
+          content.children,
+          {
+            opacity: 0,
+            y: 20,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.4,
+            stagger: 0.05,
+            ease: 'power2.out',
+            delay: 0.1,
+          }
+        );
+      } else {
+        const tl = gsap.timeline();
+
+        tl.to(content.children, {
+          opacity: 0,
+          y: -10,
+          duration: 0.2,
+          stagger: 0.02,
+          ease: 'power2.in',
+        }).to(
+          dropdown,
+          {
+            opacity: 0,
+            y: -20,
+            duration: 0.3,
+            ease: 'power2.in',
+          },
+          '-=0.1'
+        );
+      }
+    });
+
+    return () => ctx.revert(); // Cleanup animations
+  }, [isOpen]);
+
   return (
     <div
-      className={`
-        absolute top-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2
-        max-w-[1400px] w-[calc(100%-2rem)] bg-white rounded-3xl z-50
-        transition-all duration-500 ease-in-out overflow-hidden shadow-lg
-        ${isOpen ? 'w-[300px] max-h-[264px] opacity-100' : 'max-h-0 opacity-0'}
-      `}
+      ref={dropdownRef}
+      className="absolute top-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2 
+        w-[200px] bg-white rounded-xl z-50 shadow-[0_4px_30px_rgba(0,0,0,0.1)]
+        backdrop-blur-sm"
+      style={{ display: 'none' }}
     >
-      <div className="w-[300px] py-12 px-8">
-        <div className="flex flex-col items-center justify-center gap-4">
-          {categories.map((category, index) => (
-            <div
-              key={index}
-              className="transition-all duration-500 ease-out"
-              style={{
-                transform: `translateY(${isOpen ? '0' : '-10px'})`,
-                opacity: isOpen ? 1 : 0,
-                transitionDelay: `${index * 50}ms`,
-              }}
-            >
-              <ul className="space-y-3">
-                <Link
-                  href={category.link}
-                  className="text-gray-600 hover:text-[#2D2422] transition-colors text-sm text-center"
-                >
-                  {category.title}
-                </Link>
-              </ul>
-            </div>
-          ))}
-        </div>
+      <div ref={contentRef} className="py-4">
+        {categories.map((category, index) => (
+          <Link
+            key={index}
+            href={category.link}
+            className="block px-4 py-2 text-gray-600 hover:text-[#2D2422] hover:bg-gray-50
+              transition-colors"
+            onClick={e => e.stopPropagation()}
+          >
+            {category.title}
+          </Link>
+        ))}
       </div>
     </div>
   );
 };
+
 export default PagesDropDown;
