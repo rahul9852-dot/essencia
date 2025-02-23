@@ -111,7 +111,6 @@ const SummerCollection = () => {
         pin: true,
         anticipatePin: 1,
         onComplete: () => {
-          // Signal completion to parent
           ScrollTrigger.refresh();
         },
       },

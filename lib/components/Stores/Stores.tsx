@@ -39,9 +39,9 @@ const Stores = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <div className="relative flex w-full min-h-screen bg-[#1C1C1C]">
+    <div className="relative flex flex-col md:flex-row w-full min-h-screen bg-[#1C1C1C]">
       {/* Left Image Section with Image Transitions */}
-      <div className="w-1/2 relative overflow-hidden">
+      <div className="w-full md:w-1/2 h-[50vh] md:h-screen relative overflow-hidden">
         {LOCATIONS.map(location => (
           <Image
             key={location.id}
@@ -58,9 +58,9 @@ const Stores = () => {
       </div>
 
       {/* Right Content Section */}
-      <div className="w-1/2 flex flex-col justify-center px-20">
-        <div className="max-w-xl">
-          <h2 className="text-white text-7xl font-light leading-tight mb-16">
+      <div className="w-full md:w-1/2 flex flex-col justify-center px-6 md:px-20 py-12 md:py-0">
+        <div className="max-w-xl mx-auto md:mx-0">
+          <h2 className="text-white text-4xl md:text-7xl font-light leading-tight mb-8 md:mb-16">
             Best Location
             <br />
             Your Brands
@@ -81,12 +81,12 @@ const Stores = () => {
                   setHoveredIndex(null);
                 }}
               >
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-3 md:gap-6 touch-manipulation">
                   {/* Location Name with Hover Effect */}
                   <div className="flex-1">
-                    <div className="flex items-center gap-4 group-hover:gap-6 transition-all duration-500">
+                    <div className="flex items-center gap-2 md:gap-4 group-hover:gap-4 md:group-hover:gap-6 transition-all duration-500">
                       <span
-                        className={`text-2xl font-light tracking-wide
+                        className={`text-xl md:text-2xl font-light tracking-wide
                         ${
                           hoveredIndex === location.id
                             ? 'text-[#CD7F32]'
@@ -101,7 +101,7 @@ const Stores = () => {
 
                       {/* Arrow that appears on hover */}
                       <span
-                        className={`transform transition-all duration-500 text-[#CD7F32]
+                        className={`hidden md:inline-block transform transition-all duration-500 text-[#CD7F32]
                         ${hoveredIndex === location.id ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
                       >
                         →
@@ -117,7 +117,7 @@ const Stores = () => {
 
                   {/* Store Count */}
                   <div
-                    className={`text-sm transition-opacity duration-500
+                    className={`text-xs md:text-sm transition-opacity duration-500
                     ${hoveredIndex === location.id ? 'opacity-100' : 'opacity-60'}`}
                   >
                     {location.stores} stores
@@ -128,8 +128,8 @@ const Stores = () => {
           </div>
 
           {/* Additional Info */}
-          <div className="mt-16 text-white/60">
-            <p className="text-sm">
+          <div className="mt-8 md:mt-16 text-white/60">
+            <p className="text-xs md:text-sm max-w-xs md:max-w-none">
               Find our stores in prime locations across major cities. Experience
               luxury shopping at its finest.
             </p>
@@ -138,7 +138,7 @@ const Stores = () => {
       </div>
 
       {/* Background Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b md:bg-gradient-to-r from-black/20 to-transparent pointer-events-none" />
     </div>
   );
 };
