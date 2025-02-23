@@ -24,7 +24,7 @@ const HomeScreen = () => {
     <main className="w-full">
       <div className="w-full">
         <Hero />
-        <div className="max-w-[1400px] mx-auto px-4">
+        <div className="max-w-[1400px] mx-auto">
           <SubHero />
           <HeroCardSection />
           <MarQuee />
