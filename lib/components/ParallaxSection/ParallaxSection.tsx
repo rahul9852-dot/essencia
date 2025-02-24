@@ -40,6 +40,18 @@ const ParallaxSection: React.FC<ParallaxSectionProps> = ({
   const cardsContainerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -54,15 +66,13 @@ const ParallaxSection: React.FC<ParallaxSectionProps> = ({
       scrollTrigger: {
         trigger: section,
         start: 'top top',
-        end: '+=200%',
-        scrub: 1,
+        end: isMobile ? 'bottom bottom' : '+=200%',
+        scrub: true,
         pin: true,
         anticipatePin: 1,
         onUpdate: self => {
-          // Calculate opacity based on scroll progress
           const progress = self.progress;
           if (background) {
-            // Start fading out at 70% of the scroll
             const opacity = progress > 0.7 ? 1 - (progress - 0.7) / 0.3 : 1;
             background.style.opacity = Math.max(
               0,
@@ -73,39 +83,41 @@ const ParallaxSection: React.FC<ParallaxSectionProps> = ({
       },
     });
 
-    // Parallax effect for background with scale
-    tl.fromTo(
-      background,
-      { scale: 1, y: 0 },
-      {
-        scale: 1.1,
-        y: '30%',
-        ease: 'none',
+    if (isMobile) {
+      // Mobile-specific animations
+      tl.fromTo(
+        background,
+        { scale: 1.1, y: 0 },
+        { scale: 1, y: '5%', ease: 'none' }
+      );
+
+      if (textContainer) {
+        tl.fromTo(
+          textContainer,
+          { y: 0, opacity: 1 },
+          { y: -20, opacity: 0.8, ease: 'none' },
+          0
+        );
       }
-    );
 
-    // Parallax effect for cards container
-    if (cardsContainer) {
-      tl.to(
-        cardsContainer,
-        {
-          yPercent: -50,
-          ease: 'none',
-        },
-        0
+      if (cardsContainer) {
+        tl.fromTo(cardsContainer, { y: 0 }, { y: 0, ease: 'none' }, 0);
+      }
+    } else {
+      // Desktop animations
+      tl.fromTo(
+        background,
+        { scale: 1, y: 0 },
+        { scale: 1.1, y: '30%', ease: 'none' }
       );
-    }
 
-    // Text animation
-    if (textContainer) {
-      tl.to(
-        textContainer,
-        {
-          yPercent: -50,
-          ease: 'none',
-        },
-        0
-      );
+      if (cardsContainer) {
+        tl.to(cardsContainer, { yPercent: -50, ease: 'none' }, 0);
+      }
+
+      if (textContainer) {
+        tl.to(textContainer, { yPercent: -50, ease: 'none' }, 0);
+      }
     }
 
     return () => {
@@ -117,7 +129,7 @@ const ParallaxSection: React.FC<ParallaxSectionProps> = ({
   return (
     <section
       ref={sectionRef}
-      className="relative h-[100vh] overflow-hidden"
+      className="relative min-h-screen overflow-hidden bg-gradient-to-b from-transparent to-black/10"
       style={{ backgroundColor }}
     >
       <div
@@ -136,20 +148,20 @@ const ParallaxSection: React.FC<ParallaxSectionProps> = ({
 
       <div
         ref={contentRef}
-        className="relative h-full flex flex-col md:flex-row items-center justify-center px-6 md:px-20"
+        className="relative min-h-screen flex flex-col md:flex-row items-center justify-start md:justify-center px-4 md:px-20 pt-24 md:pt-0 pb-16 md:pb-0 gap-8 md:gap-0"
       >
         <div
           ref={textRef}
-          className="w-full md:w-1/2 text-center md:text-left mb-8 md:mb-0"
+          className="w-full md:w-1/2 text-center md:text-left space-y-4 transition-all duration-300"
         >
           <h2
-            className="text-4xl md:text-7xl font-light mb-4 md:mb-8 leading-tight"
+            className="text-3xl sm:text-5xl md:text-7xl font-light mb-4 md:mb-8 leading-tight"
             style={{ color: textColor }}
           >
             {heading}
           </h2>
           <p
-            className="text-lg md:text-xl opacity-80 max-w-md"
+            className="text-base sm:text-lg md:text-xl opacity-80 max-w-md mx-auto md:mx-0"
             style={{ color: textColor }}
           >
             {subheading}
@@ -158,9 +170,9 @@ const ParallaxSection: React.FC<ParallaxSectionProps> = ({
 
         <div
           ref={cardsContainerRef}
-          className="w-full md:w-1/2 h-[70vh] md:h-auto overflow-hidden"
+          className="w-full md:w-1/2 md:h-screen transition-all duration-300"
         >
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4 md:p-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 p-4 md:p-6 max-w-4xl mx-auto">
             {cards.map(card => (
               <div
                 key={card.id}
@@ -173,8 +185,10 @@ const ParallaxSection: React.FC<ParallaxSectionProps> = ({
                     src={card.image}
                     alt={card.alt}
                     fill
-                    className={`object-cover transition-transform duration-500 ${
-                      hoveredCard === card.id ? 'scale-110' : 'scale-100'
+                    className={`object-cover transition-all duration-500 ${
+                      hoveredCard === card.id
+                        ? 'scale-110 brightness-110'
+                        : 'scale-100'
                     }`}
                   />
                   {card.discount && (
@@ -183,11 +197,11 @@ const ParallaxSection: React.FC<ParallaxSectionProps> = ({
                     </span>
                   )}
                 </div>
-                <div className="mt-3 mb-4">
-                  <h3 className="text-sm md:text-base font-medium text-white/90 truncate">
+                <div className="mt-3 px-1">
+                  <h3 className="text-sm font-medium text-white/90 truncate">
                     {card.title}
                   </h3>
-                  <p className="text-sm md:text-base font-semibold text-white/80">
+                  <p className="text-sm font-semibold text-white/80">
                     ${card.price.toFixed(2)}
                   </p>
                 </div>
