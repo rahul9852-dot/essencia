@@ -78,7 +78,6 @@ const Navbar: React.FC = () => {
         `}
       >
         <div className="flex items-center justify-between h-14 px-4 max-w-[1400px] mx-auto w-full md:flex md:items-center md:justify-between md:h-20">
-          {/* Logo and Brand */}
           <Link
             href="/"
             className="text-lg font-normal hover:text-gray-800 tracking-wide whitespace-nowrap"
