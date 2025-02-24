@@ -69,31 +69,48 @@ const HeroCardSection = () => {
 
         <div className="w-full lg:w-1/2">
           <div className="flex flex-col space-y-6">
-            <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold text-black leading-tight">
-              Jet-setting Fashion for Summer
+            <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold text-black leading-tight text-center lg:text-left">
+              Jet-setting Fashion for Summer.
             </h2>
-            <p className="text-base md:text-lg text-gray-800">
+            <p className="text-base md:text-lg text-gray-800 text-center lg:text-left">
               Discover versatile pieces that effortlessly transition from day
               tours to evening cocktails, ensuring you look and feel your best
               throughout your vacation.
             </p>
-            <p className="text-base md:text-lg text-gray-800">
+            <p className="text-base md:text-lg text-gray-800 text-center lg:text-left">
               Whether you&apos;re exploring exotic destinations or lounging by
               the pool, these travel-ready ensembles will make a statement
               wherever your journey takes you. Elevate your summer getaway style
               with our expert tips and outfit inspirations tailored for the
               modern globetrotter.
             </p>
-            <Link href="/collections" className="hover:text-gray-800">
-              <button
-                className="inline-flex items-center justify-center px-6 py-3 
-                bg-black text-white rounded-md hover:bg-gray-800 
-                transition-colors duration-300 mt-4 max-w-xs"
-                aria-label="Explore summer collection"
-              >
-                Explore Collection
-              </button>
-            </Link>
+            <div className="flex justify-center lg:justify-start">
+              <Link href="/collections" className="hover:text-gray-800">
+                <button
+                  className="inline-flex items-center justify-center px-6 py-3 
+                    bg-black text-white rounded-md hover:bg-gray-800 
+                    transition-colors duration-300 mt-4 group"
+                  aria-label="Explore summer collection"
+                >
+                  <span className="flex items-center gap-2">
+                    Explore Collection
+                    <svg
+                      className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

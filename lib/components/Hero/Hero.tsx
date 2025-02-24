@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState, useRef } from 'react';
 import ProgressBar from '../ProgressBar/ProgressBar';
+import Image from 'next/image';
 
 interface SlideContent {
   title: string;
@@ -23,7 +24,7 @@ const slideContents: SlideContent[] = [
     subtitle: 'Curated essentials to elevate your winter wardrobe beautifully.',
     media: '/images/bannerImage.webp',
     type: 'image',
-    duration: 3000, // 5 seconds for images
+    duration: 3000, // 3 seconds for images
   },
 ];
 
@@ -33,6 +34,8 @@ const Hero: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const progressInterval = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(Date.now());
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const mediaContainerRef = useRef<HTMLDivElement>(null);
 
   const updateProgress = (duration: number): void => {
     startTimeRef.current = Date.now();
@@ -74,6 +77,23 @@ const Hero: React.FC = () => {
     };
   }, [currentSlide]);
 
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (mediaContainerRef.current) {
+        const { width, height } =
+          mediaContainerRef.current.getBoundingClientRect();
+        setDimensions({ width, height });
+      }
+    };
+
+    // Initial update
+    updateDimensions();
+
+    // Update on resize
+    window.addEventListener('resize', updateDimensions);
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, []);
+
   const handleSlideChange = (index: number) => {
     if (progressInterval.current) {
       clearInterval(progressInterval.current);
@@ -84,7 +104,11 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <div className="relative h-screen w-full overflow-hidden">
+    <div
+      ref={mediaContainerRef}
+      className="relative h-screen w-full overflow-hidden bg-black"
+    >
+      {/* Media Slides */}
       {slideContents.map((slide, index) => (
         <div
           key={index}
@@ -93,53 +117,104 @@ const Hero: React.FC = () => {
           }`}
         >
           {slide.type === 'video' ? (
-            <video
-              ref={videoRef}
-              autoPlay
-              muted
-              loop
-              className="absolute inset-0 w-full h-full object-cover"
-              onLoadedMetadata={() => {
-                if (index === currentSlide && videoRef.current) {
-                  updateProgress(videoRef.current.duration * 1000);
-                }
-              }}
-            >
-              <source src={slide.media} type="video/mp4" />
-            </video>
+            <div className="relative w-full h-full">
+              <video
+                ref={videoRef}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className={`
+                  absolute w-full h-full object-cover
+                  ${dimensions.width > dimensions.height ? 'object-contain md:object-cover' : 'object-cover'}
+                `}
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '100vh',
+                }}
+                onLoadedMetadata={() => {
+                  if (index === currentSlide && videoRef.current) {
+                    updateProgress(videoRef.current.duration * 1000);
+                  }
+                }}
+              >
+                <source src={slide.media} type="video/mp4" />
+              </video>
+            </div>
           ) : (
-            <img
-              src={slide.media}
-              alt={slide.title}
-              className="absolute inset-0 w-full h-full object-cover"
-            />
+            <div className="relative w-full h-full">
+              <Image
+                src={slide.media}
+                alt={slide.title}
+                fill
+                priority
+                sizes="100vw"
+                className={`
+                  absolute w-full h-full
+                  ${dimensions.width > dimensions.height ? 'object-contain md:object-cover' : 'object-cover'}
+                `}
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '100vh',
+                }}
+              />
+            </div>
           )}
-          <div className="absolute inset-0 bg-black/30" />
+
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/40" />
         </div>
       ))}
 
       {/* Content and Navigation */}
-      <div className="relative z-10 h-full flex flex-col justify-center px-16 md:px-20">
-        <div className="pt-48 md:pt-48">
-          <h1 className="md:text-8xl text-wrap max-w-2xl text-white font-light mb-8">
-            {slideContents[currentSlide].title}
-          </h1>
-          <p className="text-lg md:text-xl text-white/90 max-w-2xl mb-8">
-            {slideContents[currentSlide].subtitle}
-          </p>
+      <div
+        className="relative z-10 h-full flex flex-col justify-between 
+        px-4 sm:px-8 md:px-16 lg:px-20"
+      >
+        {/* Main Content */}
+        <div className="flex-1 flex items-center">
+          <div
+            className="pt-20 sm:pt-24 md:pt-32 lg:pt-48 
+            w-full max-w-[90%] sm:max-w-[80%] md:max-w-2xl"
+          >
+            <h1
+              className="text-3xl sm:text-4xl md:text-6xl lg:text-8xl 
+              text-white font-light mb-4 sm:mb-6 md:mb-8 
+              leading-tight sm:leading-tight md:leading-tight
+              opacity-0 animate-fadeIn"
+            >
+              {slideContents[currentSlide].title}
+            </h1>
+            <p
+              className="text-base sm:text-lg md:text-xl text-white/90 
+              max-w-xl opacity-0 animate-fadeInDelay"
+            >
+              {slideContents[currentSlide].subtitle}
+            </p>
+          </div>
         </div>
 
-        <div className="absolute bottom-32 left-0 right-0 px-4 md:px-20">
-          <div className="flex gap-8">
+        {/* Navigation */}
+        <div className="pb-8 sm:pb-16 md:pb-24 lg:pb-32 w-full">
+          <div
+            className="flex flex-col sm:flex-row gap-4 sm:gap-8 
+            max-w-4xl mx-auto sm:mx-0"
+          >
             {slideContents.map((slide, index) => (
-              <div key={index} className="flex flex-col gap-4">
+              <div
+                key={index}
+                className="flex flex-col gap-2 sm:gap-4 group cursor-pointer"
+                onClick={() => handleSlideChange(index)}
+              >
                 <h3
-                  className={`text-xl cursor-pointer transition-all duration-300 ${
+                  className={`
+                  text-base sm:text-lg  md:text-xl transition-all duration-300
+                  sm:text-left
+                  ${
                     currentSlide === index
                       ? 'text-white'
-                      : 'text-white/60 hover:text-white'
+                      : 'text-white/60 group-hover:text-white'
                   }`}
-                  onClick={() => handleSlideChange(index)}
                 >
                   {slide.title}
                 </h3>
