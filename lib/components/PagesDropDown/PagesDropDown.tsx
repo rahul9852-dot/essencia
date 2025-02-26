@@ -27,83 +27,77 @@ const categories = [
   },
 ];
 
-interface Props {
-  isOpen: boolean;
-}
-
-const PagesDropDown: React.FC<Props> = ({ isOpen }) => {
+const PagesDropDown: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!dropdownRef.current || !contentRef.current) return;
-
     const dropdown = dropdownRef.current;
     const content = contentRef.current;
-    const ctx = gsap.context(() => {
-      if (isOpen) {
-        gsap.set(dropdown, {
-          display: 'block',
-          opacity: 0,
-          y: -20,
-        });
+    if (!dropdown || !content) return;
 
-        gsap.to(dropdown, {
+    if (isOpen) {
+      gsap.set(dropdown, {
+        height: 'auto',
+        display: 'block',
+      });
+      const height = dropdown.offsetHeight;
+
+      gsap.fromTo(
+        dropdown,
+        {
+          height: 0,
+          opacity: 0,
+        },
+        {
+          height: height,
           opacity: 1,
-          y: 0,
           duration: 0.4,
-          ease: 'power2.out',
-        });
+          ease: 'power3.out',
+        }
+      );
 
-        gsap.fromTo(
-          content.children,
-          {
-            opacity: 0,
-            y: 20,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.4,
-            stagger: 0.05,
-            ease: 'power2.out',
-            delay: 0.1,
-          }
-        );
-      } else {
-        const tl = gsap.timeline();
-
-        tl.to(content.children, {
+      // Animate content from left
+      gsap.fromTo(
+        content,
+        {
+          x: -30,
           opacity: 0,
-          y: -10,
-          duration: 0.2,
-          stagger: 0.02,
-          ease: 'power2.in',
-        }).to(
-          dropdown,
-          {
-            opacity: 0,
-            y: -20,
-            duration: 0.3,
-            ease: 'power2.in',
-          },
-          '-=0.1'
-        );
-      }
-    });
+        },
+        {
+          x: 0,
+          opacity: 1,
+          duration: 0.4,
+          ease: 'power3.out',
+        }
+      );
+    } else {
+      gsap.to(content, {
+        x: -30,
+        opacity: 0,
+        duration: 0.3,
+        ease: 'power3.inOut',
+      });
 
-    return () => ctx.revert(); // Cleanup animations
+      gsap.to(dropdown, {
+        height: 0,
+        opacity: 0,
+        duration: 0.3,
+        ease: 'power3.inOut',
+      });
+    }
   }, [isOpen]);
 
   return (
     <div
       ref={dropdownRef}
-      className="absolute top-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2 
-        w-[200px] bg-white rounded-xl z-50 shadow-[0_4px_30px_rgba(0,0,0,0.1)]
-        backdrop-blur-sm"
-      style={{ display: 'none' }}
+      className="overflow-hidden bg-white"
+      style={{ height: 0 }}
     >
-      <div ref={contentRef} className="py-4">
+      <div
+        ref={contentRef}
+        className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 lg:px-16 py-8"
+      >
         {categories.map((category, index) => (
           <Link
             key={index}

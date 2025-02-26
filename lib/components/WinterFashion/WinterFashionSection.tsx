@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -84,18 +84,23 @@ const ColorDots = ({
   colors: string[];
   showMore?: boolean;
 }) => (
-  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2">
+  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3">
     {colors.slice(0, 3).map((color, index) => (
       <button
         key={index}
-        className="w-6 h-6 rounded-full border-2 border-white hover:scale-110 transition-transform duration-200"
+        className="w-7 h-7 rounded-full border-2 border-white shadow-lg 
+          hover:scale-110 transition-transform duration-200 
+          ring-2 ring-black/10"
         style={{ backgroundColor: color }}
         aria-label={`Select color ${index + 1}`}
       />
     ))}
     {showMore && colors.length > 3 && (
       <button
-        className="w-6 h-6 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white text-xs"
+        className="w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm 
+          flex items-center justify-center text-black text-xs font-medium
+          shadow-lg hover:scale-110 transition-transform duration-200
+          ring-2 ring-black/10"
         aria-label="More colors available"
       >
         +{colors.length - 3}
@@ -108,8 +113,22 @@ const WinterFashionSection = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [isHovered, setIsHovered] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const itemsPerPage = 4;
+  const [isMobile, setIsMobile] = useState(false);
+  const itemsPerPage = isMobile ? 2 : 4;
   const totalPages = Math.ceil(fashionItems.length / itemsPerPage);
+  const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
+  const autoScrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const touchStartXRef = useRef<number>(0);
+
+  // Handle responsive state
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const currentItems = fashionItems.slice(
     currentPage * itemsPerPage,
@@ -128,12 +147,57 @@ const WinterFashionSection = () => {
     setTimeout(() => setIsLoading(false), 300);
   };
 
+  // Auto scroll function
+  const autoScroll = useCallback(() => {
+    if (isMobile && autoScrollEnabled) {
+      autoScrollTimeoutRef.current = setTimeout(() => {
+        setCurrentPage(prev => (prev + 1) % totalPages);
+      }, 3000); // Change slide every 3 seconds
+    }
+  }, [isMobile, autoScrollEnabled, totalPages]);
+
+  // Handle auto scroll
+  useEffect(() => {
+    if (autoScrollTimeoutRef.current) {
+      clearTimeout(autoScrollTimeoutRef.current);
+    }
+    autoScroll();
+    return () => {
+      if (autoScrollTimeoutRef.current) {
+        clearTimeout(autoScrollTimeoutRef.current);
+      }
+    };
+  }, [currentPage, autoScroll]);
+
+  // Handle touch events
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setAutoScrollEnabled(false);
+    touchStartXRef.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    const diffX = touchStartXRef.current - touchEndX;
+
+    if (Math.abs(diffX) > 50) {
+      // Minimum swipe distance
+      if (diffX > 0 && currentPage < totalPages - 1) {
+        handleNext();
+      } else if (diffX < 0 && currentPage > 0) {
+        handlePrevious();
+      }
+    }
+
+    // Resume auto scroll after 5 seconds of no interaction
+    setTimeout(() => setAutoScrollEnabled(true), 5000);
+  };
+
   return (
-    <section className="px-4 py-16 max-w-[1400px] mx-auto">
+    <section className="px-4 sm:px-6 lg:px-8 py-12 sm:py-16 max-w-[1400px] mx-auto">
       {/* Enhanced Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-12 gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 sm:mb-12 gap-4">
         <div>
-          <h2 className="text-4xl sm:text-5xl font-normal mb-2">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal mb-2">
             Essancia Winter Fashion
           </h2>
           <p className="text-sm text-gray-500">
@@ -144,8 +208,9 @@ const WinterFashionSection = () => {
         </div>
         <Link
           href="/collections/winter-fashion"
-          className="group flex items-center space-x-2 px-6 py-2 bg-black text-white rounded-full 
-            hover:bg-gray-900 transition-all duration-300 ease-out"
+          className="group inline-flex items-center space-x-2 px-4 sm:px-6 py-2 
+            bg-red-500 text-white rounded-md hover:bg-gray-900 
+            transition-all duration-300 ease-out text-sm sm:text-base"
         >
           <span>View Collection</span>
           <span className="transform translate-x-0 group-hover:translate-x-1 transition-transform duration-300">
@@ -155,156 +220,283 @@ const WinterFashionSection = () => {
       </div>
 
       <div className="relative">
-        <div className="overflow-visible relative">
-          {/* Enhanced Navigation Buttons */}
-          {currentPage > 0 && (
-            <button
-              onClick={handlePrevious}
-              className="absolute -left-6 top-[35%] -translate-y-1/2 z-10 
-                w-12 h-12 bg-white/80 backdrop-blur rounded-full shadow-lg 
-                flex items-center justify-center
-                hover:bg-white hover:scale-110
-                transition-all duration-300 ease-out"
-              aria-label="Previous items"
-            >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                className="w-6 h-6 text-black"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </button>
-          )}
-
-          {currentPage < totalPages - 1 && (
-            <button
-              onClick={handleNext}
-              className="absolute -right-6 top-[35%] -translate-y-1/2 z-10 
-                w-12 h-12 bg-white/80 backdrop-blur rounded-full shadow-lg 
-                flex items-center justify-center
-                hover:bg-white hover:scale-110
-                transition-all duration-300 ease-out"
-              aria-label="Next items"
-            >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                className="w-6 h-6 text-black"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
-          )}
-
-          {/* Enhanced Product Grid */}
-          <div
-            className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 -mx-16 px-16
-            transition-opacity duration-300 ${isLoading ? 'opacity-50' : 'opacity-100'}`}
-          >
-            {currentItems.map(item => (
-              <div
-                key={item.id}
-                className="relative animate-fadeIn cursor-pointer group"
-                onMouseEnter={() => setIsHovered(item.id)}
-                onMouseLeave={() => setIsHovered(null)}
-              >
-                {item.discount && (
-                  <span
-                    className="absolute top-4 right-4 z-10
-                    bg-red-500 text-white text-sm px-4 py-1 rounded-full
-                    shadow-lg"
-                  >
-                    {item.discount}
-                  </span>
-                )}
-                <div
-                  className="aspect-[3/4] relative overflow-hidden rounded-xl mb-4 
-                  bg-gradient-to-b from-gray-50 to-gray-100 
-                  group-hover:shadow-xl
-                  transition-all duration-500 ease-out"
+        <div
+          className="overflow-hidden relative"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          {/* Navigation Buttons - Hidden on mobile */}
+          {!isMobile && (
+            <>
+              {currentPage > 0 && (
+                <button
+                  onClick={handlePrevious}
+                  className="absolute -left-3 sm:-left-6 top-[35%] -translate-y-1/2 z-10 
+                    w-12 h-12 sm:w-14 sm:h-14 bg-white shadow-lg rounded-full 
+                    flex items-center justify-center
+                    hover:bg-gray-50 hover:scale-110 active:scale-95
+                    transition-all duration-300 ease-out
+                    ring-2 ring-black/5"
+                  aria-label="Previous items"
                 >
-                  <div
-                    className={`w-full h-full transform transition-all duration-700
-                    ${isHovered === item.id ? 'scale-110' : 'scale-100'}`}
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    className="w-6 h-6 sm:w-7 sm:h-7 text-gray-800"
                   >
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                      priority={currentPage === 0 && item.id <= 4}
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2.5}
+                      d="M15 19l-7-7 7-7"
                     />
-                  </div>
+                  </svg>
+                </button>
+              )}
 
-                  {/* Improved Color dots overlay - No blur effect */}
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent
-                    transition-opacity duration-300 ease-out
-                    ${isHovered === item.id ? 'opacity-100' : 'opacity-0'}`}
-                  >
-                    <ColorDots colors={item.colors} showMore={true} />
-                  </div>
-                </div>
-
-                <div
-                  className="space-y-2 transition-transform duration-300 ease-out
-                  group-hover:translate-y-[-4px]"
+              {currentPage < totalPages - 1 && (
+                <button
+                  onClick={handleNext}
+                  className="absolute -right-3 sm:-right-6 top-[35%] -translate-y-1/2 z-10 
+                    w-12 h-12 sm:w-14 sm:h-14 bg-white shadow-lg rounded-full 
+                    flex items-center justify-center
+                    hover:bg-gray-50 hover:scale-110 active:scale-95
+                    transition-all duration-300 ease-out
+                    ring-2 ring-black/5"
+                  aria-label="Next items"
                 >
-                  <h3
-                    className="text-base font-medium transition-colors duration-300 
-                    group-hover:text-gray-600"
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    className="w-6 h-6 sm:w-7 sm:h-7 text-gray-800"
                   >
-                    {item.title}
-                  </h3>
-                  <div className="flex items-center gap-3">
-                    <span className="text-lg font-semibold">
-                      ₹{item.price.toFixed(2)}
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2.5}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </button>
+              )}
+            </>
+          )}
+
+          {/* Conditional rendering based on device */}
+          {isMobile ? (
+            // Mobile Slider Layout
+            <div
+              className="flex flex-nowrap transition-transform duration-300 ease-out"
+              style={{
+                transform: `translateX(-${currentPage * 100}%)`,
+              }}
+            >
+              {fashionItems.map(item => (
+                <div
+                  key={item.id}
+                  className="w-full flex-shrink-0 px-2 animate-fadeIn cursor-pointer group"
+                >
+                  {item.discount && (
+                    <span
+                      className="absolute top-3 right-3 z-10
+                      bg-red-500 text-white text-xs px-3 py-1 rounded-full
+                      shadow-lg"
+                    >
+                      {item.discount}
                     </span>
-                    {item.originalPrice && (
-                      <span className="text-gray-400 line-through text-sm">
-                        ₹{item.originalPrice.toFixed(2)}
+                  )}
+                  <div
+                    className="aspect-[3/4] relative overflow-hidden rounded-xl mb-4 
+                    bg-gradient-to-b from-gray-50 to-gray-100 
+                    group-hover:shadow-xl transition-all duration-500 ease-out"
+                  >
+                    <div
+                      className={`w-full h-full transform transition-all duration-700
+                      ${isHovered === item.id ? 'scale-110' : 'scale-100'}`}
+                    >
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        fill
+                        className="object-cover"
+                        sizes={
+                          isMobile ? '100vw' : '(max-width: 1024px) 50vw, 25vw'
+                        }
+                        priority={currentPage === 0 && item.id <= 4}
+                      />
+                    </div>
+
+                    {/* Color dots overlay */}
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-t 
+                      from-black/40 via-transparent to-transparent
+                      transition-opacity duration-300 ease-out
+                      ${isHovered === item.id ? 'opacity-100' : 'opacity-0'}`}
+                    >
+                      <ColorDots colors={item.colors} showMore={true} />
+                    </div>
+                  </div>
+
+                  {/* Centered title and price for mobile */}
+                  <div
+                    className="space-y-2 transition-transform duration-300 ease-out
+                    group-hover:translate-y-[-4px] text-center sm:text-left"
+                  >
+                    <h3
+                      className="text-base sm:text-lg font-medium transition-colors 
+                      duration-300 group-hover:text-gray-600"
+                    >
+                      {item.title}
+                    </h3>
+                    <div className="flex items-center gap-3 justify-center sm:justify-start">
+                      <span className="text-lg font-semibold">
+                        ₹{item.price.toFixed(2)}
                       </span>
-                    )}
+                      {item.originalPrice && (
+                        <span className="text-gray-400 line-through text-sm">
+                          ₹{item.originalPrice.toFixed(2)}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            // Desktop Grid Layout
+            <div
+              className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 
+                gap-4 sm:gap-6 transition-opacity duration-300 
+                ${isLoading ? 'opacity-50' : 'opacity-100'}`}
+            >
+              {currentItems.map(item => (
+                <div
+                  key={item.id}
+                  className="relative animate-fadeIn cursor-pointer group"
+                  onMouseEnter={() => setIsHovered(item.id)}
+                  onMouseLeave={() => setIsHovered(null)}
+                >
+                  {item.discount && (
+                    <span
+                      className="absolute top-3 right-3 z-10
+                      bg-red-500 text-white text-xs px-3 py-1 rounded-full
+                      shadow-lg"
+                    >
+                      {item.discount}
+                    </span>
+                  )}
+                  <div
+                    className="aspect-[3/4] relative overflow-hidden rounded-xl mb-4 
+                    bg-gradient-to-b from-gray-50 to-gray-100 
+                    group-hover:shadow-xl transition-all duration-500 ease-out"
+                  >
+                    <div
+                      className={`w-full h-full transform transition-all duration-700
+                      ${isHovered === item.id ? 'scale-110' : 'scale-100'}`}
+                    >
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        fill
+                        className="object-cover"
+                        sizes={
+                          isMobile ? '100vw' : '(max-width: 1024px) 50vw, 25vw'
+                        }
+                        priority={currentPage === 0 && item.id <= 4}
+                      />
+                    </div>
 
-          {/* Enhanced Page Indicators */}
-          <div className="flex justify-center mt-12 gap-3">
-            {Array.from({ length: totalPages }).map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentPage(index)}
-                className={`h-2 rounded-full transition-all duration-500 ease-out
-                  ${
-                    currentPage === index
-                      ? 'w-8 bg-black'
-                      : 'w-2 bg-gray-300 hover:bg-gray-400 hover:scale-110'
-                  }`}
-                aria-label={`Go to page ${index + 1}`}
-              />
-            ))}
-          </div>
+                    {/* Color dots overlay */}
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-t 
+                      from-black/40 via-transparent to-transparent
+                      transition-opacity duration-300 ease-out
+                      ${isHovered === item.id ? 'opacity-100' : 'opacity-0'}`}
+                    >
+                      <ColorDots colors={item.colors} showMore={true} />
+                    </div>
+                  </div>
+
+                  <div
+                    className="space-y-2 transition-transform duration-300 ease-out
+                    group-hover:translate-y-[-4px]"
+                  >
+                    <h3
+                      className="text-base sm:text-lg font-medium transition-colors 
+                      duration-300 group-hover:text-gray-600"
+                    >
+                      {item.title}
+                    </h3>
+                    <div className="flex items-center gap-3">
+                      <span className="text-lg font-semibold">
+                        ₹{item.price.toFixed(2)}
+                      </span>
+                      {item.originalPrice && (
+                        <span className="text-gray-400 line-through text-sm">
+                          ₹{item.originalPrice.toFixed(2)}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Enhanced Mobile Pagination Dots */}
+          {isMobile && (
+            <div className="flex justify-center mt-8 gap-3 px-4">
+              {Array.from({ length: totalPages }).map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    setCurrentPage(index);
+                    setAutoScrollEnabled(false);
+                    setTimeout(() => setAutoScrollEnabled(true), 3000);
+                  }}
+                  className={`h-2.5 rounded-md transition-all duration-300
+                    ${currentPage === index ? 'w-8 bg-red-500' : 'w-2.5 bg-gray-300'}
+                    relative overflow-hidden shadow-sm`}
+                  aria-label={`Go to page ${index + 1}`}
+                >
+                  {currentPage === index && autoScrollEnabled && (
+                    <span
+                      className="absolute inset-0  animate-progress"
+                      style={{
+                        transformOrigin: 'left',
+                        animation: 'progress 3s linear infinite',
+                      }}
+                    />
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Desktop Page Indicators */}
+          {!isMobile && (
+            <div className="flex justify-center mt-12 gap-3">
+              {Array.from({ length: totalPages }).map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentPage(index)}
+                  className={`h-2 rounded-full transition-all duration-500 ease-out
+                    ${
+                      currentPage === index
+                        ? 'w-8 bg-black'
+                        : 'w-2 bg-gray-300 hover:bg-gray-400 hover:scale-110'
+                    }`}
+                  aria-label={`Go to page ${index + 1}`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>

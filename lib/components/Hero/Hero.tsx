@@ -105,8 +105,9 @@ const Hero: React.FC = () => {
 
   return (
     <div
+      id="hero-section"
       ref={mediaContainerRef}
-      className="relative h-screen w-full overflow-hidden bg-black"
+      className="relative h-[100svh] w-full overflow-hidden bg-black"
     >
       {/* Media Slides */}
       {slideContents.map((slide, index) => (
@@ -124,14 +125,7 @@ const Hero: React.FC = () => {
                 muted
                 loop
                 playsInline
-                className={`
-                  absolute w-full h-full object-cover
-                  ${dimensions.width > dimensions.height ? 'object-contain md:object-cover' : 'object-cover'}
-                `}
-                style={{
-                  maxWidth: '100%',
-                  maxHeight: '100vh',
-                }}
+                className="absolute w-full h-full object-cover"
                 onLoadedMetadata={() => {
                   if (index === currentSlide && videoRef.current) {
                     updateProgress(videoRef.current.duration * 1000);
@@ -149,82 +143,80 @@ const Hero: React.FC = () => {
                 fill
                 priority
                 sizes="100vw"
-                className={`
-                  absolute w-full h-full
-                  ${dimensions.width > dimensions.height ? 'object-contain md:object-cover' : 'object-cover'}
-                `}
-                style={{
-                  maxWidth: '100%',
-                  maxHeight: '100vh',
-                }}
+                className="absolute w-full h-full object-cover"
+                quality={90}
               />
             </div>
           )}
 
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/40" />
+          {/* Enhanced gradient overlay */}
+          <div
+            className="absolute inset-0 bg-gradient-to-b 
+            from-black/60 via-transparent to-black/60"
+          />
         </div>
       ))}
 
       {/* Content and Navigation */}
-      <div
-        className="relative z-10 h-full flex flex-col justify-between 
-        px-4 sm:px-8 md:px-16 lg:px-20"
-      >
+      <div className="relative z-10 h-full flex flex-col justify-between">
         {/* Main Content */}
-        <div className="flex-1 flex items-center">
-          <div
-            className="pt-20 sm:pt-24 md:pt-32 lg:pt-48 
-            w-full max-w-[90%] sm:max-w-[80%] md:max-w-2xl"
-          >
-            <h1
-              className="text-3xl sm:text-4xl md:text-6xl lg:text-8xl 
-              text-white font-light mb-4 sm:mb-6 md:mb-8 
-              leading-tight sm:leading-tight md:leading-tight
-              opacity-0 animate-fadeIn"
-            >
-              {slideContents[currentSlide].title}
-            </h1>
-            <p
-              className="text-base sm:text-lg md:text-xl text-white/90 
-              max-w-xl opacity-0 animate-fadeInDelay"
-            >
-              {slideContents[currentSlide].subtitle}
-            </p>
+        <div className="flex-1 flex items-center pt-[20vh] sm:pt-[25vh]">
+          <div className="w-full px-6 sm:px-8 md:px-12 lg:px-16">
+            <div className="max-w-[90%] sm:max-w-[85%] md:max-w-3xl">
+              <h1
+                className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl 
+                text-white font-light leading-[1]
+                mb-8 sm:mb-10 md:mb-12
+                opacity-0 animate-fadeIn"
+              >
+                {slideContents[currentSlide].title}
+              </h1>
+              <p
+                className="text-2xl sm:text-3xl md:text-4xl 
+                text-white/90 max-w-3xl 
+                opacity-0 animate-fadeInDelay
+                leading-[1.2] font-light"
+              >
+                {slideContents[currentSlide].subtitle}
+              </p>
+            </div>
           </div>
         </div>
 
         {/* Navigation */}
-        <div className="pb-8 sm:pb-16 md:pb-24 lg:pb-32 w-full">
-          <div
-            className="flex flex-col sm:flex-row gap-4 sm:gap-8 
-            max-w-4xl mx-auto sm:mx-0"
-          >
-            {slideContents.map((slide, index) => (
-              <div
-                key={index}
-                className="flex flex-col gap-2 sm:gap-4 group cursor-pointer"
-                onClick={() => handleSlideChange(index)}
-              >
-                <h3
-                  className={`
-                  text-base sm:text-lg  md:text-xl transition-all duration-300
-                  sm:text-left
-                  ${
-                    currentSlide === index
-                      ? 'text-white'
-                      : 'text-white/60 group-hover:text-white'
-                  }`}
-                >
-                  {slide.title}
-                </h3>
-                <ProgressBar
-                  isActive={currentSlide === index}
-                  progress={currentSlide === index ? progress : 0}
+        <div className="w-full pb-12 sm:pb-16 md:pb-20">
+          <div className="px-6 sm:px-8 md:px-12 lg:px-16">
+            <div
+              className="flex flex-col sm:flex-row gap-8 sm:gap-12 
+              max-w-4xl"
+            >
+              {slideContents.map((slide, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col gap-4 group cursor-pointer"
                   onClick={() => handleSlideChange(index)}
-                />
-              </div>
-            ))}
+                >
+                  <h3
+                    className={`
+                    text-xl sm:text-2xl md:text-3xl
+                    transition-all duration-300
+                    font-light
+                    ${
+                      currentSlide === index
+                        ? 'text-white'
+                        : 'text-white/60 group-hover:text-white'
+                    }`}
+                  >
+                    {slide.title}
+                  </h3>
+                  <ProgressBar
+                    isActive={currentSlide === index}
+                    progress={currentSlide === index ? progress : 0}
+                    onClick={() => handleSlideChange(index)}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
