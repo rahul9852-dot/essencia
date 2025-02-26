@@ -274,7 +274,69 @@ const CategoryShowcase = () => {
 
   const handleCategoryClick = (categoryId: string) => {
     if (isMobile) {
-      setActiveCategory(activeCategory === categoryId ? null : categoryId);
+      setActiveCategory(prevActive => {
+        const isClosing = prevActive === categoryId;
+        const targetCategory = document.getElementById(
+          `category-${categoryId}`
+        );
+        const imageGrid = targetCategory?.nextElementSibling;
+
+        if (targetCategory && imageGrid) {
+          // Title animation
+          gsap.to(targetCategory, {
+            color: isClosing ? 'rgba(255, 255, 255, 0.6)' : '#ffffff',
+            duration: 0.3,
+            ease: 'power2.out',
+          });
+
+          // Arrow rotation and image grid animation
+          if (isClosing) {
+            gsap.to(targetCategory.querySelector('span:last-child'), {
+              rotation: 0,
+              duration: 0.3,
+              ease: 'power2.inOut',
+            });
+
+            gsap.to(imageGrid, {
+              height: 0,
+              opacity: 0,
+              duration: 0.3,
+              ease: 'power2.inOut',
+              onComplete: () => {
+                (imageGrid as HTMLElement).style.display = 'none';
+              },
+            });
+          } else {
+            // Show grid first
+            (imageGrid as HTMLElement).style.display = 'grid';
+
+            // Get the auto height
+            const autoHeight = (imageGrid as HTMLElement).scrollHeight;
+
+            // Set initial state
+            gsap.set(imageGrid, {
+              height: 0,
+              opacity: 0,
+            });
+
+            // Animate to auto height
+            gsap.to(imageGrid, {
+              height: autoHeight,
+              opacity: 1,
+              duration: 0.3,
+              ease: 'power2.out',
+            });
+
+            gsap.to(targetCategory.querySelector('span:last-child'), {
+              rotation: 180,
+              duration: 0.3,
+              ease: 'power2.inOut',
+            });
+          }
+        }
+
+        return isClosing ? null : categoryId;
+      });
     }
   };
 
@@ -282,7 +344,7 @@ const CategoryShowcase = () => {
     <div
       id="category-showcase"
       ref={containerRef}
-      className="relative min-h-screen overflow-hidden"
+      className="relative min-h-[80vh] overflow-hidden py-12 sm:py-16"
     >
       {/* Enhanced background with better styling */}
       <div className="absolute inset-0 z-0">
@@ -296,14 +358,18 @@ const CategoryShowcase = () => {
         <div className="absolute inset-0 bg-[#292221]/20 backdrop-blur-[2px]" />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen gap-4 md:gap-16 px-4">
+      <div
+        className="relative z-10 flex flex-col items-center justify-center 
+        min-h-[70vh] gap-3 sm:gap-4 md:gap-6 lg:gap-8 
+        px-4 sm:px-6 md:px-8"
+      >
         {categories.map(category => (
           <div key={category.id} className="w-full md:w-auto">
             <h2
               id={`category-${category.id}`}
-              className={`text-3xl md:text-6xl font-light cursor-pointer transform-gpu
+              className={`text-3xl md:text-5xl lg:text-6xl font-light cursor-pointer transform-gpu
                 transition-all duration-300 ease-out select-none relative group
-                ${isMobile ? 'flex items-center justify-between border-b border-white/20 pb-4' : ''}
+                ${isMobile ? 'flex items-center justify-between border-b border-white/20 pb-3' : ''}
                 ${activeCategory === category.id ? 'text-white' : 'text-white/60'}
                 ${!isMobile ? 'hover:text-orange-400' : ''}`}
               onClick={() => handleCategoryClick(category.id)}
@@ -322,29 +388,33 @@ const CategoryShowcase = () => {
                 )}
               </span>
               {isMobile && (
-                <span
-                  className={`transform transition-transform duration-300 text-2xl
-                    ${activeCategory === category.id ? 'rotate-180' : ''}`}
-                >
+                <span className="transform transition-transform duration-300 text-2xl">
                   ↓
                 </span>
               )}
             </h2>
 
             {/* Mobile Image Grid */}
-            {isMobile && activeCategory === category.id && (
-              <div className="grid grid-cols-2 gap-4 mt-4 pb-8">
+            {isMobile && (
+              <div
+                className={`grid grid-cols-2 gap-3 sm:gap-4 mt-3 pb-4 sm:pb-6 overflow-hidden
+                  ${activeCategory === category.id ? 'block' : 'hidden'}`}
+              >
                 {category.images.map((image, index) => (
                   <div
                     key={index}
-                    className="relative aspect-[3/4] rounded-lg overflow-hidden"
+                    className="relative aspect-[3/4] rounded-lg overflow-hidden 
+                      transform transition-transform duration-300 hover:scale-105"
                   >
                     <img
                       src={image.src}
                       alt={`${category.title} ${index + 1}`}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                    <div
+                      className="absolute inset-0 bg-gradient-to-t 
+                      from-black/60 via-black/20 to-transparent"
+                    />
                   </div>
                 ))}
               </div>
@@ -367,8 +437,15 @@ const CategoryShowcase = () => {
                     imagesRef.current.set(category.id, images);
                   }
                 }}
-                className="absolute w-[400px] h-[600px] rounded-2xl overflow-hidden opacity-0 shadow-2xl transform-gpu cursor-pointer"
-                style={image.position as pos}
+                className="absolute w-[280px] sm:w-[320px] md:w-[360px] lg:w-[400px] 
+                  h-[420px] sm:h-[480px] md:h-[540px] lg:h-[600px] 
+                  rounded-2xl overflow-hidden opacity-0 shadow-2xl transform-gpu cursor-pointer"
+                style={
+                  {
+                    ...image.position,
+                    top: `calc(${image.position.top} - 5%)`,
+                  } as pos
+                }
               >
                 <div className="w-full h-full transform-gpu">
                   <img

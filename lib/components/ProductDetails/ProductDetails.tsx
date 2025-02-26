@@ -178,7 +178,7 @@ const ProductDetails = () => {
             <li>
               <span className="text-gray-400">/</span>
             </li>
-            <li className="text-gray-800">Summer Maxi Dress</li>
+            <li className="text-gray-800">Summer Dress</li>
           </ol>
         </nav>
 
@@ -250,11 +250,11 @@ const ProductDetails = () => {
           <div className="space-y-8">
             {/* Product Title and Price */}
             <div className="space-y-4">
-              <h1 className="text-4xl font-light">Summer Maxi Dress</h1>
+              <h1 className="text-4xl font-light">Summer Dress</h1>
               <div className="flex items-baseline gap-4">
-                <span className="text-3xl font-medium">$399.00</span>
+                <span className="text-3xl font-medium">₹2999.00</span>
                 <span className="text-lg text-gray-500 line-through">
-                  $499.00
+                  ₹4999.00
                 </span>
                 <span className="px-3 py-1 text-sm bg-red-50 text-red-600 rounded-full">
                   20% OFF

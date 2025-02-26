@@ -4,14 +4,23 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import CollectionsDropdown from './CollectionsDropdown';
 import PagesDropDown from '../PagesDropDown/PagesDropDown';
+import gsap from 'gsap';
 
 const Navbar: React.FC = () => {
   const [isCollectionsOpen, setIsCollectionsOpen] = useState<boolean>(false);
   const [isPageOpen, setIsPageOpen] = useState<boolean>(false);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  const [isHeroSection, setIsHeroSection] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSubmenu, setActiveSubmenu] = useState<
+    'collections' | 'pages' | null
+  >(null);
+
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
   const collectionsRef = useRef<HTMLDivElement>(null);
   const pagesRef = useRef<HTMLDivElement>(null);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const mainMenuRef = useRef<HTMLDivElement>(null);
+  const submenuRef = useRef<HTMLDivElement>(null);
 
   const pathname = usePathname();
 
@@ -23,7 +32,10 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
+      const heroSection = document.getElementById('hero-section');
+      const heroBottom = heroSection?.getBoundingClientRect().bottom || 0;
+      setIsHeroSection(heroBottom > 0);
+      setIsScrolled(window.scrollY > 50);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -69,35 +81,219 @@ const Navbar: React.FC = () => {
     setIsCollectionsOpen(false);
   };
 
+  // Enhanced mobile menu animation
+  useEffect(() => {
+    const mobileMenu = mobileMenuRef.current;
+    const mainMenu = mainMenuRef.current;
+    const submenu = submenuRef.current;
+
+    if (!mobileMenu || !mainMenu || !submenu) return;
+
+    if (isMobileMenuOpen) {
+      // Reset height to get actual height
+      gsap.set(mobileMenu, { height: 'auto' });
+      const height = mobileMenu.offsetHeight;
+
+      const tl = gsap.timeline({
+        defaults: { ease: 'power3.out' },
+      });
+
+      tl.fromTo(
+        mobileMenu,
+        {
+          height: 0,
+          opacity: 0,
+        },
+        {
+          height: height,
+          opacity: 1,
+          duration: 0.4,
+        }
+      ).fromTo(
+        mainMenu.children,
+        {
+          y: 20,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.3,
+          stagger: 0.05,
+        },
+        '-=0.2'
+      );
+    } else {
+      gsap.to(mobileMenu, {
+        height: 0,
+        opacity: 0,
+        duration: 0.3,
+        ease: 'power3.inOut',
+      });
+    }
+  }, [isMobileMenuOpen]);
+
+  // Enhanced submenu animation
+  useEffect(() => {
+    const submenu = submenuRef.current;
+    const mainMenu = mainMenuRef.current;
+    const authButtons = document.querySelector('.mobile-auth-buttons');
+
+    if (!submenu || !mainMenu || !authButtons) return;
+
+    if (activeSubmenu) {
+      const tl = gsap.timeline({
+        defaults: { ease: 'power3.out' },
+      });
+
+      // Hide auth buttons first
+      tl.to(authButtons, {
+        opacity: 0,
+        y: 20,
+        duration: 0.2,
+      })
+        // Animate main menu out
+        .to(mainMenu, {
+          x: -30,
+          opacity: 0,
+          duration: 0.3,
+        })
+        // Bring in submenu
+        .fromTo(
+          submenu,
+          {
+            x: 50,
+            opacity: 0,
+          },
+          {
+            x: 0,
+            opacity: 1,
+            duration: 0.3,
+          },
+          '-=0.1'
+        );
+    } else {
+      const tl = gsap.timeline({
+        defaults: { ease: 'power3.inOut' },
+      });
+
+      // Animate submenu out
+      tl.to(submenu, {
+        x: 50,
+        opacity: 0,
+        duration: 0.3,
+      })
+        // Bring back main menu
+        .to(
+          mainMenu,
+          {
+            x: 0,
+            opacity: 1,
+            duration: 0.3,
+          },
+          '-=0.1'
+        )
+        // Show auth buttons last
+        .to(authButtons, {
+          opacity: 1,
+          y: 0,
+          duration: 0.2,
+        });
+    }
+  }, [activeSubmenu]);
+
+  const openSubmenu = (menu: 'collections' | 'pages') => {
+    setActiveSubmenu(menu);
+  };
+
+  const closeSubmenu = () => {
+    setActiveSubmenu(null);
+  };
+
+  // Add this to handle mobile menu toggle
+  const toggleMobileMenu = () => {
+    if (activeSubmenu) {
+      // If submenu is open, close it first
+      setActiveSubmenu(null);
+    } else {
+      // Otherwise toggle mobile menu
+      setIsMobileMenuOpen(!isMobileMenuOpen);
+    }
+  };
+
+  // Add useEffect to handle body scroll
+  useEffect(() => {
+    if (activeSubmenu || isMobileMenuOpen) {
+      // Prevent main page scroll
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Re-enable main page scroll
+      document.body.style.overflow = 'unset';
+    }
+
+    // Cleanup
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [activeSubmenu, isMobileMenuOpen]);
+
   return (
     <div className="fixed top-0 left-0 right-0 z-50 w-full">
       <nav
         className={`
-          w-full transition-all duration-300 text-black
-          ${isScrolled ? 'bg-white/90 backdrop-blur-sm shadow-sm' : 'bg-white/90 backdrop-blur-sm'}
+          w-full transition-all duration-500
+          ${
+            isScrolled && !isHeroSection
+              ? 'bg-white/95 backdrop-blur-lg shadow-lg'
+              : 'bg-transparent hover:bg-white/95 hover:backdrop-blur-lg'
+          }
+          ${isHeroSection ? 'text-white hover:text-black' : 'text-black'}
         `}
       >
-        <div className="flex items-center justify-between h-14 px-4 max-w-[1400px] mx-auto w-full md:flex md:items-center md:justify-between md:h-20">
+        <div className="flex items-center justify-between h-16 sm:h-20 px-4 sm:px-6 md:px-8 lg:px-16 max-w-[1400px] mx-auto">
           <Link
             href="/"
-            className="text-lg font-normal hover:text-gray-800 tracking-wide whitespace-nowrap"
+            className={`text-xl font-medium tracking-wide whitespace-nowrap
+              transition-all duration-300 transform hover:scale-105
+              ${
+                isHeroSection
+                  ? 'group-hover/nav:text-black'
+                  : 'hover:text-gray-800'
+              }`}
           >
             Essancia Fashion
           </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8 ml-10">
-            <Link href="/" className="hover:text-gray-800">
-              Home
+          <div className="hidden md:flex items-center space-x-10 ml-12">
+            <Link
+              href="/"
+              className={`relative group transition-colors duration-300
+                ${
+                  isHeroSection
+                    ? 'group-hover/nav:text-black hover:text-black'
+                    : 'hover:text-gray-800'
+                }`}
+            >
+              <span>Home</span>
+              <span
+                className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full
+                ${isHeroSection ? 'bg-black' : 'bg-black'}`}
+              />
             </Link>
-            <div ref={collectionsRef} className="relative">
+            <div ref={collectionsRef} className="relative group">
               <button
-                className="flex items-center hover:text-gray-800"
+                className={`flex items-center transition-all duration-300
+                  ${
+                    isHeroSection
+                      ? 'group-hover/nav:text-black hover:text-black'
+                      : 'hover:text-gray-800'
+                  }`}
                 onClick={toggleCollections}
               >
                 Collections
                 <svg
-                  className={`ml-1 w-4 h-4 transition-transform ${isCollectionsOpen ? 'rotate-180' : ''}`}
+                  className={`ml-1.5 w-4 h-4 transition-transform duration-300 ${isCollectionsOpen ? 'rotate-180' : ''}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -110,15 +306,24 @@ const Navbar: React.FC = () => {
                   />
                 </svg>
               </button>
+              <span
+                className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full
+                ${isHeroSection ? 'bg-black' : 'bg-black'}`}
+              />
             </div>
-            <div ref={pagesRef} className="relative">
+            <div ref={pagesRef} className="relative group">
               <button
-                className="flex items-center hover:text-gray-800"
+                className={`flex items-center transition-all duration-300
+                  ${
+                    isHeroSection
+                      ? 'group-hover/nav:text-black hover:text-black'
+                      : 'hover:text-gray-800'
+                  }`}
                 onClick={togglePages}
               >
                 Pages
                 <svg
-                  className={`ml-1 w-4 h-4 transition-transform ${isPageOpen ? 'rotate-180' : ''}`}
+                  className={`ml-1.5 w-4 h-4 transition-transform duration-300 ${isPageOpen ? 'rotate-180' : ''}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -131,29 +336,80 @@ const Navbar: React.FC = () => {
                   />
                 </svg>
               </button>
+              <span
+                className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full
+                ${isHeroSection ? 'bg-black' : 'bg-black'}`}
+              />
             </div>
-            <Link href="/blog" className="hover:text-gray-800">
-              Blog
+            <Link
+              href="/blog"
+              className={`relative group transition-colors duration-300
+                ${
+                  isHeroSection
+                    ? 'group-hover/nav:text-black hover:text-black'
+                    : 'hover:text-gray-800'
+                }`}
+            >
+              <span>Blog</span>
+              <span
+                className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full
+                ${isHeroSection ? 'bg-black' : 'bg-black'}`}
+              />
             </Link>
-            <Link href="/contact" className="hover:text-gray-800">
-              Contact
+            <Link
+              href="/contact"
+              className={`relative group transition-colors duration-300
+                ${
+                  isHeroSection
+                    ? 'group-hover/nav:text-black hover:text-black'
+                    : 'hover:text-gray-800'
+                }`}
+            >
+              <span>Contact</span>
+              <span
+                className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full
+                ${isHeroSection ? 'bg-black' : 'bg-black'}`}
+              />
             </Link>
           </div>
-          <div className="hidden md:flex items-center space-x-4">
-            <Link href="/login" className="px-4 py-2 hover:text-gray-800">
+
+          {/* Auth Buttons */}
+          <div className="hidden md:flex items-center space-x-6">
+            <Link
+              href="/login"
+              className={`px-6 py-2 transition-all duration-300 rounded-full border-2
+                ${
+                  isHeroSection
+                    ? 'border-white/20 hover:border-black/40 hover:text-black'
+                    : 'border-black/20 hover:border-black/40 hover:text-black'
+                }`}
+            >
               Login
             </Link>
             <Link
               href="/signup"
-              className="px-6 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition-colors"
+              className={`
+                px-6 py-2 rounded-full transition-all duration-300 transform hover:scale-105
+                ${
+                  isHeroSection
+                    ? 'bg-white text-black hover:bg-black hover:text-white'
+                    : 'bg-black text-white hover:bg-gray-800'
+                }
+              `}
             >
               Sign up
             </Link>
           </div>
 
+          {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className={`md:hidden p-2.5 rounded-full transition-all duration-300
+              ${
+                isHeroSection
+                  ? 'hover:bg-white/10 group-hover/nav:hover:bg-black/5'
+                  : 'hover:bg-black/5'
+              }`}
+            onClick={toggleMobileMenu}
             aria-label="Toggle menu"
           >
             <svg
@@ -162,7 +418,7 @@ const Navbar: React.FC = () => {
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              {isMobileMenuOpen ? (
+              {isMobileMenuOpen || activeSubmenu ? (
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -181,79 +437,159 @@ const Navbar: React.FC = () => {
           </button>
         </div>
 
-        {isMobileMenuOpen && (
-          <div className="md:hidden bg-white/90 backdrop-blur-sm border-t border-gray-100">
-            <div className="flex flex-col px-4 py-2">
-              <Link
-                href="/"
-                className="py-3 hover:text-gray-800 border-b border-gray-100"
-                onClick={closeAllMenus}
+        {/* Mobile Menu */}
+        <div
+          ref={mobileMenuRef}
+          className="md:hidden overflow-hidden"
+          style={{ height: 0 }}
+        >
+          <div className="bg-white border-t border-gray-100">
+            <div
+              className={`
+              flex flex-col px-4 py-2 relative
+              ${activeSubmenu ? 'h-[calc(100vh-4rem)] overflow-hidden' : ''}
+            `}
+            >
+              {/* Main Menu Items */}
+              <div
+                ref={mainMenuRef}
+                className="flex flex-col"
+                style={{
+                  opacity: activeSubmenu ? 0 : 1,
+                  transform: activeSubmenu ? 'translateX(-30px)' : 'none',
+                }}
               >
-                Home
-              </Link>
-              <button
-                className="flex items-center justify-between py-3 hover:text-gray-800 border-b border-gray-100"
-                onClick={() => setIsCollectionsOpen(!isCollectionsOpen)}
-              >
-                Collections
-                <svg
-                  className={`w-4 h-4 transition-transform ${isCollectionsOpen ? 'rotate-180' : ''}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+                <Link
+                  href="/"
+                  className="py-4 border-b border-gray-100 text-gray-800 hover:text-black transition-colors duration-300"
+                  onClick={closeAllMenus}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-              <button
-                className="flex items-center justify-between py-3 hover:text-gray-800 border-b border-gray-100"
-                onClick={() => setIsPageOpen(!isPageOpen)}
-              >
-                Pages
-                <svg
-                  className={`w-4 h-4 transition-transform ${isPageOpen ? 'rotate-180' : ''}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+                  Home
+                </Link>
+                <button
+                  className="flex items-center justify-between py-4 border-b border-gray-100 text-gray-800 
+                    hover:text-black transition-colors duration-300 w-full"
+                  onClick={() => openSubmenu('collections')}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-              <Link
-                href="/blog"
-                className="py-3 hover:text-gray-800 border-b border-gray-100"
-                onClick={closeAllMenus}
+                  <span>Collections</span>
+                  <svg
+                    className="w-5 h-5 transition-transform duration-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </button>
+                <button
+                  className="flex items-center justify-between py-4 border-b border-gray-100 text-gray-800 
+                    hover:text-black transition-colors duration-300 w-full"
+                  onClick={() => openSubmenu('pages')}
+                >
+                  <span>Pages</span>
+                  <svg
+                    className="w-5 h-5 transition-transform duration-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </button>
+                <Link
+                  href="/blog"
+                  className="py-4 border-b border-gray-100 text-gray-800 hover:text-black transition-colors duration-300"
+                  onClick={closeAllMenus}
+                >
+                  Blog
+                </Link>
+                <Link
+                  href="/contact"
+                  className="py-4 border-b border-gray-100 text-gray-800 hover:text-black transition-colors duration-300"
+                  onClick={closeAllMenus}
+                >
+                  Contact
+                </Link>
+              </div>
+
+              {/* Submenu */}
+              <div
+                ref={submenuRef}
+                className={`
+                  absolute top-0 left-0 w-full h-full bg-white
+                  ${activeSubmenu ? 'pointer-events-auto' : 'pointer-events-none'}
+                `}
+                style={{
+                  opacity: activeSubmenu ? 1 : 0,
+                  transform: activeSubmenu ? 'none' : 'translateX(50px)',
+                }}
               >
-                Blog
-              </Link>
-              <Link
-                href="/contact"
-                className="py-3 hover:text-gray-800 border-b border-gray-100"
-                onClick={closeAllMenus}
+                {activeSubmenu && (
+                  <div className="py-2 h-full overflow-y-auto">
+                    <button
+                      onClick={closeSubmenu}
+                      className="flex items-center text-gray-800 hover:text-black mb-6 
+                        sticky top-0 bg-white py-3 transition-colors duration-300 z-10
+                        border-b border-gray-100 w-full"
+                    >
+                      <svg
+                        className="w-5 h-5 mr-3"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 19l-7-7 7-7"
+                        />
+                      </svg>
+                      Back to Menu
+                    </button>
+                    <div className="overflow-y-auto px-2">
+                      {activeSubmenu === 'collections' ? (
+                        <CollectionsDropdown isOpen={true} />
+                      ) : (
+                        <PagesDropDown isOpen={true} />
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Auth Buttons */}
+              <div
+                className={`
+                mobile-auth-buttons
+                py-6 space-y-3 border-t border-gray-100 mt-6
+                transition-all duration-300
+                ${activeSubmenu ? 'opacity-0 pointer-events-none' : 'opacity-100'}
+              `}
               >
-                Contact
-              </Link>
-              <div className="py-4 space-y-2">
                 <Link
                   href="/login"
-                  className="block w-full py-2 text-center hover:text-gray-800 border border-gray-200 rounded-full"
+                  className="block w-full py-3 text-center border-2 border-gray-200 
+                    rounded-full text-gray-800 hover:text-black hover:border-gray-300
+                    transition-all duration-300"
                   onClick={closeAllMenus}
                 >
                   Login
                 </Link>
                 <Link
                   href="/signup"
-                  className="block w-full py-2 text-center bg-black text-white rounded-full hover:bg-gray-800 transition-colors"
+                  className="block w-full py-3 text-center bg-black text-white 
+                    rounded-full hover:bg-gray-800 transition-all duration-300"
                   onClick={closeAllMenus}
                 >
                   Sign up
@@ -261,10 +597,20 @@ const Navbar: React.FC = () => {
               </div>
             </div>
           </div>
-        )}
+        </div>
       </nav>
-      {isCollectionsOpen && <CollectionsDropdown isOpen={isCollectionsOpen} />}
-      {isPageOpen && <PagesDropDown isOpen={isPageOpen} />}
+
+      {/* Desktop Dropdowns */}
+      {isCollectionsOpen && !isMobileMenuOpen && (
+        <div className="hidden md:block bg-white w-full">
+          <CollectionsDropdown isOpen={isCollectionsOpen} />
+        </div>
+      )}
+      {isPageOpen && !isMobileMenuOpen && (
+        <div className="hidden md:block bg-white w-full">
+          <PagesDropDown isOpen={isPageOpen} />
+        </div>
+      )}
     </div>
   );
 };
