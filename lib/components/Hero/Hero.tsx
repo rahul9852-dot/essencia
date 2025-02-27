@@ -24,7 +24,7 @@ const slideContents: SlideContent[] = [
     subtitle: 'Curated essentials to elevate your winter wardrobe beautifully.',
     media: '/images/bannerImage.webp',
     type: 'image',
-    duration: 3000, // 3 seconds for images
+    duration: 4000, // 3 seconds for images
   },
 ];
 
@@ -34,7 +34,8 @@ const Hero: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const progressInterval = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(Date.now());
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const mediaContainerRef = useRef<HTMLDivElement>(null);
 
   const updateProgress = (duration: number): void => {
@@ -162,18 +163,18 @@ const Hero: React.FC = () => {
         {/* Main Content */}
         <div className="flex-1 flex items-center pt-[20vh] sm:pt-[25vh]">
           <div className="w-full px-6 sm:px-8 md:px-12 lg:px-16">
-            <div className="max-w-[90%] sm:max-w-[85%] md:max-w-3xl">
+            <div className=" sm:max-w-[85%] md:max-w-3xl lg:max-w-4xl">
               <h1
                 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl 
                 text-white font-light leading-[1]
-                mb-8 sm:mb-10 md:mb-12
+                 sm:mb-10 md:mb-12 lg:mb-14
                 opacity-0 animate-fadeIn"
               >
                 {slideContents[currentSlide].title}
               </h1>
               <p
                 className="text-2xl sm:text-3xl md:text-4xl 
-                text-white/90 max-w-3xl 
+                text-white/80 max-w-3xl 
                 opacity-0 animate-fadeInDelay
                 leading-[1.2] font-light"
               >
@@ -184,7 +185,7 @@ const Hero: React.FC = () => {
         </div>
 
         {/* Navigation */}
-        <div className="w-full pb-12 sm:pb-16 md:pb-20">
+        <div className="w-full pb-12 sm:pb-16 md:pb-20 lg:pb-24">
           <div className="px-6 sm:px-8 md:px-12 lg:px-16">
             <div
               className="flex flex-col sm:flex-row gap-8 sm:gap-12 

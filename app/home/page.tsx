@@ -7,16 +7,13 @@ import WinterFashionSection from '../../lib/components/WinterFashion/WinterFashi
 import SportswearSection from '../../lib/components/Sportswear/SportswearSection';
 import RoundedCards from '@/lib/components/RoundedCards/roundedCards';
 import CategoryShowcase from '@/lib/components/Category-Showcase/Category';
-
-// import WinterCollection from '@/lib/components/WinterCollection/WinterCollection';
-// import SummerCollection from '@/lib/components/SummerCollection/SummerCollection';
-// import SpringCollections from '@/lib/components/SpringCollections/SpringCollections';
 import ProductDetails from '@/lib/components/ProductDetails/ProductDetails';
 import FitnessFashion from '@/lib/components/FitnessFashion/FitnessFashion';
 import Stores from '@/lib/components/Stores/Stores';
 import DesignerSection from '@/lib/components/Designer/Designer';
 import { categories } from '@/lib/constants/roundedCards';
 import ParallaxSection from '@/lib/components/ParallaxSection/ParallaxSection';
+import FashionShowcase from '@/lib/components/FashionShowcase/FashionShowcase';
 
 //https://colorhunt.co/palette/fff2d7ffe0b5f8c794d8ae7e
 const HomeScreen = () => {

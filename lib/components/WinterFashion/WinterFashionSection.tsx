@@ -197,10 +197,10 @@ const WinterFashionSection = () => {
       {/* Enhanced Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 sm:mb-12 gap-4">
         <div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal mb-2">
+          <h2 className="text-black text-3xl sm:text-4xl md:text-5xl font-normal mb-2">
             Essancia Winter Fashion
           </h2>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-black">
             {currentPage * itemsPerPage + 1}-
             {Math.min((currentPage + 1) * itemsPerPage, fashionItems.length)} of{' '}
             {fashionItems.length} items
@@ -208,8 +208,8 @@ const WinterFashionSection = () => {
         </div>
         <Link
           href="/collections/winter-fashion"
-          className="group inline-flex items-center space-x-2 px-4 sm:px-6 py-2 
-            bg-red-500 text-white rounded-md hover:bg-gray-900 
+          className="group inline-flex items-center space-x-2 px-4 sm:px-6 py-3 
+            bg-primary-500 text-black rounded-full hover:bg-primary-600 
             transition-all duration-300 ease-out text-sm sm:text-base"
         >
           <span>View Collection</span>

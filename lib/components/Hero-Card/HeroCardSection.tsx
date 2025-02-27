@@ -85,10 +85,10 @@ const HeroCardSection = () => {
               modern globetrotter.
             </p>
             <div className="flex justify-center lg:justify-start">
-              <Link href="/collections" className="hover:text-gray-800">
+              <Link href="/collections">
                 <button
                   className="inline-flex items-center justify-center px-6 py-3 
-                    bg-black text-white rounded-md hover:bg-gray-800 
+                    bg-primary-500 text-black/70 hover:text-black hover:bg-primary-600 rounded-full 
                     transition-colors duration-300 mt-4 group"
                   aria-label="Explore summer collection"
                 >

@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
+import { useRouter } from 'next/navigation';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -9,6 +10,7 @@ const SubHero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const router = useRouter();
 
   // Check for mobile device
   useEffect(() => {
@@ -82,28 +84,18 @@ const SubHero = () => {
     return () => ctx.revert();
   }, [isMobile]);
 
+  const handleCustomize = () => {
+    router.push('/customize');
+  };
+
   return (
     <div
       ref={containerRef}
-      className="bg-subhero-900 min-h-[200px] relative group overflow-hidden 
+      className="bg-primary-500 min-h-[200px] relative group overflow-hidden 
         px-4 sm:px-6 md:px-8 py-8 sm:py-10 md:py-12"
     >
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-r from-black/5 via-transparent to-black/5" />
-
-      {/* Animated lines */}
-      <div className="absolute inset-0 opacity-20">
-        <div
-          className="animated-line absolute top-0 left-0 w-full h-[1px] 
-          bg-gradient-to-r from-transparent via-black/20 to-transparent 
-          origin-left"
-        />
-        <div
-          className="animated-line absolute bottom-0 right-0 w-full h-[1px] 
-          bg-gradient-to-r from-transparent via-black/20 to-transparent 
-          origin-right"
-        />
-      </div>
 
       {/* Main content */}
       <div
@@ -142,22 +134,23 @@ const SubHero = () => {
               <span className="relative z-10">Read More →</span>
             </button>
 
-            <span className="hidden sm:block w-[1px] h-4 bg-black/20" />
+            <span className="hidden sm:block w-[1px] h-7 bg-black/20" />
 
             <button
               className="w-full sm:w-auto px-6 py-2.5 text-sm text-black/70 
               hover:text-black transition-all duration-300 relative overflow-hidden
               group/button bg-white/50 backdrop-blur-sm rounded-full border border-black/10
               hover:bg-white/70 active:scale-95"
+              onClick={handleCustomize}
             >
-              <span className="relative z-10">Share Guide →</span>
+              <span className="relative z-10">Customize →</span>
             </button>
           </div>
         </div>
       </div>
 
       {/* Corner decorations */}
-      <div
+      {/* <div
         className="absolute top-4 left-4 w-6 sm:w-8 h-6 sm:h-8 border-l border-t 
         border-black/10 group-hover:w-8 sm:group-hover:w-12 group-hover:h-8 
         sm:group-hover:h-12 transition-all duration-300"
@@ -166,7 +159,7 @@ const SubHero = () => {
         className="absolute bottom-4 right-4 w-6 sm:w-8 h-6 sm:h-8 border-r 
         border-b border-black/10 group-hover:w-8 sm:group-hover:w-12 group-hover:h-8 
         sm:group-hover:h-12 transition-all duration-300"
-      />
+      /> */}
     </div>
   );
 };
