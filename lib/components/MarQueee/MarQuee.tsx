@@ -2,7 +2,7 @@ import React from 'react';
 
 const MarQuee = () => {
   return (
-    <div className="w-full bg-marquee-100 overflow-hidden relative group">
+    <div className="w-full bg-primary-500 overflow-hidden relative group">
       <div className="relative flex hover:pause-animation">
         {/* First moving text */}
         <div className="animate-marquee whitespace-nowrap flex items-center transition-all duration-300 group-hover:[animation-play-state:paused]">

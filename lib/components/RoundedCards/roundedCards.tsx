@@ -220,14 +220,14 @@ const RoundedCards: React.FC<RoundedCardsProps> = ({ categories }) => {
                 >
                   {/* Updated glassmorphism background */}
                   <div
-                    className="absolute inset-0 bg-black/5 backdrop-blur-md 
+                    className="absolute bg-primary-500 inset-0 bg-black/5 backdrop-blur-md 
                     rounded-full border border-black/10 transition-all duration-300
                     group-hover:bg-black/10"
                   />
 
                   {/* Button content */}
                   <span
-                    className="relative z-10 flex items-center gap-2 text-gray-800
+                    className=" relative z-10 flex items-center gap-2 text-gray-800
                     group-hover:text-black transition-colors duration-300"
                   >
                     Explore Collection
