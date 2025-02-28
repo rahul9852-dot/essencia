@@ -6,14 +6,12 @@ import gsap from 'gsap';
 
 const categories = [
   {
-    title: 'Innerwear & Sleepwear',
+    title: 'Essancia Collections',
     links: [
-      'Dresses',
+      'Hoodies',
       'Tshirts',
+      'Sweatshirts',
       'Trousers & Capris',
-      'Shorts & Skirts',
-      "Men's Jeans",
-      'Loungewear suits',
       'Coats and Jackets',
     ],
   },
@@ -24,6 +22,7 @@ const categories = [
       'Ethnic Wear',
       'Lehenga Cholis',
       'Skirts & Palazzos',
+      'Shorts & Skirts',
     ],
   },
   {
@@ -46,14 +45,14 @@ const categories = [
       'Pouches',
     ],
   },
-  {
-    title: 'Small Leather Goods',
-    links: ['Handbags', 'Jackets', 'Shoes', 'Hats', 'Gloves'],
-  },
-  {
-    title: 'Accessories',
-    links: ['Belt', 'Caps', 'Handbags', 'Shoes', 'Sun glasses', 'Watches'],
-  },
+  // {
+  //   title: 'Small Leather Goods',
+  //   links: ['Handbags', 'Jackets', 'Shoes', 'Hats', 'Gloves'],
+  // },
+  // {
+  //   title: 'Accessories',
+  //   links: ['Belt', 'Caps', 'Shoes', 'Sun glasses', 'Watches'],
+  // },
 ];
 
 interface CollectionsDropdownProps {
@@ -147,7 +146,7 @@ const CollectionsDropdown: React.FC<CollectionsDropdownProps> = ({
                     <Link
                       href={`/${link.toLowerCase().replace(/\s+/g, '-')}`}
                       className="text-gray-600 hover:text-black transition-colors 
-                        text-[12px] sm:text-[13px] leading-tight block py-0.5"
+                        text-[14px] sm:text-[14px] leading-tight block py-0.5"
                     >
                       {link}
                     </Link>

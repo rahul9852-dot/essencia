@@ -18,12 +18,12 @@ const categories = [
     link: '/terms-conditions',
   },
   {
-    title: 'Privacy',
-    link: '/privacy',
-  },
-  {
     title: 'Shipping Policy',
     link: '/shipping-policy',
+  },
+  {
+    title: 'Privacy',
+    link: '/privacy',
   },
 ];
 
