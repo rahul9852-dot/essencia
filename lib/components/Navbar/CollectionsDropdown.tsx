@@ -144,7 +144,7 @@ const CollectionsDropdown: React.FC<CollectionsDropdownProps> = ({
                 {category.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
                     <Link
-                      href={`/${link.toLowerCase().replace(/\s+/g, '-')}`}
+                      href={`/collections/${link.toLowerCase().replace(/\s+/g, '-')}`}
                       className="text-gray-600 hover:text-black transition-colors 
                         text-[14px] sm:text-[14px] leading-tight block py-0.5"
                     >
