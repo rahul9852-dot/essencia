@@ -24,6 +24,9 @@ const Navbar: React.FC = () => {
 
   const pathname = usePathname();
 
+  // Add this to determine if we're on a page with white background
+  const isWhiteBackgroundPage = pathname === '/customize';
+
   useEffect(() => {
     // Close dropdowns when route changes
     setIsCollectionsOpen(false);
@@ -245,9 +248,17 @@ const Navbar: React.FC = () => {
           ${
             isScrolled && !isHeroSection
               ? 'bg-white/95 backdrop-blur-lg shadow-lg'
-              : 'bg-transparent hover:bg-white/95 hover:backdrop-blur-lg'
+              : isWhiteBackgroundPage
+                ? 'bg-white/95 backdrop-blur-lg'
+                : 'bg-transparent hover:bg-white/95 hover:backdrop-blur-lg'
           }
-          ${isHeroSection ? 'text-white hover:text-black' : 'text-black'}
+          ${
+            isWhiteBackgroundPage
+              ? 'text-black'
+              : isHeroSection
+                ? 'text-white hover:text-black'
+                : 'text-black'
+          }
         `}
       >
         <div className="flex items-center justify-between h-16 sm:h-20 px-4 sm:px-6 md:px-8 lg:px-16 max-w-[1400px] mx-auto">
@@ -256,9 +267,11 @@ const Navbar: React.FC = () => {
             className={`text-xl font-medium tracking-wide whitespace-nowrap
               transition-all duration-300 transform hover:scale-105
               ${
-                isHeroSection
-                  ? 'group-hover/nav:text-black'
-                  : 'hover:text-gray-800'
+                isWhiteBackgroundPage
+                  ? 'text-black hover:text-gray-800'
+                  : isHeroSection
+                    ? 'group-hover/nav:text-black'
+                    : 'hover:text-gray-800'
               }`}
           >
             Essancia Fashion
@@ -266,28 +279,15 @@ const Navbar: React.FC = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-10 ml-12">
-            <Link
-              href="/"
-              className={`relative group transition-colors duration-300
-                ${
-                  isHeroSection
-                    ? 'group-hover/nav:text-black hover:text-black'
-                    : 'hover:text-gray-800'
-                }`}
-            >
-              <span>Home</span>
-              <span
-                className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full
-                ${isHeroSection ? 'bg-black' : 'bg-black'}`}
-              />
-            </Link>
             <div ref={collectionsRef} className="relative group">
               <button
                 className={`flex items-center transition-all duration-300
                   ${
-                    isHeroSection
-                      ? 'group-hover/nav:text-black hover:text-black'
-                      : 'hover:text-gray-800'
+                    isWhiteBackgroundPage
+                      ? 'text-black hover:text-gray-800'
+                      : isHeroSection
+                        ? 'group-hover/nav:text-black hover:text-black'
+                        : 'hover:text-gray-800'
                   }`}
                 onClick={toggleCollections}
               >
@@ -308,16 +308,35 @@ const Navbar: React.FC = () => {
               </button>
               <span
                 className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full
-                ${isHeroSection ? 'bg-black' : 'bg-black'}`}
+                bg-black`}
               />
             </div>
+            <Link
+              href="/customize"
+              className={`relative group transition-colors duration-300
+                ${
+                  isWhiteBackgroundPage
+                    ? 'text-black hover:text-gray-800'
+                    : isHeroSection
+                      ? 'group-hover/nav:text-black hover:text-black'
+                      : 'hover:text-gray-800'
+                }`}
+            >
+              <span>Customise</span>
+              <span
+                className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full
+                bg-black`}
+              />
+            </Link>
             <div ref={pagesRef} className="relative group">
               <button
                 className={`flex items-center transition-all duration-300
                   ${
-                    isHeroSection
-                      ? 'group-hover/nav:text-black hover:text-black'
-                      : 'hover:text-gray-800'
+                    isWhiteBackgroundPage
+                      ? 'text-black hover:text-gray-800'
+                      : isHeroSection
+                        ? 'group-hover/nav:text-black hover:text-black'
+                        : 'hover:text-gray-800'
                   }`}
                 onClick={togglePages}
               >
@@ -338,37 +357,41 @@ const Navbar: React.FC = () => {
               </button>
               <span
                 className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full
-                ${isHeroSection ? 'bg-black' : 'bg-black'}`}
+                bg-black`}
               />
             </div>
             <Link
               href="/blog"
               className={`relative group transition-colors duration-300
                 ${
-                  isHeroSection
-                    ? 'group-hover/nav:text-black hover:text-black'
-                    : 'hover:text-gray-800'
+                  isWhiteBackgroundPage
+                    ? 'text-black hover:text-gray-800'
+                    : isHeroSection
+                      ? 'group-hover/nav:text-black hover:text-black'
+                      : 'hover:text-gray-800'
                 }`}
             >
               <span>Blog</span>
               <span
                 className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full
-                ${isHeroSection ? 'bg-black' : 'bg-black'}`}
+                bg-black`}
               />
             </Link>
             <Link
               href="/contact"
               className={`relative group transition-colors duration-300
                 ${
-                  isHeroSection
-                    ? 'group-hover/nav:text-black hover:text-black'
-                    : 'hover:text-gray-800'
+                  isWhiteBackgroundPage
+                    ? 'text-black hover:text-gray-800'
+                    : isHeroSection
+                      ? 'group-hover/nav:text-black hover:text-black'
+                      : 'hover:text-gray-800'
                 }`}
             >
               <span>Contact</span>
               <span
                 className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full
-                ${isHeroSection ? 'bg-black' : 'bg-black'}`}
+                bg-black`}
               />
             </Link>
           </div>
@@ -379,9 +402,11 @@ const Navbar: React.FC = () => {
               href="/login"
               className={`px-6 py-2 transition-all duration-300 rounded-full border-2
                 ${
-                  isHeroSection
-                    ? 'border-white/20 hover:border-black/40 hover:text-black'
-                    : 'border-black/20 hover:border-black/40 hover:text-black'
+                  isWhiteBackgroundPage
+                    ? 'border-black/20 hover:border-black/40 text-black'
+                    : isHeroSection
+                      ? 'border-white/20 hover:border-black/40 hover:text-black'
+                      : 'border-black/20 hover:border-black/40 hover:text-black'
                 }`}
             >
               Login
@@ -391,9 +416,9 @@ const Navbar: React.FC = () => {
               className={`
                 px-6 py-2 rounded-full transition-all duration-300 transform hover:scale-105
                 ${
-                  isHeroSection
-                    ? 'bg-white text-black hover:bg-black hover:text-white'
-                    : 'bg-black text-white hover:bg-gray-800'
+                  isWhiteBackgroundPage || !isHeroSection
+                    ? 'bg-black text-white hover:bg-gray-800'
+                    : 'bg-white text-black hover:bg-black hover:text-white'
                 }
               `}
             >
@@ -459,13 +484,6 @@ const Navbar: React.FC = () => {
                   transform: activeSubmenu ? 'translateX(-30px)' : 'none',
                 }}
               >
-                <Link
-                  href="/"
-                  className="py-4 border-b border-gray-100 text-gray-800 hover:text-black transition-colors duration-300"
-                  onClick={closeAllMenus}
-                >
-                  Home
-                </Link>
                 <button
                   className="flex items-center justify-between py-4 border-b border-gray-100 text-gray-800 
                     hover:text-black transition-colors duration-300 w-full"
@@ -486,6 +504,13 @@ const Navbar: React.FC = () => {
                     />
                   </svg>
                 </button>
+                <Link
+                  href="/customize"
+                  className="py-4 border-b border-gray-100 text-gray-800 hover:text-black transition-colors duration-300"
+                  onClick={closeAllMenus}
+                >
+                  Customise
+                </Link>
                 <button
                   className="flex items-center justify-between py-4 border-b border-gray-100 text-gray-800 
                     hover:text-black transition-colors duration-300 w-full"
