@@ -102,11 +102,15 @@ const PagesDropDown: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
           <Link
             key={index}
             href={category.link}
-            className="block px-4 py-2 text-gray-600 hover:text-[#2D2422] hover:bg-gray-50
-              transition-colors"
+            className="block px-4 py-2 text-gray-600 hover:text-black
+              transition-all duration-300 relative group overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
-            {category.title}
+            <span className="relative z-10 inline-block">
+              {category.title}
+              <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-black transition-all duration-300 group-hover:w-full"></span>
+            </span>
+            <span className="absolute left-0 top-0 w-0 h-full bg-gray-50 -z-10 transition-all duration-300 ease-out group-hover:w-full"></span>
           </Link>
         ))}
       </div>

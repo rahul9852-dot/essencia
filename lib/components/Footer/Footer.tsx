@@ -1,17 +1,13 @@
 'use client';
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
   TwitterIcon,
   FacebookIcon,
   InstagramIcon,
   LinkedInIcon,
 } from '../SocialIcons/SocialIcons';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const navigation = {
   home: [
@@ -42,55 +38,11 @@ const navigation = {
 };
 
 const Footer = () => {
-  const footerRef = useRef<HTMLElement>(null);
-  const newsletterRef = useRef<HTMLDivElement>(null);
-  const navRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const bottomRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!footerRef.current) return;
-
-    gsap.from(newsletterRef.current, {
-      y: 50,
-      opacity: 0,
-      duration: 0.8,
-      scrollTrigger: {
-        trigger: newsletterRef.current,
-        start: 'top bottom',
-        end: 'bottom bottom',
-        toggleActions: 'play none none reverse',
-      },
-    });
-
-    gsap.from(navRefs.current, {
-      y: 30,
-      opacity: 0,
-      duration: 0.5,
-      stagger: 0.1,
-      scrollTrigger: {
-        trigger: navRefs.current[0],
-        start: 'top bottom-=100',
-        toggleActions: 'play none none reverse',
-      },
-    });
-
-    gsap.from(bottomRef.current, {
-      opacity: 0,
-      duration: 0.8,
-      delay: 0.5,
-      scrollTrigger: {
-        trigger: bottomRef.current,
-        start: 'top bottom',
-        toggleActions: 'play none none reverse',
-      },
-    });
-  }, []);
-
   return (
-    <footer ref={footerRef} className="bg-white text-black overflow-hidden">
+    <footer className="bg-white text-black overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Newsletter Section */}
-        <div ref={newsletterRef} className="py-20 border-b border-gray-100">
+        <div className="py-20 border-b border-gray-100">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="max-w-md">
               <h2 className="text-4xl font-light mb-3">Join Our Newsletter</h2>
@@ -122,14 +74,8 @@ const Footer = () => {
 
         {/* Navigation Grid */}
         <div className="grid grid-cols-2 gap-x-8 gap-y-12 py-16 md:grid-cols-5">
-          {Object.entries(navigation).map(([key, items], index) => (
-            <div
-              key={key}
-              ref={(el: HTMLDivElement | null) => {
-                if (navRefs.current) navRefs.current[index] = el;
-              }}
-              className="group"
-            >
+          {Object.entries(navigation).map(([key, items]) => (
+            <div key={key} className="group">
               <h3
                 className="flex items-center gap-2 text-sm font-medium tracking-wider uppercase 
                 cursor-pointer"
@@ -164,7 +110,7 @@ const Footer = () => {
         </div>
 
         {/* Bottom Section */}
-        <div ref={bottomRef} className="border-t border-gray-100 py-8">
+        <div className="border-t border-gray-100 py-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
               <Link href="/" className="group">
@@ -243,16 +189,6 @@ const Footer = () => {
                   </Link>
                 ))}
               </div>
-
-              {/* Payment Methods */}
-              {/* <div className="border-l border-gray-100 pl-8 py-2">
-                <div className="flex flex-col items-end gap-3">
-                  <PaymentMethods />
-                  <span className="text-[11px] text-gray-400 tracking-wider">
-                    SECURE PAYMENT
-                  </span>
-                </div>
-              </div> */}
             </div>
           </div>
         </div>

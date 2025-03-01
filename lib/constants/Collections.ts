@@ -1,6 +1,6 @@
 export const collectionsData = {
   hoodies: {
-    title: 'Coats',
+    title: 'Hoodies',
     description:
       'Premium coats designed to keep you warm and stylish during the colder months.',
     items: [
@@ -123,7 +123,7 @@ export const collectionsData = {
     ],
   },
   sweatshirts: {
-    title: 'Trousers',
+    title: 'Sweat-Shirts',
     description:
       'Find the best trousers for work, casual, and formal occasions.',
     items: [
@@ -183,7 +183,7 @@ export const collectionsData = {
     ],
   },
   pants: {
-    title: 'Pants',
+    title: 'Jumpsuits',
     description: 'Comfortable and stylish pants for every occasion.',
     items: [
       {
