@@ -7,13 +7,7 @@ import gsap from 'gsap';
 const categories = [
   {
     title: 'Essancia Collections',
-    links: [
-      'Hoodies',
-      'Tshirts',
-      'Sweatshirts',
-      'Trousers & Capris',
-      'Coats and Jackets',
-    ],
+    links: ['Hoodies', 'Tshirts', 'Sweatshirts', 'Pants'],
   },
   {
     title: 'Fusion Wear Clothes',
@@ -144,11 +138,22 @@ const CollectionsDropdown: React.FC<CollectionsDropdownProps> = ({
                 {category.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
                     <Link
-                      href={`/collections/${link.toLowerCase().replace(/\s+/g, '-')}`}
-                      className="text-gray-600 hover:text-black transition-colors 
-                        text-[14px] sm:text-[14px] leading-tight block py-0.5"
+                      href={
+                        link.toLowerCase() === 'hoodies' ||
+                        link.toLowerCase() === 'tshirts' ||
+                        link.toLowerCase() === 'sweatshirts' ||
+                        link.toLowerCase() === 'pants'
+                          ? `/collections/${link.toLowerCase()}`
+                          : `/collections`
+                      }
+                      className="text-gray-600 hover:text-black transition-all duration-300
+                        text-[14px] sm:text-[14px] leading-tight block py-0.5 relative group"
                     >
-                      {link}
+                      <span className="relative z-10 inline-block">
+                        {link}
+                        <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-black transition-all duration-300 group-hover:w-full"></span>
+                      </span>
+                      <span className="absolute left-0 top-0 w-0 h-full bg-gray-50 -z-10 transition-all duration-300 ease-out group-hover:w-full rounded-sm"></span>
                     </Link>
                   </li>
                 ))}
