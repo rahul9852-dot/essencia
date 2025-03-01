@@ -4,6 +4,9 @@ import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import gsap from 'gsap';
 
+// Available products that should redirect to customize page
+const availableProducts = ['hoodies', 'tshirts', 'sweatshirts'];
+
 const categories = [
   {
     title: 'Essancia Collections',
@@ -144,7 +147,11 @@ const CollectionsDropdown: React.FC<CollectionsDropdownProps> = ({
                 {category.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
                     <Link
-                      href={`/collections/${link.toLowerCase().replace(/\s+/g, '-')}`}
+                      href={
+                        availableProducts.includes(link.toLowerCase())
+                          ? `/collections/${link.toLowerCase()}`
+                          : '/collections/coming-soon'
+                      }
                       className="text-gray-600 hover:text-black transition-colors 
                         text-[14px] sm:text-[14px] leading-tight block py-0.5"
                     >

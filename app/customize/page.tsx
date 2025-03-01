@@ -118,12 +118,9 @@ const CustomizePage = () => {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-          {/* Mobile-first order of sections */}
           <div className="lg:order-1 order-2">
-            {/* Preview Section */}
             <div className="lg:sticky lg:top-24 space-y-4 md:space-y-6">
               <div className="bg-white rounded-xl p-4 md:p-6 shadow-xl border border-gray-200">
                 {isLoading ? (
@@ -161,9 +158,7 @@ const CustomizePage = () => {
             </div>
           </div>
 
-          {/* Customization Controls - Reordered for mobile */}
           <div className="lg:order-1 order-2 space-y-4 md:space-y-6">
-            {/* Color Selection - Moved to top for mobile */}
             <div className="bg-white rounded-xl p-4 md:p-6 shadow-lg border border-gray-200">
               <div className="flex items-center gap-3 mb-4 md:mb-6">
                 <MdColorLens className="text-xl md:text-2xl text-gray-900" />
@@ -184,7 +179,6 @@ const CustomizePage = () => {
               </div>
             </div>
 
-            {/* Product Selection - Moved below color for mobile */}
             <div className="bg-white rounded-xl p-4 md:p-6 shadow-lg border border-gray-200">
               <div className="flex items-center gap-3 mb-4 md:mb-6">
                 <FaTshirt className="text-xl md:text-2xl text-gray-900" />

@@ -50,40 +50,29 @@ const Footer = () => {
   useEffect(() => {
     if (!footerRef.current) return;
 
-    gsap.from(newsletterRef.current, {
-      y: 50,
-      opacity: 0,
-      duration: 0.8,
-      scrollTrigger: {
-        trigger: newsletterRef.current,
-        start: 'top bottom',
-        end: 'bottom bottom',
-        toggleActions: 'play none none reverse',
-      },
+    // Set initial visibility
+    gsap.set([newsletterRef.current, ...navRefs.current, bottomRef.current], {
+      opacity: 1,
+      y: 0,
     });
 
-    gsap.from(navRefs.current, {
-      y: 30,
-      opacity: 0,
-      duration: 0.5,
-      stagger: 0.1,
-      scrollTrigger: {
-        trigger: navRefs.current[0],
+    // Add scroll-triggered animations
+    ScrollTrigger.batch(
+      [newsletterRef.current, ...navRefs.current, bottomRef.current],
+      {
+        onEnter: elements => {
+          gsap.from(elements, {
+            y: 30,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: 'power2.out',
+          });
+        },
         start: 'top bottom-=100',
-        toggleActions: 'play none none reverse',
-      },
-    });
-
-    gsap.from(bottomRef.current, {
-      opacity: 0,
-      duration: 0.8,
-      delay: 0.5,
-      scrollTrigger: {
-        trigger: bottomRef.current,
-        start: 'top bottom',
-        toggleActions: 'play none none reverse',
-      },
-    });
+        once: true,
+      }
+    );
   }, []);
 
   return (

@@ -19,12 +19,84 @@ const ProductViewer: React.FC<ProductViewerProps> = ({
   customText,
   textColor,
 }) => {
+  console.log('logo====>', logo);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const sceneRef = useRef<THREE.Scene>(new THREE.Scene());
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const modelRef = useRef<THREE.Group | null>(null);
   const controlsRef = useRef<OrbitControls | null>(null);
+
+  // Function to load and setup model
+  const loadModel = (
+    scene: THREE.Scene,
+    camera: THREE.PerspectiveCamera,
+    controls: OrbitControls
+  ) => {
+    const loader = new GLTFLoader();
+    loader.load(`/models/${productType}Model.glb`, gltf => {
+      // Remove existing model if any
+      if (modelRef.current) {
+        scene.remove(modelRef.current);
+      }
+
+      const model = gltf.scene;
+
+      // Set scale based on product type
+      let scale = 0.06;
+      let yPosition = -0.3;
+
+      switch (productType) {
+        case 'hoodie':
+          scale = 0.07;
+          yPosition = -0.4;
+          break;
+        case 'sweatshirt':
+          scale = 0.065;
+          yPosition = -0.35;
+          break;
+        default: // tshirt
+          scale = 0.06;
+          yPosition = -0.3;
+      }
+
+      model.scale.setScalar(scale);
+      model.position.set(0, yPosition, 0);
+      model.rotation.set(0, Math.PI, 0);
+
+      // Apply material
+      model.traverse(child => {
+        if (child instanceof THREE.Mesh) {
+          child.material = new THREE.MeshStandardMaterial({
+            color: new THREE.Color(color),
+            metalness: 0.1,
+            roughness: 0.8,
+            side: THREE.DoubleSide,
+          });
+        }
+      });
+
+      modelRef.current = model;
+      scene.add(model);
+
+      // Center camera on model
+      const box = new THREE.Box3().setFromObject(model);
+      const center = box.getCenter(new THREE.Vector3());
+      const size = box.getSize(new THREE.Vector3());
+
+      const fov = camera.fov * (Math.PI / 180);
+      const cameraDistance =
+        Math.max(size.x / camera.aspect, size.y) / (2 * Math.tan(fov / 2));
+
+      // Adjust camera position based on product type
+      const zOffset = productType === 'hoodie' ? 1.3 : 1.2;
+      camera.position.set(0, center.y - 0.15, cameraDistance * zOffset);
+      camera.lookAt(center);
+      controls.target.set(0, center.y - 0.15, 0);
+      controls.update();
+    });
+  };
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -143,12 +215,136 @@ const ProductViewer: React.FC<ProductViewerProps> = ({
     if (modelRef.current) {
       modelRef.current.traverse(child => {
         if (child instanceof THREE.Mesh) {
-          (child.material as THREE.MeshStandardMaterial).color.set(color);
-          (child.material as THREE.MeshStandardMaterial).needsUpdate = true;
+          const material = child.material as THREE.MeshStandardMaterial;
+          material.color.set(color);
+          material.needsUpdate = true;
         }
       });
     }
   }, [color]);
+
+  // Update logo texture
+  useEffect(() => {
+    if (!modelRef.current) {
+      console.log('No model available');
+      return;
+    }
+
+    // If no logo, reset to base material
+    if (!logo) {
+      modelRef.current.traverse(child => {
+        if (child instanceof THREE.Mesh) {
+          child.material = new THREE.MeshStandardMaterial({
+            color: new THREE.Color(color),
+            metalness: 0.1,
+            roughness: 0.8,
+            side: THREE.DoubleSide,
+          });
+          child.material.needsUpdate = true;
+        }
+      });
+      return;
+    }
+
+    console.log('Starting texture load for logo:', logo);
+
+    // Create a canvas for combined texture
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Set canvas size
+    canvas.width = 2048;
+    canvas.height = 2048;
+
+    // Load the logo image
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = logo;
+
+    img.onload = () => {
+      console.log('Logo image loaded');
+
+      // Fill background with product color
+      ctx.fillStyle = color;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Calculate logo size and position
+      const logoSize = canvas.width * 0.3; // 30% of canvas size
+      const x = (canvas.width - logoSize) * 0.5;
+      const y = canvas.height * 0.3; // Position at 30% from top
+
+      // Draw logo
+      ctx.drawImage(img, x, y, logoSize, logoSize);
+
+      // Add text if present
+      if (customText) {
+        ctx.font = 'bold 150px Arial';
+        ctx.fillStyle = textColor || '#000000';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(customText, canvas.width / 2, canvas.height * 0.7);
+      }
+
+      // Create and configure texture
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.flipY = false;
+      texture.needsUpdate = true;
+
+      // Apply material to model
+      modelRef.current?.traverse(child => {
+        if (child instanceof THREE.Mesh) {
+          // Create material with proper blending
+          const material = new THREE.MeshStandardMaterial({
+            map: texture,
+            color: new THREE.Color('#ffffff'), // Use white to show true texture colors
+            metalness: 0.1,
+            roughness: 0.8,
+            side: THREE.DoubleSide,
+          });
+
+          // Apply material
+          child.material = material;
+          material.needsUpdate = true;
+
+          // Adjust UV mapping for better logo placement
+          if (child.geometry.attributes.uv) {
+            const uvs = child.geometry.attributes.uv;
+            for (let i = 0; i < uvs.count; i++) {
+              const u = uvs.getX(i);
+              const v = uvs.getY(i);
+              // Scale and center UVs
+              uvs.setXY(
+                i,
+                u * 0.8 + 0.1, // Scale to 80% and offset by 10%
+                v * 0.8 + 0.1
+              );
+            }
+            uvs.needsUpdate = true;
+          }
+        }
+      });
+    };
+
+    img.onerror = error => {
+      console.error('Error loading logo image:', error);
+    };
+
+    return () => {
+      // Cleanup
+      canvas.remove();
+      if (modelRef.current) {
+        modelRef.current.traverse(child => {
+          if (child instanceof THREE.Mesh && child.material) {
+            if (child.material.map) {
+              child.material.map.dispose();
+            }
+            child.material.dispose();
+          }
+        });
+      }
+    };
+  }, [logo, color, customText, textColor]);
 
   // Update model type
   useEffect(() => {
