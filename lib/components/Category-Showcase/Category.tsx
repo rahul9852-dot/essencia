@@ -355,7 +355,7 @@ const CategoryShowcase = () => {
         />
         <div className="overlay absolute inset-0 bg-gradient-to-br from-[#0F172A]/95 to-[#1E293B]/95 transition-all duration-700" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/50" />
-        <div className="absolute inset-0 bg-[#292221]/20 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
       </div>
 
       <div

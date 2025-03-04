@@ -91,7 +91,7 @@ const SubHero = () => {
   return (
     <div
       ref={containerRef}
-      className="bg-primary-500 min-h-[200px] relative group overflow-hidden 
+      className="bg-black min-h-[200px] relative group overflow-hidden 
         px-4 sm:px-6 md:px-8 py-8 sm:py-10 md:py-12"
     >
       {/* Background gradient */}
@@ -104,7 +104,7 @@ const SubHero = () => {
           max-w-4xl mx-auto text-center"
       >
         <span
-          className="text-black/60 text-xs sm:text-sm tracking-widest uppercase mb-4 
+          className="text-white text-xs sm:text-sm tracking-widest uppercase mb-4 
           sm:mb-6 animate-fadeIn"
         >
           Summer Style Guide
@@ -113,7 +113,7 @@ const SubHero = () => {
         <div className="relative space-y-6 sm:space-y-8">
           <h1
             className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-center font-light 
-            bg-clip-text text-transparent bg-gradient-to-r from-black via-black/80 to-black
+            bg-clip-text text-transparent bg-gradient-to-r from-white via-white/80 to-white
             leading-tight sm:leading-tight md:leading-tight"
           >
             Tips for staying cool and comfortable while maintaining style in hot
@@ -137,10 +137,10 @@ const SubHero = () => {
             <span className="hidden sm:block w-[1px] h-7 bg-black/20" />
 
             <button
-              className="w-full sm:w-auto px-6 py-2.5 text-sm text-black/70 
+              className="w-full sm:w-auto px-6 py-2.5 text-sm text-black
               hover:text-black transition-all duration-300 relative overflow-hidden
-              group/button bg-white/50 backdrop-blur-sm rounded-full border border-black/10
-              hover:bg-white/70 active:scale-95"
+              group/button bg-white backdrop-blur-sm rounded-full border border-black/10
+              hover:bg-white active:scale-95"
               onClick={handleCustomize}
             >
               <span className="relative z-10">Customize →</span>

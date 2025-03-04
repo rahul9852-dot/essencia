@@ -3,6 +3,21 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
+// Client-side only component wrapper
+const ClientOnly = ({ children }: { children: React.ReactNode }) => {
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  if (!hasMounted) {
+    return null;
+  }
+
+  return <>{children}</>;
+};
+
 interface FashionItem {
   id: number;
   image: string;
@@ -114,60 +129,86 @@ const WinterFashionSection = () => {
   const [isHovered, setIsHovered] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const itemsPerPage = isMobile ? 2 : 4;
-  const totalPages = Math.ceil(fashionItems.length / itemsPerPage);
-  const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
+  const [mounted, setMounted] = useState(false);
+  const itemsPerPageRef = useRef(4);
+  const totalPagesRef = useRef(Math.ceil(fashionItems.length / 4));
+  const [autoScrollEnabled, setAutoScrollEnabled] = useState(false);
   const autoScrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const touchStartXRef = useRef<number>(0);
 
-  // Handle responsive state
+  // Handle mounted state
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    setMounted(true);
   }, []);
 
-  const currentItems = fashionItems.slice(
-    currentPage * itemsPerPage,
-    (currentPage + 1) * itemsPerPage
-  );
+  // Handle responsive state
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const checkMobile = () => {
+        const isMobileView = window.innerWidth < 768;
+        setIsMobile(isMobileView);
+        itemsPerPageRef.current = isMobileView ? 2 : 4;
+        totalPagesRef.current = Math.ceil(
+          fashionItems.length / itemsPerPageRef.current
+        );
+      };
 
-  const handlePrevious = () => {
-    setIsLoading(true);
-    setCurrentPage(prev => prev - 1);
-    setTimeout(() => setIsLoading(false), 300);
-  };
+      checkMobile();
+      window.addEventListener('resize', checkMobile);
 
-  const handleNext = () => {
+      // Enable auto-scroll after component is mounted
+      setAutoScrollEnabled(true);
+
+      return () => window.removeEventListener('resize', checkMobile);
+    }
+  }, []);
+
+  const currentItems = mounted
+    ? fashionItems.slice(
+        currentPage * itemsPerPageRef.current,
+        (currentPage + 1) * itemsPerPageRef.current
+      )
+    : [];
+
+  const handlePrevious = useCallback(() => {
     setIsLoading(true);
-    setCurrentPage(prev => prev + 1);
+    setCurrentPage(prev => (prev > 0 ? prev - 1 : prev));
     setTimeout(() => setIsLoading(false), 300);
-  };
+  }, []);
+
+  const handleNext = useCallback(() => {
+    setIsLoading(true);
+    setCurrentPage(prev =>
+      prev < totalPagesRef.current - 1 ? prev + 1 : prev
+    );
+    setTimeout(() => setIsLoading(false), 300);
+  }, []);
 
   // Auto scroll function
   const autoScroll = useCallback(() => {
-    if (isMobile && autoScrollEnabled) {
+    if (mounted && isMobile && autoScrollEnabled) {
       autoScrollTimeoutRef.current = setTimeout(() => {
-        setCurrentPage(prev => (prev + 1) % totalPages);
+        setCurrentPage(prev => (prev + 1) % totalPagesRef.current);
       }, 3000); // Change slide every 3 seconds
     }
-  }, [isMobile, autoScrollEnabled, totalPages]);
+  }, [isMobile, autoScrollEnabled, mounted]);
 
   // Handle auto scroll
   useEffect(() => {
     if (autoScrollTimeoutRef.current) {
       clearTimeout(autoScrollTimeoutRef.current);
     }
-    autoScroll();
+
+    if (mounted) {
+      autoScroll();
+    }
+
     return () => {
       if (autoScrollTimeoutRef.current) {
         clearTimeout(autoScrollTimeoutRef.current);
       }
     };
-  }, [currentPage, autoScroll]);
+  }, [currentPage, autoScroll, mounted]);
 
   // Handle touch events
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -181,7 +222,7 @@ const WinterFashionSection = () => {
 
     if (Math.abs(diffX) > 50) {
       // Minimum swipe distance
-      if (diffX > 0 && currentPage < totalPages - 1) {
+      if (diffX > 0 && currentPage < totalPagesRef.current - 1) {
         handleNext();
       } else if (diffX < 0 && currentPage > 0) {
         handlePrevious();
@@ -192,8 +233,36 @@ const WinterFashionSection = () => {
     setTimeout(() => setAutoScrollEnabled(true), 5000);
   };
 
+  // If not mounted yet, render a placeholder with the same dimensions
+  if (!mounted) {
+    return (
+      <section className="px-4 sm:px-6 lg:px-12 py-12 sm:py-16 max-w-[1500px] mx-auto">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 sm:mb-12 gap-4">
+          <div>
+            <h2 className="text-black text-3xl sm:text-4xl md:text-5xl font-normal mb-2">
+              Essancia Winter Fashion
+            </h2>
+            <p className="text-sm text-black">Loading items...</p>
+          </div>
+          <div className="px-4 sm:px-6 py-3 bg-primary-500 text-black rounded-full">
+            <span>View Collection</span>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          {[1, 2, 3, 4].map(item => (
+            <div key={item} className="animate-pulse">
+              <div className="aspect-[3/4] bg-gray-200 rounded-xl mb-4"></div>
+              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <section className="px-4 sm:px-6 lg:px-8 py-12 sm:py-16 max-w-[1400px] mx-auto">
+    <section className="px-4 sm:px-6 lg:px-12 py-12 sm:py-16 max-w-[1500px] mx-auto">
       {/* Enhanced Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 sm:mb-12 gap-4">
         <div>
@@ -201,9 +270,12 @@ const WinterFashionSection = () => {
             Essancia Winter Fashion
           </h2>
           <p className="text-sm text-black">
-            {currentPage * itemsPerPage + 1}-
-            {Math.min((currentPage + 1) * itemsPerPage, fashionItems.length)} of{' '}
-            {fashionItems.length} items
+            {currentPage * itemsPerPageRef.current + 1}-
+            {Math.min(
+              (currentPage + 1) * itemsPerPageRef.current,
+              fashionItems.length
+            )}{' '}
+            of {fashionItems.length} items
           </p>
         </div>
         <Link
@@ -231,7 +303,7 @@ const WinterFashionSection = () => {
               {currentPage > 0 && (
                 <button
                   onClick={handlePrevious}
-                  className="absolute -left-3 sm:-left-6 top-[35%] -translate-y-1/2 z-10 
+                  className="absolute -left-6 sm:-left-8 top-[35%] -translate-y-1/2 z-10 
                     w-12 h-12 sm:w-14 sm:h-14 bg-white shadow-lg rounded-full 
                     flex items-center justify-center
                     hover:bg-gray-50 hover:scale-110 active:scale-95
@@ -257,10 +329,10 @@ const WinterFashionSection = () => {
                 </button>
               )}
 
-              {currentPage < totalPages - 1 && (
+              {currentPage < totalPagesRef.current - 1 && (
                 <button
                   onClick={handleNext}
-                  className="absolute -right-3 sm:-right-6 top-[35%] -translate-y-1/2 z-10 
+                  className="absolute -right-6 sm:-right-8 top-[35%] -translate-y-1/2 z-10 
                     w-12 h-12 sm:w-14 sm:h-14 bg-white shadow-lg rounded-full 
                     flex items-center justify-center
                     hover:bg-gray-50 hover:scale-110 active:scale-95
@@ -324,10 +396,8 @@ const WinterFashionSection = () => {
                         src={item.image}
                         alt={item.title}
                         fill
-                        className="object-cover"
-                        sizes={
-                          isMobile ? '100vw' : '(max-width: 1024px) 50vw, 25vw'
-                        }
+                        className="object-cover object-top"
+                        sizes="100vw"
                         priority={currentPage === 0 && item.id <= 4}
                       />
                     </div>
@@ -372,7 +442,7 @@ const WinterFashionSection = () => {
             // Desktop Grid Layout
             <div
               className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 
-                gap-4 sm:gap-6 transition-opacity duration-300 
+                gap-6 sm:gap-8 transition-opacity duration-300 
                 ${isLoading ? 'opacity-50' : 'opacity-100'}`}
             >
               {currentItems.map(item => (
@@ -404,10 +474,8 @@ const WinterFashionSection = () => {
                         src={item.image}
                         alt={item.title}
                         fill
-                        className="object-cover"
-                        sizes={
-                          isMobile ? '100vw' : '(max-width: 1024px) 50vw, 25vw'
-                        }
+                        className="object-cover object-top"
+                        sizes="(max-width: 1024px) 50vw, 25vw"
                         priority={currentPage === 0 && item.id <= 4}
                       />
                     </div>
@@ -452,7 +520,7 @@ const WinterFashionSection = () => {
           {/* Enhanced Mobile Pagination Dots */}
           {isMobile && (
             <div className="flex justify-center mt-8 gap-3 px-4">
-              {Array.from({ length: totalPages }).map((_, index) => (
+              {Array.from({ length: totalPagesRef.current }).map((_, index) => (
                 <button
                   key={index}
                   onClick={() => {
@@ -467,7 +535,7 @@ const WinterFashionSection = () => {
                 >
                   {currentPage === index && autoScrollEnabled && (
                     <span
-                      className="absolute inset-0  animate-progress"
+                      className="absolute inset-0 bg-red-600"
                       style={{
                         transformOrigin: 'left',
                         animation: 'progress 3s linear infinite',
@@ -482,7 +550,7 @@ const WinterFashionSection = () => {
           {/* Desktop Page Indicators */}
           {!isMobile && (
             <div className="flex justify-center mt-12 gap-3">
-              {Array.from({ length: totalPages }).map((_, index) => (
+              {Array.from({ length: totalPagesRef.current }).map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentPage(index)}
@@ -503,4 +571,11 @@ const WinterFashionSection = () => {
   );
 };
 
-export default WinterFashionSection;
+// Export the component wrapped in ClientOnly to prevent hydration errors
+const WinterFashionSectionWithClientOnly = () => (
+  <ClientOnly>
+    <WinterFashionSection />
+  </ClientOnly>
+);
+
+export default WinterFashionSectionWithClientOnly;

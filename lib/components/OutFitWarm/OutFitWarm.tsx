@@ -8,7 +8,7 @@ const OutFitWarm = () => {
         <div className="relative">
           <div className="relative w-full aspect-[3/4] max-w-[500px]">
             <Image
-              src="/aboutUs/aboutUs-innerImg.webp"
+              src="/aboutUs/aboutUs-innerImg2.webp"
               alt="Woman in blue sportswear"
               fill
               className="object-cover rounded-lg"

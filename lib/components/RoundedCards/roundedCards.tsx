@@ -159,7 +159,7 @@ const RoundedCards: React.FC<RoundedCardsProps> = ({ categories }) => {
   return (
     <div
       ref={containerRef}
-      className="h-screen overflow-hidden bg-gradient-to-br from-white via-gray-50 to-gray-100 relative"
+      className=" h-screen overflow-hidden bg-gradient-to-br from-white via-gray-50 to-gray-100 relative"
     >
       {/* Progress indicator */}
       <div className="fixed top-1/2 right-4 md:right-8 transform -translate-y-1/2 z-50">

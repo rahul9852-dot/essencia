@@ -362,14 +362,17 @@ const ParallaxSection: React.FC<ParallaxSectionProps> = ({
                   }`}
               >
                 <div className="relative w-full h-full group">
-                  <Image
-                    src={card.image}
-                    alt={card.alt}
-                    fill
-                    className="object-cover transition-transform duration-500 
-                      group-hover:scale-105"
-                    sizes="(max-width: 768px) 100vw, 80vw"
-                  />
+                  <div className="absolute inset-0 overflow-hidden">
+                    <Image
+                      src={card.image}
+                      alt={card.alt}
+                      fill
+                      className="object-contain md:object-cover transition-transform duration-500 
+                        group-hover:scale-105 object-top"
+                      sizes="(max-width: 768px) 100vw, 80vw"
+                      quality={90}
+                    />
+                  </div>
                   <div
                     className="absolute inset-0 bg-gradient-to-t 
                     from-black/80 via-black/20 to-transparent"
