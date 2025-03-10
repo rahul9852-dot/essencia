@@ -59,7 +59,7 @@ const FAQ = () => {
           <h1 className="text-6xl text-white font-light">FAQs</h1>
         </div>
       </div>
-      <section className="py-16 px-4 bg-primary-700">
+      <section className="py-16 px-4 bg-white">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-light text-center mb-12">
             Frequently Asked Questions
@@ -72,12 +72,12 @@ const FAQ = () => {
                 className="border border-gray-200 rounded-lg overflow-hidden"
               >
                 <button
-                  className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-black/10 transition-colors duration-300"
+                  className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-black/5 transition-colors duration-300"
                   onClick={() => toggleFAQ(index)}
                 >
                   <span className="text-lg font-light">{faq.question}</span>
                   <ChevronDown
-                    className={`w-5 h-5 text-gray-500 transition-transform duration-300 ${
+                    className={`w-5 h-5 text-gray-800 transition-transform duration-300 ${
                       openIndex === index ? 'rotate-180' : ''
                     }`}
                   />
@@ -101,7 +101,7 @@ const FAQ = () => {
               Still have questions?{' '}
               <a
                 href="/contact"
-                className="text-black underline hover:text-gray-800 transition-colors"
+                className="text-gray-500 underline hover:text-gray-900 transition-colors"
               >
                 Contact our support team
               </a>

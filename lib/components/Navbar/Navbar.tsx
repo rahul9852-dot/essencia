@@ -584,9 +584,15 @@ const Navbar: React.FC = () => {
                     </button>
                     <div className="overflow-y-auto px-2">
                       {activeSubmenu === 'collections' ? (
-                        <CollectionsDropdown isOpen={true} />
+                        <CollectionsDropdown
+                          isOpen={true}
+                          onLinkClick={closeAllMenus}
+                        />
                       ) : (
-                        <PagesDropDown isOpen={true} />
+                        <PagesDropDown
+                          isOpen={true}
+                          onLinkClick={closeAllMenus}
+                        />
                       )}
                     </div>
                   </div>

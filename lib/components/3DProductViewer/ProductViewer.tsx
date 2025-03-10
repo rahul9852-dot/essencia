@@ -83,11 +83,15 @@ const ProductViewer: React.FC<ProductViewerProps> = ({
       // Apply material
       model.traverse(child => {
         if (child instanceof THREE.Mesh) {
-          child.material = new THREE.MeshStandardMaterial({
+          console.log(`Mesh name: ${child.name}`);
+          const material = new THREE.MeshStandardMaterial({
             color: new THREE.Color(color),
-            metalness: 0.1,
-            roughness: 0.8,
+            metalness: 0.2,
+            roughness: 0.6,
+            side: THREE.DoubleSide,
           });
+          child.material = material;
+          material.needsUpdate = true;
         }
       });
 
@@ -164,11 +168,14 @@ const ProductViewer: React.FC<ProductViewerProps> = ({
 
       newModel.traverse(child => {
         if (child instanceof THREE.Mesh) {
-          child.material = new THREE.MeshStandardMaterial({
+          const material = new THREE.MeshStandardMaterial({
             color: new THREE.Color(color),
-            metalness: 0.1,
-            roughness: 0.8,
+            metalness: 0.2,
+            roughness: 0.6,
+            side: THREE.DoubleSide,
           });
+          child.material = material;
+          material.needsUpdate = true;
         }
       });
 

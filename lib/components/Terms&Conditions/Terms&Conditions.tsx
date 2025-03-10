@@ -2,29 +2,30 @@ import React from 'react';
 
 const TermsOfService = () => {
   return (
-    <div className="min-h-screen bg-[#3b302e] text-[#A6A6A6] pt-40">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-5xl font-bold text-white mb-12 text-center">
-          Terms of service
+    <div className="min-h-screen bg-white text-black pt-32 sm:pt-36 md:pt-40 px-4 sm:px-6 md:px-8">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-light text-black mb-8 sm:mb-12 text-center">
+          Terms of Service
         </h1>
 
-        <section className="space-y-8">
+        <div className="h-0.5 w-24 bg-black mx-auto mb-12"></div>
+
+        <section className="space-y-10">
           <div>
-            <h2 className="text-lg font-semibold text-[#A6A6A6] mb-4">
+            <h2 className="text-lg sm:text-xl font-semibold text-black mb-4 border-b border-gray-200 pb-2">
               OVERVIEW
             </h2>
-            <p className="text-[#A6A6A6] leading-relaxed">
-              This website is operated by [Your Company Name]. Throughout the
-              site, the terms &ldquo;we&rdquo;, &ldquo;us&rdquo; and
-              &ldquo;our&rdquo; refer to [Your Company Name]. [Your Company
-              Name] offers this website, including all information, tools and
-              Services available from this site to you, the user, conditioned
-              upon your acceptance of all terms, conditions, policies and
-              notices stated here.
+            <p className="text-gray-800 leading-relaxed">
+              This website is operated by Essancia Fashion. Throughout the site,
+              the terms &ldquo;we&rdquo;, &ldquo;us&rdquo; and &ldquo;our&rdquo;
+              refer to Essancia Fashion. Essancia Fashion offers this website,
+              including all information, tools and Services available from this
+              site to you, the user, conditioned upon your acceptance of all
+              terms, conditions, policies and notices stated here.
             </p>
           </div>
 
-          <div className="text-[#A6A6A6] leading-relaxed space-y-6">
+          <div className="text-gray-800 leading-relaxed space-y-6">
             <p>
               By visiting our site and/or purchasing something from us, you
               engage in our &ldquo;Service&rdquo; and agree to be bound by the
@@ -59,17 +60,17 @@ const TermsOfService = () => {
             </p>
 
             <p>
-              Our store is hosted on [Platform Name]. They provide us with the
-              online e-commerce platform that allows us to sell our products and
+              Our store is hosted on Vercel. They provide us with the online
+              e-commerce platform that allows us to sell our products and
               Services to you.
             </p>
           </div>
 
           <div>
-            <h2 className="text-lg font-semibold text-[#A6A6A6] mb-4">
+            <h2 className="text-lg sm:text-xl font-semibold text-black mb-4 border-b border-gray-200 pb-2">
               SECTION 1 - ONLINE STORE TERMS
             </h2>
-            <div className="text-[#A6A6A6] leading-relaxed space-y-4">
+            <div className="text-gray-800 leading-relaxed space-y-4">
               <p>
                 By agreeing to these Terms of Service, you represent that you
                 are at least the age of majority in your state or province of
@@ -95,10 +96,10 @@ const TermsOfService = () => {
           </div>
 
           <div>
-            <h2 className="text-lg font-semibold text-[#A6A6A6] mb-4">
+            <h2 className="text-lg sm:text-xl font-semibold text-black mb-4 border-b border-gray-200 pb-2">
               SECTION 2 - GENERAL CONDITIONS
             </h2>
-            <div className="text-[#A6A6A6] leading-relaxed space-y-4">
+            <div className="text-gray-800 leading-relaxed space-y-4">
               <p>
                 We reserve the right to refuse Service to anyone for any reason
                 at any time.
@@ -126,10 +127,10 @@ const TermsOfService = () => {
           </div>
 
           <div>
-            <h2 className="text-lg font-semibold text-[#A6A6A6] mb-4">
+            <h2 className="text-lg sm:text-xl font-semibold text-black mb-4 border-b border-gray-200 pb-2">
               SECTION 3 - ACCURACY, COMPLETENESS AND TIMELINESS OF INFORMATION
             </h2>
-            <div className="text-[#A6A6A6] leading-relaxed space-y-4">
+            <div className="text-gray-800 leading-relaxed space-y-4">
               <p>
                 We are not responsible if information made available on this
                 site is not accurate, complete or current. The material on this
@@ -148,20 +149,31 @@ const TermsOfService = () => {
                 responsibility to monitor changes to our site.
               </p>
             </div>
-            <div>
-              <h2 className="text-lg font-semibold text-[#A6A6A6] mb-4">
-                SECTION 20 - CONTACT INFORMATION
-              </h2>
-              <p className="">
-                Questions about the Terms of Service should be sent to us at
-                vikas.shinedezign@gmail.com. Our contact information is posted
-                below: [INSERT TRADING NAME] vikas.shinedezign@gmail.com [INSERT
-                BUSINESS ADDRESS] [INSERT BUSINESS PHONE NUMBER] [INSERT
-                BUSINESS REGISTRATION NUMBER] [INSERT VAT NUMBER]
+          </div>
+
+          <div>
+            <h2 className="text-lg sm:text-xl font-semibold text-black mb-4 border-b border-gray-200 pb-2">
+              SECTION 4 - CONTACT INFORMATION
+            </h2>
+            <div className="text-gray-800 leading-relaxed bg-gray-50 p-6 rounded-lg border border-gray-200">
+              <p className="mb-4">
+                Questions about the Terms of Service should be sent to us at:
               </p>
+              <div className="space-y-2">
+                <p>
+                  <strong>Essancia Fashion</strong>
+                </p>
+                <p>Email: contact@essanciafashion.com</p>
+                <p>Address: Worli, Mumbai, India</p>
+                <p>Phone: +91 8080261261</p>
+              </div>
             </div>
           </div>
         </section>
+
+        <div className="mt-16 mb-8 text-center text-sm text-gray-500">
+          Last updated: June 2023
+        </div>
       </div>
     </div>
   );

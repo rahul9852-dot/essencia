@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Button from '../ui/Button';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -114,12 +115,6 @@ const SportswearSection = () => {
         px-4 sm:px-6 md:px-8 lg:px-16 py-16 sm:py-20 md:py-24 lg:py-28 
         overflow-hidden"
     >
-      {/* Background Pattern */}
-      {/* <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0 bg-gradient-to-br from-black/5 to-transparent" />
-        <div className="h-full w-full bg-[linear-gradient(45deg,transparent_25%,black_25%,black_50%,transparent_50%,transparent_75%,black_75%)] bg-[length:20px_20px]" />
-      </div> */}
-
       <div
         className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-2 
         gap-8 sm:gap-12 md:gap-16 lg:gap-20 relative"
@@ -205,10 +200,7 @@ const SportswearSection = () => {
             </p>
           </div>
 
-          {/*  bg-[#9c6d4e] text-white px-6 sm:px-8 py-3 rounded-md 
-              hover:bg-[#8b5e3f] transition-all duration-300  */}
-
-          <Link
+          {/* <Link
             href="/collections/sportswear"
             className="cta-button group inline-flex items-center mt-8 sm:mt-10 
               bg-[#9c6d4e] text-white px-6 sm:px-8 py-3 rounded-md 
@@ -240,7 +232,15 @@ const SportswearSection = () => {
                 opacity-0 group-hover:opacity-100 
                 transition-opacity duration-300 ease-out"
             />
-          </Link>
+          </Link> */}
+          <Button
+            href="/collections"
+            variant="primary"
+            size="lg"
+            className="rounded-full mt-10"
+          >
+            View Collection
+          </Button>
         </div>
       </div>
     </section>
