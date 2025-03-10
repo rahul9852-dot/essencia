@@ -70,19 +70,19 @@ const HeroCardSection = () => {
         <div className="w-full lg:w-1/2">
           <div className="flex flex-col space-y-6">
             <h2 className="text-4xl md:text-5xl lg:text-7xl font-light text-black leading-tight text-center lg:text-left">
-              Jet-setting Fashion for Summer.
+              Style That Travels With You.
             </h2>
             <p className="text-base md:text-lg text-gray-800 text-center lg:text-left">
-              Discover versatile pieces that effortlessly transition from day
-              tours to evening cocktails, ensuring you look and feel your best
-              throughout your vacation.
+              From casual streetwear to cozy essentials, discover apparel that
+              moves with your lifestyle. Whether you&apos;re embracing urban
+              adventures or unwinding in your favorite spot, our ESSaNCIA
+              collection ensures you stay effortlessly stylish and comfortable.
             </p>
             <p className="text-base md:text-lg text-gray-800 text-center lg:text-left">
-              Whether you&apos;re exploring exotic destinations or lounging by
-              the pool, these travel-ready ensembles will make a statement
-              wherever your journey takes you. Elevate your summer getaway style
-              with our expert tips and outfit inspirations tailored for the
-              modern globetrotter.
+              Designed for every season, our T-shirts, Hoodies, and Sweatshirts
+              blend fashion with function—keeping you cool in summer and snug in
+              winter. Elevate your everyday wardrobe with versatile pieces made
+              for trendsetters on the go.
             </p>
             <div className="flex justify-center lg:justify-start">
               <Link href="/collections">
