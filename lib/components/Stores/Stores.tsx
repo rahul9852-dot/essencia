@@ -5,30 +5,30 @@ import React, { useState } from 'react';
 const LOCATIONS = [
   {
     id: 1,
-    name: 'Canada',
-    stores: 12,
+    name: ' Delhi',
+    stores: 1,
     isActive: true,
     image: '/images/store_1.webp',
   },
   {
     id: 2,
-    name: 'United States',
-    stores: 24,
+    name: 'Mumbai',
+    stores: 12,
     isActive: false,
     isHighlighted: true,
     image: '/images/store_4.webp',
   },
   {
     id: 3,
-    name: 'United Kingdom',
-    stores: 8,
+    name: 'Jaipur',
+    stores: 4,
     isActive: false,
     image: '/images/store_1.webp',
   },
   {
     id: 4,
-    name: 'Newport Beach',
-    stores: 3,
+    name: 'United Kingdom',
+    stores: 1,
     isActive: false,
     image: '/images/store_4.webp',
   },
@@ -39,7 +39,7 @@ const Stores = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <div className="relative flex flex-col md:flex-row w-full min-h-screen bg-[#1C1C1C]">
+    <div className="relative flex flex-col md:flex-row w-full min-h-screen bg-[#010203]">
       {/* Left Image Section with Image Transitions */}
       <div className="w-full md:w-1/2 h-[50vh] md:h-screen relative overflow-hidden">
         {LOCATIONS.map(location => (

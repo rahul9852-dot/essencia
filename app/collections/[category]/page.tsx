@@ -7,18 +7,21 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { collectionsData } from '@/lib/constants/Collections';
 import PageContainer from '@/lib/components/PageContainer/PageContainer';
 import { Filter, SlidersHorizontal, ChevronDown, Search } from 'lucide-react';
+import { useParams } from 'next/navigation';
+import Button from '@/lib/components/ui/Button';
 
 // Define valid categories type
 type Category = keyof typeof collectionsData;
 
-type Props = {
-  params: { category: Category };
-};
+// type Props = {
+//   params: { category: Category };
+// };
 
 // Client component
-export default function CategoryPage({ params }: Props) {
-  const { category } = params;
-  const collection = collectionsData[category];
+export default function CategoryPage() {
+  const params = useParams();
+  const collectionType = (params.category as Category) || 'hoodies';
+  const collection = collectionsData[collectionType];
   const [filterOpen, setFilterOpen] = useState(false);
   const [selectedSort, setSelectedSort] = useState('featured');
 
@@ -208,14 +211,14 @@ export default function CategoryPage({ params }: Props) {
   return (
     <PageContainer>
       <div ref={containerRef} className="w-full">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
           {/* Collection Header with Background */}
           <div
             ref={headerRef}
             className="relative mb-12 py-16 px-8 sm:px-12 rounded-3xl overflow-hidden"
           >
             {/* Background Image and Overlay */}
-            <div className="absolute inset-0 z-0">
+            <div className="absolute inset-0 z-0 bg-black">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-indigo-900/85 to-purple-900/90 mix-blend-multiply"></div>
               <div className="absolute inset-0 bg-grid-pattern opacity-20"></div>
             </div>
@@ -284,7 +287,7 @@ export default function CategoryPage({ params }: Props) {
           >
             <div className="flex items-center space-x-2 text-gray-600 mb-4 sm:mb-0">
               <Filter className="w-4 h-4" />
-              <span className="text-sm font-medium">
+              <span className="text-sm font-medium text-black">
                 Showing {collection.items.length} products
               </span>
             </div>
@@ -293,14 +296,14 @@ export default function CategoryPage({ params }: Props) {
                 <select
                   value={selectedSort}
                   onChange={e => setSelectedSort(e.target.value)}
-                  className="appearance-none bg-white border border-gray-200 rounded-lg pl-4 pr-10 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[180px]"
+                  className="appearance-none text-black bg-white border border-gray-300 rounded-lg pl-4 pr-10 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[180px]"
                 >
                   <option value="featured">Sort by: Featured</option>
                   <option value="price-asc">Price: Low to High</option>
                   <option value="price-desc">Price: High to Low</option>
                   <option value="newest">Newest First</option>
                 </select>
-                <ChevronDown className="absolute right-3 top-3 w-4 h-4 text-gray-500 pointer-events-none" />
+                <ChevronDown className="absolute right-3 top-3 w-4 h-4 text-black pointer-events-none" />
               </div>
               <button
                 onClick={() => setFilterOpen(!filterOpen)}
@@ -326,28 +329,32 @@ export default function CategoryPage({ params }: Props) {
                         type="checkbox"
                         className="rounded text-blue-600 focus:ring-blue-500 mr-2"
                       />
-                      <span className="text-sm text-gray-700">Under $50</span>
+                      <span className="text-sm text-gray-700">Under ₹500</span>
                     </label>
                     <label className="flex items-center">
                       <input
                         type="checkbox"
                         className="rounded text-blue-600 focus:ring-blue-500 mr-2"
                       />
-                      <span className="text-sm text-gray-700">$50 - $100</span>
+                      <span className="text-sm text-gray-700">
+                        ₹500 - ₹1000
+                      </span>
                     </label>
                     <label className="flex items-center">
                       <input
                         type="checkbox"
                         className="rounded text-blue-600 focus:ring-blue-500 mr-2"
                       />
-                      <span className="text-sm text-gray-700">$100 - $200</span>
+                      <span className="text-sm text-gray-700">
+                        ₹1000 - ₹2000
+                      </span>
                     </label>
                     <label className="flex items-center">
                       <input
                         type="checkbox"
                         className="rounded text-blue-600 focus:ring-blue-500 mr-2"
                       />
-                      <span className="text-sm text-gray-700">Over $200</span>
+                      <span className="text-sm text-gray-700">Over ₹2000</span>
                     </label>
                   </div>
                 </div>
@@ -370,7 +377,7 @@ export default function CategoryPage({ params }: Props) {
 
                 <div>
                   <h3 className="font-medium text-gray-900 mb-3">Size</h3>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 text-black">
                     {['XS', 'S', 'M', 'L', 'XL', 'XXL'].map(size => (
                       <button
                         key={size}
@@ -384,12 +391,19 @@ export default function CategoryPage({ params }: Props) {
               </div>
 
               <div className="flex justify-between mt-8 pt-6 border-t border-gray-100">
-                <button className="text-sm text-gray-600 hover:text-gray-900">
+                <button
+                  onClick={() => setFilterOpen(!filterOpen)}
+                  className="text-gray-600 text-sm hover:text-black"
+                >
                   Clear all filters
                 </button>
-                <button className="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => setFilterOpen(!filterOpen)}
+                >
                   Apply Filters
-                </button>
+                </Button>
               </div>
             </div>
           )}
@@ -406,10 +420,10 @@ export default function CategoryPage({ params }: Props) {
                 className="opacity-0 bg-white rounded-xl overflow-hidden shadow-sm transition-all duration-300 group"
               >
                 <Link
-                  href={`/collections/${category}/${item.id}`}
+                  href={`/collections/${collectionType}/${item.id}`}
                   className="block h-full"
                 >
-                  <div className="relative h-80 w-full overflow-hidden">
+                  <div className="relative h-96 w-full overflow-hidden">
                     <Image
                       src={
                         Array.isArray(item.images)
@@ -514,25 +528,24 @@ export default function CategoryPage({ params }: Props) {
           {collection.items.length > 0 && (
             <div className="flex justify-center mt-16">
               <nav className="flex items-center space-x-2">
-                <button className="px-3 py-2 rounded-md border border-gray-300 text-gray-500 hover:bg-gray-50">
+                <Button variant="outline" size="sm" className="text-gray-500">
                   Previous
-                </button>
-                <button className="px-3 py-2 rounded-md bg-blue-600 text-white">
+                </Button>
+                <Button variant="primary" size="sm">
                   1
-                </button>
-                <button className="px-3 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
+                </Button>
+                <Button variant="outline" size="sm">
                   2
-                </button>
-                <button className="px-3 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
+                </Button>
+                <Button variant="outline" size="sm">
                   3
-                </button>
-                <span className="px-2 text-gray-500">...</span>
-                <button className="px-3 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
-                  8
-                </button>
-                <button className="px-3 py-2 rounded-md border border-gray-300 text-gray-500 hover:bg-gray-50">
+                </Button>
+                <Button variant="outline" size="sm">
+                  4
+                </Button>
+                <Button variant="outline" size="sm" className="text-gray-500">
                   Next
-                </button>
+                </Button>
               </nav>
             </div>
           )}
@@ -553,11 +566,15 @@ export default function CategoryPage({ params }: Props) {
                   <input
                     type="email"
                     placeholder="Enter your email"
-                    className="px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[240px]"
+                    className="px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-black min-w-[240px]"
                   />
-                  <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors whitespace-nowrap">
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    className="whitespace-nowrap"
+                  >
                     Subscribe
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>

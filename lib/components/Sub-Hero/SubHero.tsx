@@ -113,8 +113,7 @@ const SubHero = () => {
         <div className="relative space-y-6 sm:space-y-8">
           <h1
             className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-center font-light 
-            bg-clip-text text-transparent bg-gradient-to-r from-white via-white/80 to-white
-            leading-tight sm:leading-tight md:leading-tight"
+            text-white leading-tight sm:leading-tight md:leading-tight"
           >
             Tips for staying cool and comfortable while maintaining style in hot
             weather.
@@ -126,21 +125,21 @@ const SubHero = () => {
               transition-opacity duration-500`}
           >
             <button
-              className="w-full sm:w-auto px-6 py-2.5 text-sm text-black/70 
+              className="w-full sm:w-auto px-6 py-2.5 text-sm text-black
               hover:text-black transition-all duration-300 relative overflow-hidden
-              group/button bg-white/50 backdrop-blur-sm rounded-full border border-black/10
-              hover:bg-white/70 active:scale-95"
+              group/button bg-white rounded-full border border-white
+              hover:bg-white/90 active:scale-95"
             >
               <span className="relative z-10">Read More →</span>
             </button>
 
-            <span className="hidden sm:block w-[1px] h-7 bg-black/20" />
+            <span className="hidden sm:block w-[1px] h-7 bg-white/20" />
 
             <button
-              className="w-full sm:w-auto px-6 py-2.5 text-sm text-black
-              hover:text-black transition-all duration-300 relative overflow-hidden
-              group/button bg-white backdrop-blur-sm rounded-full border border-black/10
-              hover:bg-white active:scale-95"
+              className="w-full sm:w-auto px-6 py-2.5 text-sm text-white
+              hover:text-white transition-all duration-300 relative overflow-hidden
+              group/button bg-transparent rounded-full border border-white
+              hover:bg-white/10 active:scale-95"
               onClick={handleCustomize}
             >
               <span className="relative z-10">Customize →</span>

@@ -14,7 +14,7 @@ const FitnessFashion = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center w-full bg-[#8B6646] mb-8">
+    <div className="flex flex-col items-center justify-center w-full bg-white mb-8">
       <p
         className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl 
         text-center font-light text-black/80 

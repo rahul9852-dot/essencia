@@ -7,37 +7,24 @@ import gsap from 'gsap';
 const categories = [
   {
     title: 'Essancia Collections',
-    links: ['Hoodies', 'Tshirts', 'Sweatshirts', 'Pants'],
+    links: ['Hoodies', 'Tshirts', 'Sweatshirts', 'Jumpsuits'],
   },
   {
     title: 'Fusion Wear Clothes',
     links: [
       'Kurtas & Suits',
       'Ethnic Wear',
-      'Lehenga Cholis',
       'Skirts & Palazzos',
       'Shorts & Skirts',
     ],
   },
   {
     title: 'Western Wear',
-    links: [
-      'Dresses',
-      'Playsuits',
-      'Shorts & Skirts',
-      'Trousers & Capris',
-      'Tshirts',
-    ],
+    links: ['Dresses', 'Playsuits', 'Shorts & Skirts', 'Trousers & Capris'],
   },
   {
     title: 'Handbags',
-    links: [
-      'Long Wallets',
-      'Compact Wallets',
-      'Card Holders',
-      'Phone Cases',
-      'Pouches',
-    ],
+    links: ['Long Wallets', 'Compact Wallets', 'Card Holders', 'Phone Cases'],
   },
   // {
   //   title: 'Small Leather Goods',
@@ -51,10 +38,12 @@ const categories = [
 
 interface CollectionsDropdownProps {
   isOpen: boolean;
+  onLinkClick?: () => void;
 }
 
 const CollectionsDropdown: React.FC<CollectionsDropdownProps> = ({
   isOpen,
+  onLinkClick,
 }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -118,6 +107,23 @@ const CollectionsDropdown: React.FC<CollectionsDropdownProps> = ({
     }
   }, [isOpen]);
 
+  // Handle link click with smooth transition
+  const handleLinkClick = (e: React.MouseEvent, href: string) => {
+    // Only apply special handling on mobile
+    if (window.innerWidth < 768 && onLinkClick) {
+      e.preventDefault();
+
+      // First close the menu with animation
+      onLinkClick();
+
+      // Then navigate after animation completes
+      setTimeout(() => {
+        window.location.href = href;
+      }, 400); // Match this with the animation duration
+    }
+    // On desktop, let the link work normally
+  };
+
   return (
     <div
       ref={dropdownRef}
@@ -135,28 +141,32 @@ const CollectionsDropdown: React.FC<CollectionsDropdownProps> = ({
                 {category.title}
               </h3>
               <ul className="space-y-2 sm:space-y-[10px]">
-                {category.links.map((link, linkIndex) => (
-                  <li key={linkIndex}>
-                    <Link
-                      href={
-                        link.toLowerCase() === 'hoodies' ||
-                        link.toLowerCase() === 'tshirts' ||
-                        link.toLowerCase() === 'sweatshirts' ||
-                        link.toLowerCase() === 'pants'
-                          ? `/collections/${link.toLowerCase()}`
-                          : `/collections`
-                      }
-                      className="text-gray-600 hover:text-black transition-all duration-300
-                        text-[14px] sm:text-[14px] leading-tight block py-0.5 relative group"
-                    >
-                      <span className="relative z-10 inline-block">
-                        {link}
-                        <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-black transition-all duration-300 group-hover:w-full"></span>
-                      </span>
-                      <span className="absolute left-0 top-0 w-0 h-full bg-gray-50 -z-10 transition-all duration-300 ease-out group-hover:w-full rounded-sm"></span>
-                    </Link>
-                  </li>
-                ))}
+                {category.links.map((link, linkIndex) => {
+                  const href =
+                    link.toLowerCase() === 'hoodies' ||
+                    link.toLowerCase() === 'tshirts' ||
+                    link.toLowerCase() === 'sweatshirts' ||
+                    link.toLowerCase() === 'pants'
+                      ? `/collections/${link.toLowerCase()}`
+                      : `/collections`;
+
+                  return (
+                    <li key={linkIndex}>
+                      <Link
+                        href={href}
+                        className="text-gray-600 hover:text-black transition-all duration-300
+                          text-[14px] sm:text-[14px] leading-tight block py-0.5 relative group"
+                        onClick={e => handleLinkClick(e, href)}
+                      >
+                        <span className="relative z-10 inline-block">
+                          {link}
+                          <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-black transition-all duration-300 group-hover:w-full"></span>
+                        </span>
+                        <span className="absolute left-0 top-0 w-0 h-full bg-gray-50 -z-10 transition-all duration-300 ease-out group-hover:w-full rounded-sm"></span>
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}

@@ -33,7 +33,7 @@ const HeroCardSection = () => {
 
   return (
     <section
-      className="bg-white w-full px-4 sm:px-8 lg:px-16 py-8 lg:py-16"
+      className="bg-white w-full px-4 sm:px-8 lg:px-16 py-8 lg:py-16 border-t border-gray-100"
       aria-label="Summer Fashion Collection"
     >
       <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-32">
@@ -69,7 +69,7 @@ const HeroCardSection = () => {
 
         <div className="w-full lg:w-1/2">
           <div className="flex flex-col space-y-6">
-            <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold text-black leading-tight text-center lg:text-left">
+            <h2 className="text-4xl md:text-5xl lg:text-7xl font-light text-black leading-tight text-center lg:text-left">
               Jet-setting Fashion for Summer.
             </h2>
             <p className="text-base md:text-lg text-gray-800 text-center lg:text-left">
@@ -88,8 +88,8 @@ const HeroCardSection = () => {
               <Link href="/collections">
                 <button
                   className="inline-flex items-center justify-center px-6 py-3 
-                    bg-primary-500 text-black/70 hover:text-black hover:bg-primary-600 rounded-full 
-                    transition-colors duration-300 mt-4 group"
+                    bg-black text-white rounded-full 
+                    transition-colors duration-300 mt-4 group hover:bg-gray-900"
                   aria-label="Explore summer collection"
                 >
                   <span className="flex items-center gap-2">

@@ -16,6 +16,7 @@ import ProductCarousel from '@/lib/components/Carousel/Carousel';
 import ColorSelector from '@/lib/components/ColorSelector/ColorSelector';
 import SizeSelector from '@/lib/components/SizeSelector/SizeSelector';
 import PageContainer from '@/lib/components/PageContainer/PageContainer';
+import Button from '@/lib/components/ui/Button';
 
 // Define valid categories type
 type Category = keyof typeof collectionsData;
@@ -227,20 +228,20 @@ export default function ProductPage({ params }: Props) {
 
             {product.colors && (
               <div className="mb-6 animate-in">
-                <h2 className="text-lg font-medium mb-3">Color</h2>
+                <h2 className=" text-black text-lg font-medium mb-3">Color</h2>
                 <ColorSelector colors={product.colors} />
               </div>
             )}
 
             {product.sizes && (
               <div className="mb-6 animate-in">
-                <h2 className="text-lg font-medium mb-3">Size</h2>
+                <h2 className=" text-black text-lg font-medium mb-3">Size</h2>
                 <SizeSelector sizes={product.sizes} />
               </div>
             )}
 
             <div className="mb-6 animate-in">
-              <h2 className="text-lg font-medium mb-3">Quantity</h2>
+              <h2 className="text-black text-lg font-medium mb-3">Quantity</h2>
               <div className="flex items-center border border-gray-300 rounded-md w-36">
                 <button
                   onClick={decrementQuantity}
@@ -249,7 +250,7 @@ export default function ProductPage({ params }: Props) {
                 >
                   -
                 </button>
-                <span className="flex-1 text-center font-medium">
+                <span className="text-black flex-1 text-center font-medium">
                   {quantity}
                 </span>
                 <button
@@ -266,13 +267,17 @@ export default function ProductPage({ params }: Props) {
               ref={actionsRef}
               className="flex flex-col sm:flex-row gap-4 mb-8"
             >
-              <button className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center">
+              <Button
+                variant="primary"
+                fullWidth
+                className="flex items-center justify-center"
+              >
                 <ShoppingCart className="w-5 h-5 mr-2" />
                 Add to cart
-              </button>
-              <button className="flex-1 bg-gray-900 text-white py-3 px-6 rounded-md hover:bg-gray-800 transition-colors">
+              </Button>
+              <Button variant="primary" fullWidth>
                 Buy it now
-              </button>
+              </Button>
               <button
                 onClick={toggleWishlist}
                 className={`p-3 rounded-md border ${isWishlisted ? 'bg-red-50 border-red-200 text-red-500' : 'bg-gray-50 border-gray-200 text-gray-600'} hover:bg-gray-100 transition-colors`}
@@ -287,15 +292,15 @@ export default function ProductPage({ params }: Props) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 animate-in">
               <div className="flex items-center p-3 bg-gray-50 rounded-lg">
                 <Truck className="w-5 h-5 text-gray-700 mr-2" />
-                <span className="text-sm">Free Shipping</span>
+                <span className="text-sm text-black">Free Shipping</span>
               </div>
               <div className="flex items-center p-3 bg-gray-50 rounded-lg">
                 <Shield className="w-5 h-5 text-gray-700 mr-2" />
-                <span className="text-sm">2 Year Warranty</span>
+                <span className="text-sm text-black">2 Year Warranty</span>
               </div>
               <div className="flex items-center p-3 bg-gray-50 rounded-lg">
                 <RotateCcw className="w-5 h-5 text-gray-700 mr-2" />
-                <span className="text-sm">30 Day Returns</span>
+                <span className="text-sm text-black">30 Day Returns</span>
               </div>
             </div>
 

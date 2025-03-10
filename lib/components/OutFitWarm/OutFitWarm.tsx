@@ -1,61 +1,54 @@
 import React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import Button from '../ui/Button';
+
 const OutFitWarm = () => {
   return (
-    <section className="bg-[#F5F5F5] min-h-screen flex items-center px-4 md:px-16">
-      <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 py-20">
-        <div className="relative">
-          <div className="relative w-full aspect-[3/4] max-w-[500px]">
+    <section className="bg-white min-h-screen flex items-center px-4 sm:px-6 md:px-8 lg:px-16 py-12 md:py-16 lg:py-20">
+      <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16">
+        <div className="relative order-2 lg:order-1 mx-auto lg:mx-0 w-full max-w-md lg:max-w-none">
+          <div className="relative w-full aspect-[3/4] max-w-[450px] mx-auto lg:mx-0">
             <Image
               src="/aboutUs/aboutUs-innerImg2.webp"
               alt="Woman in blue sportswear"
               fill
-              className="object-cover rounded-lg"
+              className="object-cover rounded-lg shadow-lg"
               priority
             />
           </div>
-          <div className="absolute bottom-[-10%] right-[-10%] w-[80%] aspect-[3/4] max-w-[400px]">
+          <div className="absolute bottom-[-5%] sm:bottom-[-10%] right-[-5%] sm:right-[-10%] w-[60%] sm:w-[70%] md:w-[80%] aspect-[3/4] max-w-[400px] hidden sm:block">
             <Image
               src="/aboutUs/aboutUs-innerImg2.webp"
               alt="Woman in black sportswear"
               fill
-              className="object-cover rounded-lg"
+              className="object-cover rounded-lg shadow-lg"
             />
           </div>
         </div>
-        <div className="flex flex-col justify-center lg:pl-8">
-          <h2 className="text-5xl md:text-7xl font-normal mb-8 leading-tight">
-            Outfits Warm & Stylish in the Cold Months.
+
+        <div className="flex flex-col justify-center order-1 lg:order-2">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light px-2 sm:px-4 text-black mb-4 sm:mb-6">
+            Outfit yourself in warmth and style
           </h2>
-          <div className="space-y-6 text-gray-600">
-            <p className="text-lg mb-8">
-              Winter fashion is all about keeping warm and cozy while still
-              looking stylish. With the colder weather comes a variety of
-              clothing options that are both functional and fashionable. Here
-              are some popular winter fashion trends to consider:
-            </p>
-            <p className="text-lg mb-4">
-              Winter is the perfect time to invest in a good coat or jacket.
-              From puffer coats to wool coats, there are plenty of options to
-              choose from. Parkas, shearling jackets, and faux fur coats are
-              also popular choices.
-            </p>
-            <p className="text-lg">
-              Fashion clothes are constantly evolving, and new styles and
-              designs are introduced every season.
-            </p>
+          <p className="text-sm sm:text-base md:text-lg text-gray-800 mb-6 sm:mb-8 leading-relaxed px-2 sm:px-4">
+            Our collection features premium quality fabrics that provide both
+            comfort and durability. Each piece is carefully crafted to ensure
+            you stay warm without compromising on style. From casual everyday
+            wear to statement pieces for special occasions, we have something
+            for everyone.
+          </p>
+          <div className="flex flex-wrap gap-4 px-2 sm:px-4 sm:items-center">
+            <Button href="/collections/all" variant="primary" size="lg">
+              Shop Collection
+            </Button>
+            <Button href="/customize" variant="secondary" size="lg">
+              Customize Now
+            </Button>
           </div>
-          <Link
-            href="/collections/sportswear"
-            className="inline-flex mt-10 bg-[#9c6d4e] text-white px-8 py-3 rounded-lg 
-              hover:bg-[#8B5E3F] transition-colors duration-300 w-fit"
-          >
-            SHOP NOW
-          </Link>
         </div>
       </div>
     </section>
   );
 };
+
 export default OutFitWarm;

@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import Button from '../ui/Button';
 
 // Client-side only component wrapper
 const ClientOnly = ({ children }: { children: React.ReactNode }) => {
@@ -236,7 +236,7 @@ const WinterFashionSection = () => {
   // If not mounted yet, render a placeholder with the same dimensions
   if (!mounted) {
     return (
-      <section className="px-4 sm:px-6 lg:px-12 py-12 sm:py-16 max-w-[1500px] mx-auto">
+      <section className="px-4 sm:px-6 lg:px-12 py-12 sm:py-16  mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 sm:mb-12 gap-4">
           <div>
             <h2 className="text-black text-3xl sm:text-4xl md:text-5xl font-normal mb-2">
@@ -262,12 +262,12 @@ const WinterFashionSection = () => {
   }
 
   return (
-    <section className="px-4 sm:px-6 lg:px-12 py-12 sm:py-16 max-w-[1500px] mx-auto">
+    <section className="px-4 sm:px-6 lg:px-12 py-12 sm:py-16 mx-auto">
       {/* Enhanced Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 sm:mb-12 gap-4">
         <div>
           <h2 className="text-black text-3xl sm:text-4xl md:text-5xl font-normal mb-2">
-            Essancia Winter Fashion
+            Essancia Fashion
           </h2>
           <p className="text-sm text-black">
             {currentPage * itemsPerPageRef.current + 1}-
@@ -278,22 +278,14 @@ const WinterFashionSection = () => {
             of {fashionItems.length} items
           </p>
         </div>
-        <Link
-          href="/collections/winter-fashion"
-          className="group inline-flex items-center space-x-2 px-4 sm:px-6 py-3 
-            bg-primary-500 text-black rounded-full hover:bg-primary-600 
-            transition-all duration-300 ease-out text-sm sm:text-base"
-        >
-          <span>View Collection</span>
-          <span className="transform translate-x-0 group-hover:translate-x-1 transition-transform duration-300">
-            →
-          </span>
-        </Link>
+        <Button href="/collections" variant="primary" className="rounded-full">
+          View Collection
+        </Button>
       </div>
 
       <div className="relative">
         <div
-          className="overflow-hidden relative"
+          className="overflow-hidden"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
@@ -419,17 +411,17 @@ const WinterFashionSection = () => {
                     group-hover:translate-y-[-4px] text-center sm:text-left"
                   >
                     <h3
-                      className="text-base sm:text-lg font-medium transition-colors 
-                      duration-300 group-hover:text-gray-600"
+                      className="text-black text-base  sm:text-lg font-medium transition-colors 
+                      duration-300 group-hover:text-black"
                     >
                       {item.title}
                     </h3>
                     <div className="flex items-center gap-3 justify-center sm:justify-start">
-                      <span className="text-lg font-semibold">
+                      <span className="text-lg font-semibold text-black">
                         ₹{item.price.toFixed(2)}
                       </span>
                       {item.originalPrice && (
-                        <span className="text-gray-400 line-through text-sm">
+                        <span className="text-black line-through text-sm">
                           ₹{item.originalPrice.toFixed(2)}
                         </span>
                       )}
@@ -496,17 +488,17 @@ const WinterFashionSection = () => {
                     group-hover:translate-y-[-4px]"
                   >
                     <h3
-                      className="text-base sm:text-lg font-medium transition-colors 
-                      duration-300 group-hover:text-gray-600"
+                      className=" text-black text-base sm:text-lg font-medium transition-colors 
+                      duration-300 group-hover:text-black"
                     >
                       {item.title}
                     </h3>
                     <div className="flex items-center gap-3">
-                      <span className="text-lg font-semibold">
+                      <span className="text-lg font-semibold text-black">
                         ₹{item.price.toFixed(2)}
                       </span>
                       {item.originalPrice && (
-                        <span className="text-gray-400 line-through text-sm">
+                        <span className="text-black line-through text-sm">
                           ₹{item.originalPrice.toFixed(2)}
                         </span>
                       )}
@@ -529,13 +521,13 @@ const WinterFashionSection = () => {
                     setTimeout(() => setAutoScrollEnabled(true), 3000);
                   }}
                   className={`h-2.5 rounded-md transition-all duration-300
-                    ${currentPage === index ? 'w-8 bg-red-500' : 'w-2.5 bg-gray-300'}
+                    ${currentPage === index ? 'w-8 bg-black' : 'w-2.5 bg-gray-300'}
                     relative overflow-hidden shadow-sm`}
                   aria-label={`Go to page ${index + 1}`}
                 >
                   {currentPage === index && autoScrollEnabled && (
                     <span
-                      className="absolute inset-0 bg-red-600"
+                      className="absolute inset-0 bg-black"
                       style={{
                         transformOrigin: 'left',
                         animation: 'progress 3s linear infinite',

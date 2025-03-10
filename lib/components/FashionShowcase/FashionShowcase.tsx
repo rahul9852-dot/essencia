@@ -4,6 +4,12 @@ import Image from 'next/image';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+// Global rendering control
+if (typeof window !== 'undefined') {
+  (window as any).__FASHION_SHOWCASE_RENDERED =
+    (window as any).__FASHION_SHOWCASE_RENDERED || false;
+}
+
 gsap.registerPlugin(ScrollTrigger);
 
 const products = [
@@ -11,7 +17,7 @@ const products = [
     id: 1,
     image: '/images/c1.webp',
     title: 'Black Blouson Crop Top',
-    price: 180.0,
+    price: 1800,
     colors: ['#F3E5DC', '#C8B6A6', '#8C7C6D', '#545454'],
     alt: 'Black Blouson Crop Top model',
   },
@@ -19,7 +25,7 @@ const products = [
     id: 2,
     image: '/images/d1.webp',
     title: 'Black dress',
-    price: 148.0,
+    price: 1480,
     originalPrice: 168.0,
     discount: '11% OFF',
     alt: 'Black dress model',
@@ -28,7 +34,7 @@ const products = [
     id: 3,
     image: '/images/b1.webp',
     title: 'Casual Blazer',
-    price: 210.0,
+    price: 2100,
     colors: ['#2C3539', '#414A4C', '#151B54', '#737CA1'],
     alt: 'Casual Blazer model',
   },
@@ -36,9 +42,9 @@ const products = [
     id: 4,
     image: '/images/m4.webp',
     title: 'Summer Collection',
-    price: 160.0,
+    price: 1600,
     discount: '15% OFF',
-    originalPrice: 188.0,
+    originalPrice: 1880,
     colors: ['#FFF8DC', '#FFEBCD', '#FFE4B5'],
     alt: 'Summer Collection model',
   },
@@ -46,7 +52,7 @@ const products = [
     id: 5,
     image: '/images/f1.webp',
     title: 'Winter Jacket',
-    price: 220.0,
+    price: 2200,
     colors: ['#1B1B1B', '#363636', '#4F4F4F', '#696969'],
     alt: 'Winter Jacket model',
   },
@@ -54,7 +60,7 @@ const products = [
     id: 6,
     image: '/images/i1.webp',
     title: 'Casual Wear',
-    price: 175.0,
+    price: 1750,
     colors: ['#E5E4E2', '#B2BEB5', '#8B8589', '#848884'],
     alt: 'Casual Wear model',
   },
@@ -62,9 +68,9 @@ const products = [
     id: 7,
     image: '/images/d2.webp',
     title: 'Evening Dress',
-    price: 195.0,
+    price: 1950,
     discount: '20% OFF',
-    originalPrice: 244.0,
+    originalPrice: 2440,
     colors: ['#702963', '#C8A2C8', '#E0B0FF'],
     alt: 'Evening Dress model',
   },
@@ -72,7 +78,7 @@ const products = [
     id: 8,
     image: '/images/b2.webp',
     title: 'Business Attire',
-    price: 230.0,
+    price: 2300,
     colors: ['#4B0082', '#571B7E', '#461B7E', '#663399'],
     alt: 'Business Attire model',
   },
@@ -80,7 +86,7 @@ const products = [
     id: 9,
     image: '/images/c2.webp',
     title: 'Summer Top',
-    price: 120.0,
+    price: 1200,
     colors: ['#F0F8FF', '#E6E6FA', '#B0E0E6', '#87CEEB'],
     alt: 'Summer Top model',
   },
@@ -88,9 +94,9 @@ const products = [
     id: 10,
     image: '/images/e2.webp',
     title: 'Casual Collection',
-    price: 185.0,
+    price: 1850,
     discount: '10% OFF',
-    originalPrice: 205.0,
+    originalPrice: 2050,
     colors: ['#CCCCFF', '#9890C7', '#4B0082'],
     alt: 'Casual Collection model',
   },
@@ -124,52 +130,122 @@ const ColorDots = ({
   </div>
 );
 
-const FashionShowcase = () => {
+// Wrap the entire component in React.memo to prevent unnecessary rerenders
+const FashionShowcase = React.memo(() => {
   const sectionRef = useRef<HTMLElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState<number | null>(null);
+  const [canRender, setCanRender] = useState(false);
 
+  // Only mount once by checking global flag
   useEffect(() => {
-    if (!sectionRef.current || !containerRef.current) return;
+    if (typeof window !== 'undefined') {
+      // Use a safer way to check/set the global flag
+      const w = window as any;
+      if (w.__FASHION_SHOWCASE_RENDERED) {
+        // If already rendered elsewhere, don't render here
+        setCanRender(false);
+      } else {
+        // Mark as rendered and allow this instance to render
+        w.__FASHION_SHOWCASE_RENDERED = true;
+        setCanRender(true);
 
-    // Create smooth scrolling animation
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 1,
-        pin: true,
-        anticipatePin: 1,
-      },
-    });
-
-    // Animate the container up
-    tl.to(containerRef.current, {
-      y: `-${containerRef.current.scrollHeight - window.innerHeight + 100}px`,
-      ease: 'none',
-    });
+        // Add section ID for debugging
+        if (sectionRef.current) {
+          sectionRef.current.id = 'fashion-showcase-section';
+        }
+      }
+    }
 
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      // Clean up on unmount
+      if (typeof window !== 'undefined' && window.__FASHION_SHOWCASE_RENDERED) {
+        window.__FASHION_SHOWCASE_RENDERED = false;
+      }
     };
   }, []);
 
+  // Initialize scroll animation only if we're allowed to render
+  useEffect(() => {
+    if (!canRender || !sectionRef.current || !containerRef.current) return;
+
+    // Clear any existing ScrollTrigger instances for this element
+    ScrollTrigger.getAll().forEach(trigger => {
+      if (trigger.vars.trigger === sectionRef.current) {
+        trigger.kill();
+      }
+    });
+
+    // Set up the scroll animation with a single instance
+    const scrollAnimation = () => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: () => {
+            const containerHeight = containerRef.current?.scrollHeight || 0;
+            const viewportHeight = window.innerHeight;
+            return `+=${Math.max(containerHeight - viewportHeight + 100, 0)}`;
+          },
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          markers: false, // Set to true for debugging
+          id: 'fashion-showcase', // Unique ID to avoid conflicts
+        },
+      });
+
+      tl.to(containerRef.current, {
+        y: () => {
+          const containerHeight = containerRef.current?.scrollHeight || 0;
+          const viewportHeight = window.innerHeight;
+          return -Math.max(containerHeight - viewportHeight + 100, 0);
+        },
+        ease: 'none',
+      });
+    };
+
+    // Delay initialization slightly to ensure DOM is ready
+    const initTimer = setTimeout(() => {
+      scrollAnimation();
+    }, 300);
+
+    return () => {
+      clearTimeout(initTimer);
+      ScrollTrigger.getAll().forEach(trigger => {
+        if (trigger.vars.id === 'fashion-showcase') {
+          trigger.kill();
+        }
+      });
+    };
+  }, [canRender]);
+
+  // If we can't render, return an empty fragment to avoid taking up space
+  if (!canRender) {
+    return null;
+  }
+
   return (
-    <section ref={sectionRef} className="relative h-screen">
+    <section
+      ref={sectionRef}
+      className="relative h-screen fashion-showcase"
+      data-section-type="fashion-showcase"
+    >
       <div className="sticky top-0 h-screen overflow-hidden">
         <div className="grid md:grid-cols-2 grid-cols-1 h-full">
           {/* Left: Static Image */}
-          <div className="relative h-[50vh] md:h-full bg-[#F5F5F5]">
+          <div className="relative h-[50vh] md:h-full bg-white">
             <Image
               src="/images/e2.webp"
               alt="Fashion model"
               fill
               className="object-cover"
               priority
+              sizes="(max-width: 768px) 100vw, 50vw"
             />
             <div className="absolute inset-0 bg-black/10" />
-            <div className="absolute bottom-6 md:bottom-10 left-4 md:left-10 text-white">
+            <div className="absolute bottom-6 md:bottom-10 left-4 md:left-10 text-white z-10">
               <h2 className="text-3xl md:text-5xl font-light mb-2 md:mb-4">
                 New Collection
               </h2>
@@ -180,10 +256,11 @@ const FashionShowcase = () => {
           </div>
 
           {/* Right: Scrolling Cards */}
-          <div className="relative h-[50vh] md:h-full bg-[#F5F5F5] overflow-hidden">
+          <div className="relative h-[50vh] md:h-full bg-white overflow-hidden">
             <div
               ref={containerRef}
               className="absolute inset-x-0 px-4 md:px-16 pt-8 md:pt-16"
+              style={{ willChange: 'transform' }}
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-8">
                 {products.map(card => (
@@ -228,11 +305,11 @@ const FashionShowcase = () => {
                     </h3>
                     <div className="flex items-center gap-2">
                       <span className="text-lg font-medium">
-                        ${card.price.toFixed(2)}
+                        ₹{card.price.toFixed(2)}
                       </span>
                       {card.originalPrice && (
                         <span className="text-gray-400 line-through text-sm">
-                          ${card.originalPrice.toFixed(2)}
+                          ₹{card.originalPrice.toFixed(2)}
                         </span>
                       )}
                     </div>
@@ -245,6 +322,27 @@ const FashionShowcase = () => {
       </div>
     </section>
   );
+});
+
+// Force display name for debugging
+FashionShowcase.displayName = 'FashionShowcase';
+
+// Create a dynamic loader component
+const FashionShowcaseLoader = () => {
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  useEffect(() => {
+    // Delay loading slightly to ensure we don't conflict with page transitions
+    const timer = setTimeout(() => {
+      setShouldLoad(true);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!shouldLoad) return null;
+
+  return <FashionShowcase />;
 };
 
-export default FashionShowcase;
+export default FashionShowcaseLoader;

@@ -10,10 +10,6 @@ const categories = [
     link: '/about-us',
   },
   {
-    title: 'Fusion Wear Clothes',
-    link: '/faq',
-  },
-  {
     title: 'Terms & Conditions',
     link: '/terms-conditions',
   },
@@ -25,9 +21,21 @@ const categories = [
     title: 'Privacy',
     link: '/privacy',
   },
+  {
+    title: 'Frequently asked question',
+    link: '/faq',
+  },
 ];
 
-const PagesDropDown: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
+interface PagesDropDownProps {
+  isOpen: boolean;
+  onLinkClick?: () => void; // Add this prop for mobile menu closing
+}
+
+const PagesDropDown: React.FC<PagesDropDownProps> = ({
+  isOpen,
+  onLinkClick,
+}) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -88,6 +96,23 @@ const PagesDropDown: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
     }
   }, [isOpen]);
 
+  // Handle link click with smooth transition
+  const handleLinkClick = (e: React.MouseEvent, href: string) => {
+    // Only apply special handling on mobile
+    if (window.innerWidth < 768 && onLinkClick) {
+      e.preventDefault();
+
+      // First close the menu with animation
+      onLinkClick();
+
+      // Then navigate after animation completes
+      setTimeout(() => {
+        window.location.href = href;
+      }, 400); // Match this with the animation duration
+    }
+    // On desktop, let the link work normally
+  };
+
   return (
     <div
       ref={dropdownRef}
@@ -104,7 +129,7 @@ const PagesDropDown: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
             href={category.link}
             className="block px-4 py-2 text-gray-600 hover:text-black
               transition-all duration-300 relative group overflow-hidden"
-            onClick={e => e.stopPropagation()}
+            onClick={e => handleLinkClick(e, category.link)}
           >
             <span className="relative z-10 inline-block">
               {category.title}
