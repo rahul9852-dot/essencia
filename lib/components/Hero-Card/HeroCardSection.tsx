@@ -44,8 +44,8 @@ const HeroCardSection = () => {
           onMouseLeave={() => setIsHovered(false)}
         >
           <Image
-            src="/images/side-bar.webp"
-            alt="Summer fashion collection showcase"
+            src="/images/hero-card-section.jpg"
+            alt="Style That Travels With You."
             width={800}
             height={800}
             className="w-full h-full object-cover"

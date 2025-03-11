@@ -31,63 +31,63 @@ interface FashionItem {
 const fashionItems: FashionItem[] = [
   {
     id: 1,
-    image: '/images/a1.webp',
-    title: 'Brown sweatshirt with muffler',
-    price: 1299.0,
-    colors: ['#8B7355', '#2F2F2F', '#4A3728', '#6B4423'], // Brown, Black, Dark Brown, Copper
+    image: '/images/esfClothes/esf-hoodie-5.jpeg',
+    title: 'Street Luxe Hoodie',
+    price: 1199.0,
+    colors: ['#000000', '#4A4A4A', '#eaecee'], // Black, Dark Gray, Charcoal
   },
   {
     id: 2,
-    image: '/images/showcaseCategory/sc5.webp',
-    title: 'Black Blouson Crop Top',
-    price: 1199.0,
-    colors: ['#000000', '#4A4A4A', '#2C2C2C'], // Black, Dark Gray, Charcoal
+    image: '/images/esfClothes/esf-hoodie-1.webp',
+    title: 'Midnight Glow Hoodie',
+    price: 1499.0,
+    colors: ['#FFBF00', '#DFFF00', '#40E0D0', '#CCCCFF'], // Brown, Black, Dark Brown, Copper
   },
   {
     id: 3,
-    image: '/images/c1.webp',
-    title: 'Women black high-neck dress',
+    image: '/images/esfClothes/esf-hoodie-2.jpg',
+    title: 'Slate Street Hoodie',
     price: 1455.0,
-    colors: ['#000000', '#1A1A1A', '#333333'], // Black, Rich Black, Dark Gray
+    colors: ['#000000', '#85929e', '#333333'], // Black, Rich Black, Dark Gray
   },
   {
     id: 4,
-    image: '/images/f1.webp',
-    title: 'Women black Long coat',
-    price: 1980.0,
+    image: '/images/esfClothes/esf-tshirt-3.jpeg',
+    title: 'The Hype Tee',
+    price: 480.0,
     originalPrice: 5500.0,
     discount: '15% OFF',
     colors: ['#000000', '#36454F', '#1B1B1B'], // Black, Charcoal, Deep Black
   },
   {
     id: 5,
-    image: '/images/m4.webp',
-    title: 'Women Cream sweater',
-    price: 1888.0,
-    colors: ['#FFFDD0', '#F5F5DC', '#E8E5D7'], // Cream, Beige, Light Beige
+    image: '/images/esfClothes/esf-tshirt-2.jpeg',
+    title: 'ShadowFlex Tee',
+    price: 588.0,
+    colors: ['#000000', '#1B1B1B', '#36454F'], // Black, Charcoal, Deep Black
   },
   {
     id: 6,
-    image: '/images/d1.webp',
-    title: 'Women coat with brown shirt',
+    image: '/images/esfClothes/esf-tshirt-1.jpeg',
+    title: 'Tiger Strike T-Shirt',
     price: 2360.0,
-    colors: ['#8B7355', '#6B4423', '#483C32'], // Brown, Saddle Brown, Dark Brown
+    colors: ['#000000', '#1B1B1B', '#36454F'], // Black, Charcoal, Deep Black
   },
   {
     id: 7,
-    image: '/images/i1.webp',
-    title: 'Summer maxi dress',
+    image: '/images/esfClothes/esf-zipper-hoodie-2.jpg',
+    title: 'Drip Essential Hoodie',
     price: 1399.0,
-    colors: ['#FFFFFF', '#F5F5F5', '#ECECEC'], // White, Off White, Light Gray
+    colors: ['#000000', '#1B1B1B', '#36454F'], // Black, Charcoal, Deep Black
   },
   {
     id: 8,
-    image: '/images/c1.webp',
-    title: 'Black dress',
+    image: '/images/esfClothes/esf-zipper-hoodie-3.jpg',
+    title: 'Redline Zipper Hoodie',
     price: 1248.0,
     originalPrice: 168.0,
     discount: '11% OFF',
-    colors: ['#000000', '#2C2C2C', '#1A1A1A'], // Black, Dark Gray, Rich Black
+    colors: ['#000000', '#FFC300', '#F5F5F5'], // Black, Dark Gray, Rich Black    colors: ['#000000', '#1B1B1B', '#36454F'], // Black, Charcoal, Deep Black
   },
 ];
 

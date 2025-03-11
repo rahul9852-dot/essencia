@@ -20,7 +20,7 @@ const categories = [
         position: { top: '20%', left: '15%' },
       },
       {
-        src: '/images/showcaseCategory/bg-model-2.png',
+        src: '/images/showcaseCategory/bg-model-1.png',
         position: { top: '20%', right: '15%' },
       },
     ],

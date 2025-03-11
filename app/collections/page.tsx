@@ -150,7 +150,7 @@ export default function CollectionsPage() {
                       <p className="text-gray-600 mb-6 flex-grow">
                         {category.description}
                       </p>
-                      <div className="flex items-center text-blue-600 font-medium group mt-auto">
+                      <div className="flex items-center text-black font-medium group mt-auto">
                         <span>View collection</span>
                         <span className="ml-2 inline-block arrow-icon">→</span>
                       </div>

@@ -1,14 +1,13 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Button from '../ui/Button';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const SportswearSection = () => {
+const CargosSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const imageRef1 = useRef<HTMLDivElement>(null);
   const imageRef2 = useRef<HTMLDivElement>(null);
@@ -132,7 +131,7 @@ const SportswearSection = () => {
               hover:scale-105 mx-auto lg:mx-0"
           >
             <Image
-              src="/images/image_col5.webp"
+              src="/images/cargos/Classic-maroon-Cargo.webp"
               alt="Woman in blue sportswear"
               fill
               className="object-cover rounded-2xl shadow-2xl"
@@ -155,7 +154,7 @@ const SportswearSection = () => {
               transform transition-transform duration-700 hover:scale-105"
           >
             <Image
-              src="/images/image_col7.webp"
+              src="/images/cargos/classic-black-cargo.webp"
               alt="Woman in black sportswear"
               fill
               className="object-cover rounded-2xl shadow-2xl"
@@ -180,66 +179,32 @@ const SportswearSection = () => {
               bg-gradient-to-r from-black via-black/80 to-black 
               bg-clip-text text-transparent"
           >
-            Stylish and Perfect Sports wear Picks.
+            Stylish and Perfect Cargo Picks.
           </h2>
 
           <div className="space-y-4 sm:space-y-6 text-gray-600">
             <p className="text-base sm:text-lg leading-relaxed">
-              Discover the perfect blend of style and functionality with our
-              curated selection of sportswear picks. From breathable fabrics to
-              sleek designs, our collection offers everything you need to
-              elevate your active wardrobe.
+              Discover the perfect blend of utility and style with our curated
+              selection of cargo pants. Designed for comfort and durability, our
+              collection ensures you stay effortlessly stylish while embracing
+              everyday functionality.
             </p>
 
             <p className="text-base sm:text-lg leading-relaxed">
-              Whether you&apos;re hitting the gym, going for a run, or enjoying
-              outdoor activities, our sportswear ensures you stay comfortable
-              and stylish every step of the way. Explore our range today and
-              embrace the perfect fusion of fashion and performance in your
-              fitness routine.*
+              Whether you&apos;re exploring the city, heading on an adventure,
+              or just looking for a casual yet trendy look, our cargo pants
+              offer the perfect balance of fashion and practicality. Explore our
+              range today and redefine versatility in your wardrobe.
             </p>
           </div>
 
-          {/* <Link
-            href="/collections/sportswear"
-            className="cta-button group inline-flex items-center mt-8 sm:mt-10 
-              bg-[#9c6d4e] text-white px-6 sm:px-8 py-3 rounded-md 
-              hover:bg-[#8b5e3f] active:bg-[#8b5e3f]
-              transition-all duration-300 ease-out
-              w-fit mx-auto lg:mx-0
-              shadow-md hover:shadow-xl
-              relative overflow-hidden
-              transform hover:scale-[1.02] active:scale-[0.98]"
-          >
-            <span className="relative z-10 font-medium">READ MORE</span>
-            <svg
-              className="ml-2 w-5 h-5 transform transition-transform 
-                duration-300 group-hover:translate-x-1 relative z-10"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2.5}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M17 8l4 4m0 0l-4 4m4-4H3"
-              />
-            </svg>
-            <div
-              className="absolute inset-0 bg-gradient-to-r 
-                from-[#8b5e3f] to-[#9c6d4e]
-                opacity-0 group-hover:opacity-100 
-                transition-opacity duration-300 ease-out"
-            />
-          </Link> */}
           <Button
-            href="/collections"
+            href="/collections/cargos"
             variant="primary"
             size="lg"
             className="rounded-full mt-10"
           >
-            View Collection
+            View Cargos
           </Button>
         </div>
       </div>
@@ -247,4 +212,4 @@ const SportswearSection = () => {
   );
 };
 
-export default SportswearSection;
+export default CargosSection;

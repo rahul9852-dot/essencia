@@ -21,7 +21,6 @@ const Navbar: React.FC = () => {
   const pagesRef = useRef<HTMLDivElement>(null);
   const mainMenuRef = useRef<HTMLDivElement>(null);
   const submenuRef = useRef<HTMLDivElement>(null);
-
   const pathname = usePathname();
 
   // Add this to determine if we're on a page with white background
@@ -261,7 +260,7 @@ const Navbar: React.FC = () => {
           }
         `}
       >
-        <div className="flex items-center justify-between h-16 sm:h-20 px-4 sm:px-6 md:px-8 lg:px-16 max-w-[1400px] mx-auto">
+        <div className="flex items-center justify-between h-14 sm:h-16 px-4 sm:px-6 md:px-8 lg:px-16 max-w-[1400px] mx-auto">
           <Link
             href="/"
             className={`text-xl font-medium tracking-wide whitespace-nowrap
