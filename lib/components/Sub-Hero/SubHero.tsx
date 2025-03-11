@@ -112,7 +112,7 @@ const SubHero = () => {
 
         <div className="relative space-y-6 sm:space-y-8">
           <h1
-            className="text-6xl sm:text-4xl md:text-5xl lg:text-6xl text-center font-light 
+            className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-center font-light 
             text-white leading-tight sm:leading-tight md:leading-tight"
           >
             Tips for staying cool and comfortable while maintaining style in hot
