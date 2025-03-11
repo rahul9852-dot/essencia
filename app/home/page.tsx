@@ -4,7 +4,7 @@ import SubHero from '../../lib/components/Sub-Hero/SubHero';
 import HeroCardSection from '../../lib/components/Hero-Card/HeroCardSection';
 import MarQuee from '../../lib/components/MarQueee/MarQuee';
 import WinterFashionSection from '../../lib/components/WinterFashion/WinterFashionSection';
-import SportswearSection from '../../lib/components/Sportswear/SportswearSection';
+
 import CategoryShowcase from '@/lib/components/Category-Showcase/Category';
 import ProductDetails from '@/lib/components/ProductDetails/ProductDetails';
 import FitnessFashion from '@/lib/components/FitnessFashion/FitnessFashion';
@@ -14,33 +14,35 @@ import { categories } from '@/lib/constants/exploreCards';
 import ParallaxSection from '@/lib/components/ParallaxSection/ParallaxSection';
 import FashionShowcase from '@/lib/components/FashionShowcase/FashionShowcase';
 import Explore from '@/lib/components/Explore/exploreCards';
+import CargosSection from '../../lib/components/Cargos/CargosSection';
 
 const HomeScreen = () => {
   return (
     <main className="w-full bg-white">
       <div className="w-full">
-        <Hero />
+        {/* <Hero />
         <SubHero />
-        <HeroCardSection />
+        <HeroCardSection /> */}
+
         <MarQuee />
-        <Explore categories={categories} />
-        <CategoryShowcase />
-        <WinterFashionSection />
-        <SportswearSection />
+        {/* <Explore categories={categories} />
+        <CategoryShowcase /> */}
+        {/* <WinterFashionSection /> */}
+        {/* <CargosSection /> */}
 
         <ParallaxSection
           backgroundImage="/images/slider_3.webp"
           cards={[
             {
               id: 1,
-              image: '/images/f1.webp',
+              image: '/images/summerCollection/summer-collection-1.jpeg',
               title: 'Men leather jacket',
               price: 2100.0,
               alt: 'Spring fashion model 1',
             },
             {
               id: 2,
-              image: '/images/i1.webp',
+              image: '/images/summerCollection/summer-collection-7.jpeg',
               title: 'Women casual wear',
               price: 1800.0,
               discount: '15% OFF',
@@ -48,21 +50,21 @@ const HomeScreen = () => {
             },
             {
               id: 3,
-              image: '/images/m4.webp',
+              image: '/images/summerCollection/summer-collection-3.jpeg',
               title: 'Spring collection',
               price: 1290.0,
               alt: 'Spring fashion model 3',
             },
             {
               id: 4,
-              image: '/images/d1.webp',
+              image: '/images/summerCollection/summer-collection-5.jpeg',
               title: 'Men leather jacket',
               price: 2110.0,
               alt: 'Spring fashion model 4',
             },
             {
               id: 5,
-              image: '/images/c1.webp',
+              image: '/images/summerCollection/summer-collection-6.jpeg',
               title: 'Women casual wear',
               price: 1280.0,
               discount: '15% OFF',
@@ -70,14 +72,14 @@ const HomeScreen = () => {
             },
             {
               id: 6,
-              image: '/images/b1.webp',
+              image: '/images/summerCollection/summer-collection-8.jpeg',
               title: 'Spring collection',
               price: 1499.0,
               alt: 'Spring fashion model 6',
             },
           ]}
-          heading="Winter Elegance"
-          subheading="Explore our premium winter collection featuring luxurious materials and timeless designs."
+          heading="Summer Vibes"
+          subheading="Discover our latest summer collection with breathtaking designs and comfortable fits."
           backgroundColor="#000000"
         />
         <ParallaxSection
@@ -85,7 +87,7 @@ const HomeScreen = () => {
           cards={[
             {
               id: 1,
-              image: '/images/m4.webp',
+              image: '/images/winterCollection/winter-collection-2.jpeg',
               title: 'Summer collection',
               price: 1500.0,
               alt: 'Summer fashion model 1',
@@ -128,8 +130,8 @@ const HomeScreen = () => {
               alt: 'Summer fashion model 6',
             },
           ]}
-          heading="Summer Vibes"
-          subheading="Discover our latest summer collection with breathtaking designs and comfortable fits."
+          heading="Winter Elegance"
+          subheading="Explore our premium winter collection featuring luxurious materials and timeless designs."
           backgroundColor="#000000"
         />
         <ParallaxSection

@@ -7,7 +7,7 @@ import gsap from 'gsap';
 const categories = [
   {
     title: 'Essancia Collections',
-    links: ['Hoodies', 'Tshirts', 'Sweatshirts', 'Jumpsuits'],
+    links: ['Hoodies', 'Tshirts', 'Sweatshirts', 'Cargos'],
   },
   {
     title: 'Fusion Wear Clothes',
@@ -26,14 +26,6 @@ const categories = [
     title: 'Handbags',
     links: ['Long Wallets', 'Compact Wallets', 'Card Holders', 'Phone Cases'],
   },
-  // {
-  //   title: 'Small Leather Goods',
-  //   links: ['Handbags', 'Jackets', 'Shoes', 'Hats', 'Gloves'],
-  // },
-  // {
-  //   title: 'Accessories',
-  //   links: ['Belt', 'Caps', 'Shoes', 'Sun glasses', 'Watches'],
-  // },
 ];
 
 interface CollectionsDropdownProps {
@@ -146,7 +138,7 @@ const CollectionsDropdown: React.FC<CollectionsDropdownProps> = ({
                     link.toLowerCase() === 'hoodies' ||
                     link.toLowerCase() === 'tshirts' ||
                     link.toLowerCase() === 'sweatshirts' ||
-                    link.toLowerCase() === 'pants'
+                    link.toLowerCase() === 'cargos'
                       ? `/collections/${link.toLowerCase()}`
                       : `/collections`;
 
