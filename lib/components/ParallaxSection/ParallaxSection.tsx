@@ -250,14 +250,14 @@ const ParallaxSection: React.FC<ParallaxSectionProps> = ({
           ref={cardsContainerRef}
           className="w-full max-w-5xl mx-auto relative"
         >
-          <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
+          <div className="absolute top-4 right-4 z-20 flex items-center gap-2 ">
             <button
               onClick={togglePlayPause}
               className={`p-2.5 rounded-full transition-all duration-300
                 ${
                   isHovered
-                    ? 'bg-white/10 hover:bg-white/20 text-white'
-                    : 'bg-black/90 hover:bg-black text-white'
+                    ? 'bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full text-white'
+                    : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full'
                 } backdrop-blur-sm`}
               aria-label={isAutoPlaying ? 'Pause slideshow' : 'Play slideshow'}
             >
@@ -293,17 +293,17 @@ const ParallaxSection: React.FC<ParallaxSectionProps> = ({
             </button>
           </div>
 
-          <div className="absolute top-0 left-0 right-0 h-1 bg-black/10 z-10">
+          <div className="absolute top-0 left-0 right-0 h-1 bg-black/10 z-50">
             <div
               ref={progressRef}
-              className={`h-full origin-left transform-gpu
-                ${isHovered ? 'bg-white/30' : 'bg-black/30'}`}
+              className={`h-full origin-left transform-gpu backdrop-blur-sm
+                ${isHovered ? 'bg-white/30' : 'bg-white/30'}`}
             />
           </div>
 
           <button
             onClick={handlePrevCard}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-50
               bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-2
               transition-all duration-300 text-white"
             aria-label="Previous card"
@@ -325,7 +325,7 @@ const ParallaxSection: React.FC<ParallaxSectionProps> = ({
 
           <button
             onClick={handleNextCard}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-50 
               bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-2
               transition-all duration-300 text-white"
             aria-label="Next card"
@@ -417,15 +417,7 @@ const ParallaxSection: React.FC<ParallaxSectionProps> = ({
                       : 'w-2 bg-white/50 hover:bg-white/70'
                   }`}
                 aria-label={`Go to slide ${index + 1}`}
-              >
-                <span
-                  className="absolute -top-8 left-1/2 -translate-x-1/2 
-                  px-2 py-1 bg-white/10 backdrop-blur-sm rounded text-xs text-white
-                  opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                >
-                  {index + 1}
-                </span>
-              </button>
+              ></button>
             ))}
           </div>
         </div>

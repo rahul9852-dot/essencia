@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Hero from '../../lib/components/Hero/Hero';
 import SubHero from '../../lib/components/Sub-Hero/SubHero';
 import HeroCardSection from '../../lib/components/Hero-Card/HeroCardSection';
@@ -17,21 +17,33 @@ import Explore from '@/lib/components/Explore/exploreCards';
 import CargosSection from '../../lib/components/Cargos/CargosSection';
 
 const HomeScreen = () => {
+  function ScrollToTop() {
+    useEffect(() => {
+      window.scrollTo(0, 0);
+      if ('scrollRestoration' in window.history) {
+        window.history.scrollRestoration = 'manual';
+      }
+    }, []);
+
+    return null;
+  }
   return (
     <main className="w-full bg-white">
       <div className="w-full">
-        {/* <Hero />
+        <ScrollToTop />
+        <Hero />
         <SubHero />
-        <HeroCardSection /> */}
+        <HeroCardSection />
 
         <MarQuee />
-        {/* <Explore categories={categories} />
-        <CategoryShowcase /> */}
-        {/* <WinterFashionSection /> */}
-        {/* <CargosSection /> */}
+
+        <Explore categories={categories} />
+        <CategoryShowcase />
+        <WinterFashionSection />
+        <CargosSection />
 
         <ParallaxSection
-          backgroundImage="/images/slider_3.webp"
+          backgroundImage="/images/summerCollection/summer-collection-1.jpeg"
           cards={[
             {
               id: 1,
@@ -72,7 +84,7 @@ const HomeScreen = () => {
             },
             {
               id: 6,
-              image: '/images/summerCollection/summer-collection-8.jpeg',
+              image: '/images/summerCollection/summer-collection-7.jpeg',
               title: 'Spring collection',
               price: 1499.0,
               alt: 'Spring fashion model 6',
@@ -83,7 +95,7 @@ const HomeScreen = () => {
           backgroundColor="#000000"
         />
         <ParallaxSection
-          backgroundImage="/images/slider_1.webp"
+          backgroundImage="/images/winterCollection/winter-collection-2.jpeg"
           cards={[
             {
               id: 1,
@@ -94,7 +106,7 @@ const HomeScreen = () => {
             },
             {
               id: 2,
-              image: '/images/d1.webp',
+              image: '/images/winterCollection/winter-collection-women-3.jpeg',
               title: 'Summer dress',
               price: 1800.0,
               discount: '20% OFF',
@@ -102,21 +114,22 @@ const HomeScreen = () => {
             },
             {
               id: 3,
-              image: '/images/c1.webp',
+              image: '/images/winterCollection/winter-collection-4.jpeg',
               title: 'Casual wear',
               price: 1600.0,
               alt: 'Summer fashion model 3',
             },
             {
               id: 4,
-              image: '/images/b1.webp',
+              image: '/images/winterCollection/winter-collection-2.jpeg',
               title: 'Beach collection',
               price: 1900.0,
               alt: 'Summer fashion model 4',
             },
             {
               id: 5,
-              image: '/images/i1.webp',
+              image: '/images/winterCollection/winter-collection-women-1.jpeg',
+
               title: 'Evening wear',
               price: 2200.0,
               discount: '10% OFF',
@@ -124,7 +137,8 @@ const HomeScreen = () => {
             },
             {
               id: 6,
-              image: '/images/f1.webp',
+              image: '/images/winterCollection/winter-collection-women-2.jpeg',
+
               title: 'Party collection',
               price: 2400.0,
               alt: 'Summer fashion model 6',
@@ -135,18 +149,18 @@ const HomeScreen = () => {
           backgroundColor="#000000"
         />
         <ParallaxSection
-          backgroundImage="/images/slider_2.webp"
+          backgroundImage="/images/springCollection/spring-collection-both-2.jpeg"
           cards={[
             {
               id: 1,
-              image: '/images/c1.webp',
+              image: '/images/springCollection/spring-collection-both-2.jpeg',
               title: 'Spring dress',
               price: 1700.0,
               alt: 'Spring fashion model 1',
             },
             {
               id: 2,
-              image: '/images/b1.webp',
+              image: '/images/springCollection/spring-collection-1.jpeg',
               title: 'Casual blazer',
               price: 1900.0,
               discount: '15% OFF',
@@ -154,21 +168,21 @@ const HomeScreen = () => {
             },
             {
               id: 3,
-              image: '/images/i1.webp',
+              image: '/images/springCollection/spring-collection-women-2.jpeg',
               title: 'Spring collection',
               price: 1600.0,
               alt: 'Spring fashion model 3',
             },
             {
               id: 4,
-              image: '/images/f1.webp',
+              image: '/images/springCollection/spring-collection-2.jpeg',
               title: 'Light jacket',
               price: 2000.0,
               alt: 'Spring fashion model 4',
             },
             {
               id: 5,
-              image: '/images/d1.webp',
+              image: '/images/springCollection/spring-collection-women-1.jpeg',
               title: 'Floral dress',
               price: 1750.0,
               discount: '10% OFF',
@@ -176,7 +190,7 @@ const HomeScreen = () => {
             },
             {
               id: 6,
-              image: '/images/m4.webp',
+              image: '/images/springCollection/spring-collection-3.jpeg',
               title: 'Spring wear',
               price: 1650.0,
               alt: 'Spring fashion model 6',

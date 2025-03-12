@@ -13,7 +13,7 @@ const MarQuee = () => {
                 text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light
                 flex items-center transition-transform duration-300 hover:scale-105"
             >
-              <span className="inline-block">WINTERS SALE</span>
+              <span className="inline-block">Essancia SALE</span>
               <span className="mx-2 sm:mx-3 inline-block">-</span>
               <span className="inline-block">
                 FLAT ₹400 OFF ON ALL PRODUCTS
@@ -32,7 +32,7 @@ const MarQuee = () => {
                 text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light
                 flex items-center transition-transform duration-300 hover:scale-105"
             >
-              <span className="inline-block">WINTERS SALE</span>
+              <span className="inline-block">Essancia SALE</span>
               <span className="mx-2 sm:mx-3 inline-block">-</span>
               <span className="inline-block">
                 FLAT ₹400 OFF ON ALL PRODUCTS
