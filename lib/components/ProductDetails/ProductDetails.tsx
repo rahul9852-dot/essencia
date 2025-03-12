@@ -31,34 +31,87 @@ interface SizeImages {
 }
 
 const ProductDetails = () => {
-  const [quantity, setQuantity] = useState<number>(1);
-  const [selectedSize, setSelectedSize] = useState<string>('S');
-  const [selectedColor, setSelectedColor] = useState<string>('Pale Taupe');
-  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
-  const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [isSizeGuideOpen, setIsSizeGuideOpen] = useState<boolean>(false);
-  const [measurementUnit, setMeasurementUnit] = useState<'inches' | 'cms'>(
-    'inches'
-  );
-
-  const sizes: string[] = ['S', 'M', 'L', 'XL', 'XXL'];
+  const sizes: string[] = ['1', '2', '3', '4', '5'];
 
   const colors: Color[] = [
-    { name: 'Pale Taupe', class: 'bg-[#C5B0A0]' },
-    { name: 'Forest Green', class: 'bg-[#4B5F58]' },
-    { name: 'Brown', class: 'bg-[#8B6646]' },
-    { name: 'Dark Brown', class: 'bg-[#593D3D]' },
-    { name: 'Gray Brown', class: 'bg-[#6F635B]' },
+    { name: 'Bright Pink', class: 'bg-[#ff0054]' },
+    { name: 'Amethyst Purple', class: 'bg-[#9d4edd]' },
+    { name: 'Dodger Blue', class: 'bg-[#3a86ff]' },
+    { name: 'Vermilion Orange', class: 'bg-[#ff5400]' },
+
+    { name: 'Brown', class: 'bg-[#ffbd00]' },
   ];
 
   const sizeImages: SizeImages = {
-    S: ['/images/c1.webp', '/images/c2.webp'],
-    M: ['/images/d1.webp', '/images/d2.webp'],
-    L: ['/images/b2.webp', '/images/b1.webp'],
-    XL: ['/images/d1.webp', '/images/d2.webp'],
-    XXL: ['/images/f1.webp', '/images/f1.webp'],
+    '1': [
+      '/images/productDetails/product-detail-men-1.jpeg',
+      '/images/productDetails/product-detail-men-2.jpeg',
+    ],
+    '2': [
+      '/images/productDetails/product-detail-women-1.jpeg',
+      '/images/productDetails/product-detail-women-2.jpeg',
+    ],
+    '3': [
+      '/images/productDetails/product-detail-men-hoodie-1.jpeg',
+      '/images/productDetails/product-detail-men-hoodie-2.jpeg',
+    ],
+    '4': [
+      '/images/productDetails/product-detail-men-5.jpeg',
+      '/images/productDetails/product-detail-men-6.jpeg',
+    ],
+    '5': [
+      '/images/productDetails/product-detail-women-5.jpg',
+      '/images/productDetails/product-detail-women-3.jpg',
+    ],
   };
+
+  const products = [
+    {
+      id: 1,
+      title: 'Essancia Collection: Elevate Your Style',
+      price: 2999.0,
+      originalPrice: 3499.0,
+      discount: '20% OFF',
+      description:
+        'Elevate your wardrobe with a stunning collection. Crafted from premium fabric for all-day comfort and style.',
+    },
+    {
+      id: 2,
+      title: 'Urban Chic: Redefine Fashion',
+      price: 2499.0,
+      originalPrice: 2999.0,
+      discount: '17% OFF',
+      description:
+        'Step into urban elegance with our exclusive designs, perfect for casual and formal occasions.',
+    },
+    {
+      id: 3,
+      title: 'Vintage Vibes: Classic Elegance',
+      price: 1999.0,
+      originalPrice: 2599.0,
+      discount: '23% OFF',
+      description:
+        'Relive the golden era of fashion with our timeless, elegant, and vintage inspired pieces.',
+    },
+    {
+      id: 4,
+      title: 'Minimalist Collection: Sleek and Stylish',
+      price: 1799.0,
+      originalPrice: 2299.0,
+      discount: '22% OFF',
+      description:
+        'Simplicity meets sophistication in our minimalist collection, perfect for modern-day styling.',
+    },
+    {
+      id: 5,
+      title: 'Bold Statements: Be Unapologetically You',
+      price: 3999.0,
+      originalPrice: 4999.0,
+      discount: '20% OFF',
+      description:
+        'Stand out in bold prints and striking designs, crafted for those who dare to be different.',
+    },
+  ];
 
   const handleQuantityChange = (action: 'increment' | 'decrement'): void => {
     if (action === 'increment') {
@@ -79,11 +132,11 @@ const ProductDetails = () => {
 
   const handleAddToCart = (): void => {
     const newItem: CartItem = {
-      name: 'Summer dress',
+      name: selectedProduct.title,
       size: selectedSize,
       color: selectedColor,
       quantity,
-      price: 399.0,
+      price: selectedProduct.price,
       image: sizeImages[selectedSize][0],
     };
     setCartItems(prev => [...prev, newItem]);
@@ -273,6 +326,32 @@ const ProductDetails = () => {
     </div>
   );
 
+  const [quantity, setQuantity] = useState<number>(1);
+  const [selectedSize, setSelectedSize] = useState<string>('1');
+  const [selectedColor, setSelectedColor] = useState<string>('Pale Taupe');
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+  const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [isSizeGuideOpen, setIsSizeGuideOpen] = useState<boolean>(false);
+  const [measurementUnit, setMeasurementUnit] = useState<'inches' | 'cms'>(
+    'inches'
+  );
+  const [selectedProduct, setSelectedProduct] = useState(products[0]);
+
+  // Update selected product when size changes
+  const handleSizeChange = (size: string) => {
+    setSelectedSize(size);
+    setCurrentImageIndex(0);
+
+    // Convert size string to number and subtract 1 to get the index (since sizes are "1", "2", etc.)
+    const productIndex = parseInt(size) - 1;
+
+    // Make sure the index is valid
+    if (productIndex >= 0 && productIndex < products.length) {
+      setSelectedProduct(products[productIndex]);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white py-16">
       <div className="max-w-7xl mx-auto px-6">
@@ -295,7 +374,12 @@ const ProductDetails = () => {
             <li>
               <span className="text-gray-400">/</span>
             </li>
-            <li className="text-gray-800">Summer Dress</li>
+            <a
+              href="/collections"
+              className="text-gray-500 hover:text-gray-800"
+            >
+              Collections
+            </a>
           </ol>
         </nav>
 
@@ -321,7 +405,7 @@ const ProductDetails = () => {
               <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between">
                 <button
                   onClick={() => handleImageNavigation('prev')}
-                  className="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-xl 
+                  className="p-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full shadow-xl  
                     disabled:opacity-50 transition-all hover:scale-110 disabled:hover:scale-100"
                   disabled={currentImageIndex === 0}
                 >
@@ -329,13 +413,13 @@ const ProductDetails = () => {
                 </button>
                 <button
                   onClick={() => handleImageNavigation('next')}
-                  className="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-xl 
+                  className="p-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full shadow-xl 
                     disabled:opacity-50 transition-all hover:scale-110 disabled:hover:scale-100"
                   disabled={
                     currentImageIndex === sizeImages[selectedSize].length - 1
                   }
                 >
-                  <ChevronRight className="w-6 h-6 text-black" />
+                  <ChevronRight className="w-6 h-6 " />
                 </button>
               </div>
             </div>
@@ -367,28 +451,31 @@ const ProductDetails = () => {
           <div className="space-y-8">
             {/* Product Title and Price */}
             <div className="space-y-4">
-              <h1 className="text-4xl text-black font-light">Summer Dress</h1>
+              <h1 className="text-3xl text-black font-light">
+                {selectedProduct.title}
+              </h1>
               <div className="flex items-baseline gap-4">
-                <span className="text-3xl font-medium text-gray-900">
-                  ₹2999.00
+                <span className="text-2xl font-medium text-gray-900">
+                  ₹{selectedProduct.price.toFixed(2)}
                 </span>
                 <span className="text-lg text-gray-900 line-through">
-                  ₹4999.00
+                  ₹{selectedProduct.originalPrice.toFixed(2)}
                 </span>
                 <span className="px-3 py-1 text-sm bg-red-50 text-red-600 rounded-full">
-                  20% OFF
+                  {selectedProduct.discount}
                 </span>
               </div>
               <p className="text-gray-900 leading-relaxed">
-                Elevate your summer wardrobe with this stunning maxi dress.
-                Crafted from premium fabric for all-day comfort and style.
+                {selectedProduct.description}
               </p>
             </div>
 
             {/* Size Selection */}
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <h3 className=" text-gray-900 font-medium">Select Size</h3>
+                <h3 className=" text-gray-900 font-medium">
+                  Essancia Collection :{' '}
+                </h3>
                 <button
                   className="text-sm text-gray-900 hover:underline"
                   onClick={() => setIsSizeGuideOpen(true)}
@@ -400,10 +487,7 @@ const ProductDetails = () => {
                 {sizes.map(size => (
                   <button
                     key={size}
-                    onClick={() => {
-                      setSelectedSize(size);
-                      setCurrentImageIndex(0);
-                    }}
+                    onClick={() => handleSizeChange(size)}
                     className={`w-14 h-14 text-gray-900 rounded-xl  flex items-center justify-center 
                       border-2 transition-all
                       ${
