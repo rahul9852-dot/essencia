@@ -23,7 +23,13 @@ export const collectionsData = {
         sizes: ['S', 'M', 'L', 'XL', 'XXL'],
         rating: 5.0,
         reviews: 1,
-        images: ['/images/collections/hoodies/hoodie_zipper_black.webp'],
+        images: [
+          '/images/collections/hoodies/hoodie_zipper_black.webp',
+          '/images/a1.webp',
+          '/images/b2.webp',
+          '/images/d3.webp',
+          '/images/e4.webp',
+        ],
       },
       {
         id: '2',
@@ -298,8 +304,8 @@ export const collectionsData = {
     ],
   },
   cargos: {
-    title: 'Joggers & Cargos',
-    description: 'Comfortable and stylish Joggers for every occasion.',
+    title: 'Jumpsuits',
+    description: 'Comfortable and stylish pants for every occasion.',
     items: [
       {
         id: '1',
