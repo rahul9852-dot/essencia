@@ -2,7 +2,6 @@ import React from 'react';
 import { collectionsData } from '@/lib/constants/Collections';
 import ProductListPage from './ProductListPage';
 
-// Define valid categories type
 type Category = keyof typeof collectionsData;
 
 type Props = {

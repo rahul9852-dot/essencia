@@ -442,4 +442,38 @@ export const collectionsData = {
       },
     ],
   },
+  jackets: {
+    title: 'Jackets',
+    description:
+      'Premium coats designed to keep you warm and stylish during the colder months.',
+    items: [
+      {
+        id: '1',
+        name: 'Street Luxe Hoodie',
+        price: '₹498.00',
+        originalPrice: '₹1199.00',
+        discount: '6% OFF',
+        description:
+          "Our men's brown long coat is the perfect addition to any gentleman's wardrobe. Made with high-quality materials, this coat is designed to keep you warm and stylish during the colder months. The classic brown color and timeless design make it a versatile piece that can be dressed up or down for any occasion.",
+        features: [
+          'High-quality materials for durability and comfort',
+          'Classic notch lapel collar and single-breasted button closure',
+          'Two front pockets for convenient storage or hand warming',
+          'Long length provides excellent coverage and warmth',
+          'Flattering fit for all body types',
+        ],
+        colors: ['coffee', 'darkbrown', 'olive', 'tan', 'black'],
+        sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+        rating: 5.0,
+        reviews: 1,
+        images: [
+          '/images/esfClothes/esf-hoodie-5.jpeg',
+          '/images/esfClothes/esf-hoodie-1.webp',
+          '/images/esfClothes/esf-hoodie-2.webp',
+          '/images/esfClothes/esf-hoodie-3.webp',
+          '/images/esfClothes/esf-hoodie-4.webp',
+        ],
+      },
+    ],
+  },
 };
